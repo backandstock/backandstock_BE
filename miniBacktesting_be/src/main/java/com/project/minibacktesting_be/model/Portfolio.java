@@ -8,50 +8,50 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Entity
-public class Portfolio {
+public class Portfolio extends Timestamped{
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private BigInteger id;
+    private Long id;
 
     @Column(nullable = false)
-    private BigInteger seedMoney;
+    private Long seedMoney;
 
     @Column(nullable = false)
-    private BigInteger startDate;
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private BigInteger endDate;
+    private LocalDate endDate;
 
     @Column(nullable = false)
-    private BigInteger bestMonth;
+    private int bestMonth;
 
     @Column(nullable = false)
-    private BigInteger worstMonth;
+    private int worstMonth;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @Column(nullable = false)
+    private boolean myBest;
 
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
 //    private List<PortStock> portStocks;
 
-    public Portfolio(BigInteger seedMoney,
-                     BigInteger startDate,
-                     BigInteger endDate,
-                     BigInteger bestMonth,
-                     BigInteger worstMonth,
-                     User user){
+    public Portfolio(Long seedMoney,
+                     LocalDate startDate,
+                     LocalDate endDate,
+                     int bestMonth,
+                     int worstMonth,
+                     boolean myBest){
         this.seedMoney = seedMoney;
         this.startDate = startDate;
         this.endDate = endDate;
         this.bestMonth = bestMonth;
         this.worstMonth = worstMonth;
-        this.user = user;
+        this.myBest = myBest;
     }
 }

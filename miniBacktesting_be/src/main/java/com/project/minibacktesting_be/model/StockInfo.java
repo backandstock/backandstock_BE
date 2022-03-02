@@ -13,13 +13,13 @@ import java.time.LocalDate;
 public class StockInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private BigInteger id;
+    private Long id;
 
     @Column(nullable = false)
     private String stockName;
 
     @Column(nullable = false)
-    private BigInteger stockCode;
+    private Long stockCode;
 
     @Column(nullable = false)
     private LocalDate publicDate;
