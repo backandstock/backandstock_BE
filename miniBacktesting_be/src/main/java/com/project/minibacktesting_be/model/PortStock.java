@@ -12,6 +12,7 @@ import java.math.BigInteger;
 public class PortStock {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
+    @Column(name = "portStock_id")
     private Long id;
 
     @Column(nullable = false)
@@ -22,6 +23,6 @@ public class PortStock {
     private Portfolio portfolio;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "STOCKIN_ID")
+    @JoinColumn(name = "stockInfo_ID")
     private StockInfo stockInfo;
 }

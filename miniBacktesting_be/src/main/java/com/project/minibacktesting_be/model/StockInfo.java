@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class StockInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
+    @Column(name = "stockInfo_id")
     private Long id;
 
     @Column(nullable = false)
