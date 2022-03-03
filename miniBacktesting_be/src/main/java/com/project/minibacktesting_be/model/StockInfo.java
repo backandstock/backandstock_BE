@@ -20,7 +20,7 @@ public class StockInfo {
     private String stockName;
 
     @Column(nullable = false)
-    private Long stockCode;
+    private String stockCode;
 
     @Column(nullable = false)
     private LocalDate publicDate;
