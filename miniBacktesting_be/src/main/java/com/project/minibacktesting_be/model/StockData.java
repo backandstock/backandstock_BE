@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Builder
 public class StockData {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "stockData_id")
     private Long id;

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Entity
 public class FinalInfo {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 

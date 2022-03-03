@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 public class Likes {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "LIKES_ID")
     private Long id;

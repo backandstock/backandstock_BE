@@ -10,7 +10,7 @@ import java.math.BigInteger;
 @Getter
 @Entity
 public class PortStock {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "portStock_id")
     private Long id;
