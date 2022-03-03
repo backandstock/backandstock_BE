@@ -17,6 +17,7 @@ import java.util.List;
 public class Portfolio extends Timestamped{
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
+    @Column(name = "PORTFOLIO_ID")
     private Long id;
 
     @Column(nullable = false)
