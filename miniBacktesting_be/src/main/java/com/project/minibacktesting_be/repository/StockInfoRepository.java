@@ -1,4 +1,7 @@
 package com.project.minibacktesting_be.repository;
 
-public interface StockInfoRepository {
+import com.project.minibacktesting_be.model.StockInfo;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StockInfoRepository extends JpaRepository<StockInfo, Long> {
 }
