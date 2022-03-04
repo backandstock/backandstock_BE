@@ -21,7 +21,7 @@ public class StockController  {
     //백테스팅 계산하기
     @PostMapping("/api/comment")
     public BacktestingResponseDto creatComment(@RequestBody BacktestingRequestDto backtestingRequestDto){
-        return stockService.backtestingCal();
+        return stockService.backTestingCal();
 
     }
 

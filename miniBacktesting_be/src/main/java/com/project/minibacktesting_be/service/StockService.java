@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class StockService {
 
-    public BacktestingResponseDto backtestingCal() {
+    public BacktestingResponseDto backTestingCal() {
         return null;
     }
 }
