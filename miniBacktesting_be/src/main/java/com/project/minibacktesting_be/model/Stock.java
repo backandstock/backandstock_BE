@@ -1,6 +1,4 @@
 package com.project.minibacktesting_be.model;
-
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
