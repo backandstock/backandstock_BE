@@ -1,5 +1,6 @@
 package com.project.minibacktesting_be.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +17,8 @@ public class StockData {
     @Column(name = "stockData_id")
     private Long id;
 
-    @ManyToOne
+    @JsonBackReference
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "stockInfo_id")
     private StockInfo stockinfo;
 
@@ -40,4 +42,5 @@ public class StockData {
 
     @Column(nullable = false)
     private Long transaction;
+
 }

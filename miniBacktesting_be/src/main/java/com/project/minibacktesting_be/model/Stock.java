@@ -1,12 +1,13 @@
 package com.project.minibacktesting_be.model;
 
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
 public class Stock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column
+
     private Long id;
 
     @Column(nullable = false)
@@ -30,11 +31,6 @@ public class Stock {
     @Column(nullable = false)
     private Long transaction;
 
-    @Column(nullable = false)
-    private String stockName;
-
-    @Column(nullable = false)
-    private String stockCode;
 
     @Column(nullable = false)
     private LocalDate publicDate;

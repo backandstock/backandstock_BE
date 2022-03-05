@@ -1,8 +1,7 @@
 package com.project.minibacktesting_be.controller;
 
-import com.project.minibacktesting_be.dto.BacktestingRequestDto;
-import com.project.minibacktesting_be.dto.BacktestingResponseDto;
-import com.project.minibacktesting_be.repository.CommentRepository;
+import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
+import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.repository.StockDataRepository;
 import com.project.minibacktesting_be.repository.StockInfoRepository;
 import com.project.minibacktesting_be.service.StockService;
@@ -19,10 +18,9 @@ public class StockController  {
 
 
     //백테스팅 계산하기
-    @PostMapping("/api/comment")
+    @PostMapping("/port/result")
     public BacktestingResponseDto creatComment(@RequestBody BacktestingRequestDto backtestingRequestDto){
-        return stockService.backTestingCal();
-
+        return stockService.backTestingCal(backtestingRequestDto);
     }
 
 }
