@@ -18,9 +18,9 @@ public class StockInfo {
     @Column(name = "stockInfo_id")
     private Long id;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "stockData", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<StockData> stockDatas;
+
+//    @OneToMany(mappedBy = "stockData", orphanRemoval = true, cascade = CascadeType.ALL)
+//    private List<StockData> stockDatas;
 
 
     @Column(nullable = false)

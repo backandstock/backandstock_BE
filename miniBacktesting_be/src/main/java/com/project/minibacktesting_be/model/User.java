@@ -1,6 +1,6 @@
 package com.project.minibacktesting_be.model;
 
-import lombok.Builder;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

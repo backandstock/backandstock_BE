@@ -17,7 +17,6 @@ public class StockData {
     @Column(name = "stockData_id")
     private Long id;
 
-    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "stockInfo_id")
     private StockInfo stockinfo;

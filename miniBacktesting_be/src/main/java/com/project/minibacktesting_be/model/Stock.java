@@ -1,11 +1,16 @@
 package com.project.minibacktesting_be.model;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@Getter
+@NoArgsConstructor
+@Entity
 public class Stock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-
     private Long id;
 
     @Column(nullable = false)
@@ -26,9 +31,17 @@ public class Stock {
     @Column(nullable = false)
     private Long volume;
 
+    @Column
+    private Double yieldPct;
+
     @Column(nullable = false)
     private Long transaction;
 
+    @Column(nullable = false)
+    private String stockName;
+
+    @Column(nullable = false)
+    private String stockCode;
 
     @Column(nullable = false)
     private LocalDate publicDate;
