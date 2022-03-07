@@ -1,4 +1,4 @@
-package com.clonecoding.velogclone_be.exception;
+package com.project.minibacktesting_be.exception;
 
 import lombok.Getter;
 import lombok.Setter;

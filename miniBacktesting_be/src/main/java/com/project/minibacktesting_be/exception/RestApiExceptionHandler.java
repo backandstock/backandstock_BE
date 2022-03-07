@@ -1,11 +1,9 @@
-package com.clonecoding.velogclone_be.exception;
+package com.project.minibacktesting_be.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.NoSuchElementException;
 
 // exception 발생시 에러와 status를 보내준다.
 @RestControllerAdvice
