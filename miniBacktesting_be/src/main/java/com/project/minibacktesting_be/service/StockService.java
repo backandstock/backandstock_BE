@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @RequiredArgsConstructor
@@ -38,7 +37,7 @@ public class StockService {
         Long seedMoney = backtestingRequestDto.getSeedMoney();
         List<String> stockList = backtestingRequestDto.getStockList();
         List<Integer> ratioList = backtestingRequestDto.getRatioList();
-        List<Double> targetPrices = new ArrayList<>();
+
         List<YearMonth> yearMonthList = new ArrayList<>();
 
         YearMonth startYearMonth = YearMonth.from(startDate);
@@ -50,17 +49,19 @@ public class StockService {
             startYearMonth = startYearMonth.plusMonths(1);
 
         }
-
-        // 스트림으로 할 수 있는 방법을 찾아보자
-        // 주식의 비율을 충족 시키기 위해선 해당 주식을 몇주 사야 할까?
+        List<Double> targetPrices = new ArrayList<>();
+//         스트림으로 할 수 있는 방법을 찾아보자
+//         주식의 비율을 충족 시키기 위해선 해당 주식을 얼마 사야 할까?
         for (Integer targetRatio : ratioList){
             double targetPrice = targetRatio* 0.01 *seedMoney;
             targetPrices.add(targetPrice);
         }
 
-
-//        Stream<Double> stream = ratioList.stream().
-//                filter(n -> )
+        // 스트림 : 주식의 비율을 충족 시키기 위해선 해당 주식을 얼마 사야 할까?
+//        List<Double> targetPrices = ratioList.
+//                stream().
+//                map(s -> s*0.01*seedMoney).
+//                collect(Collectors.toList());
 
 
 
@@ -77,9 +78,9 @@ public class StockService {
             // 타겟 주식의 정보 가져오기
             List<Stock> stocks = stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate(targetStockName, startDate, endDate);
 
-            if (stocks.size() == 0) {
-                throw new IllegalArgumentException("설정하신 기간에 따른 "+targetStockName + "의 데이터가 없습니다.");
-            }
+//            if (stocks.size() == 0) {
+//                throw new IllegalArgumentException("설정하신 기간에 따른 "+targetStockName + "의 데이터가 없습니다.");
+//            }
 
             // 주식 코드 가져오기
             stockCodes.add(stocks.get(0).getStockCode());
@@ -92,19 +93,19 @@ public class StockService {
             // 주식 목표 금액에 맞추기 위해 필요한 주식 수
             Long firstMonthPrice = stocks.get(0).getClose();
             Double stockNum = targetPrice / firstMonthPrice;
-
-            List<YearMonth> months =  new ArrayList<>();
+//
+//            List<YearMonth> months =  new ArrayList<>();
 //            List<Long> stockPrices =  new ArrayList<>();
-            List<Double> yieldMoneys =  new ArrayList<>();
-
-            // 해당 주식의 closeDate List 만들기 (월로 변환함)
-            for (Stock stock : stocks) {
-                LocalDate targetDate = stock.getCloseDate();
-                months.add(YearMonth.from(targetDate));
+//            List<Double> yieldMoneys =  new ArrayList<>();
+//
+////             해당 주식의 closeDate List 만들기 (월로 변환함)
+//            for (Stock stock : stocks) {
+//                LocalDate targetDate = stock.getCloseDate();
+//                months.add(YearMonth.from(targetDate));
 //                stockPrices.add(stock.getClose());
-                double yieldMoney = stock.getClose() * stockNum;
-                yieldMoneys.add(yieldMoney);
-            }
+//                double yieldMoney = stock.getClose() * stockNum;
+//                yieldMoneys.add(yieldMoney);
+//            }
 
             // 스트림을 활용해서 stock의 종가만 얻어냄
             List<Long> stockPrices =  stocks.
@@ -113,6 +114,18 @@ public class StockService {
                     collect(Collectors.toList());
 
 
+            // 스트림 : 일자만 뽑아내기
+            List<YearMonth> months = stocks.
+                    stream().
+                    map(Stock::getCloseDate).
+                    map(d -> YearMonth.from(d)).
+                    collect(Collectors.toList());
+
+            // 스트림 : 수익금 계산하기
+            List<Double> yieldMoneys = stocks.
+                    stream().map(Stock :: getClose).
+                    map(s -> s*stockNum).
+                    collect(Collectors.toList());
 
             BacktestingDataDto backtestingDataDto =
                     new BacktestingDataDto(targetStockName, targetPrice,
@@ -149,8 +162,8 @@ public class StockService {
                     monthYieldMoneys.set(k, monthYieldMoneys.get(k) + targetMoney);
 
                 } else {
-                    // 해당 월의 값이 없을 경우 가장 첫번째 값을 사용한다.
-                    Double targetMoney = targetYieldMoneys.get(0);
+                    // 해당 월의 값이 없을 경우 현금으로 대체한다.
+                    Double targetMoney = dataDto.getTargetPrice();
                     monthYieldMoneys.set(k, monthYieldMoneys.get(k) + targetMoney);
                 }
 
@@ -166,14 +179,20 @@ public class StockService {
         }
 
 
+        // 최고, 최악의 달을 위한 리스트 (첫달 제외)
+        List<Double> withoutFirstYield = monthYieldMoneys.subList(1, monthYieldMoneys.size());
+        List<YearMonth> withoutFirstMonth = yearMonthList.subList(1, yearMonthList.size());
+
+
         // 최고의 달 , 최고의 수익
-        double bestMoney = Collections.max(monthYieldMoneys);
-        YearMonth bestMonth = yearMonthList.get(monthYieldMoneys.indexOf(bestMoney));
+        double bestMoney = Collections.max(withoutFirstYield);
+        int bestIdx = withoutFirstYield.indexOf(bestMoney);
+        YearMonth bestMonth =withoutFirstMonth.get(bestIdx);
 
         // 첫 달 빼고 ! 최악의 달, 최악의 수익
-        double worstMoney = Collections.min(monthYieldMoneys.subList(1, monthYieldMoneys.size()-1));
-        YearMonth worstMonth = yearMonthList.get(
-                monthYieldMoneys.subList(1, monthYieldMoneys.size()-1).indexOf(worstMoney));
+        double worstMoney = Collections.min(withoutFirstYield);
+        int worstIdx = withoutFirstYield.indexOf(worstMoney);
+        YearMonth worstMonth =withoutFirstMonth.get(worstIdx);
 
         // 마지막 수익률 ( 현재 수익 - 투자금액 / 투자 금액 *100)
         double finalYield = ((monthYieldMoneys.get(monthYieldMoneys.size()-1) - seedMoney)/
@@ -185,42 +204,79 @@ public class StockService {
         List<Stock> kosdaqStocks =
                 stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate("KODEX 코스닥 150", startDate, endDate);
 
-        List<Double> kospiYield = new ArrayList<>();
-        List<Double> kospiYieldMoney = new ArrayList<>();
-
-        List<Double> kosdaqYield = new ArrayList<>();
-        List<Double> kosdaqYieldMoney = new ArrayList<>();
-
         Double kospiNum = seedMoney.doubleValue()/kospiStocks.get(0).getClose();
         Double kosdaqNum = seedMoney.doubleValue()/(kosdaqStocks.get(0).getClose());
-        for (int l =0 ; l < kospiStocks.size(); l++){
 
-            // kospi
-            // 수익금 추가
-            kospiYieldMoney.add(kospiStocks.get(l).getClose()*kospiNum);
-            // 수익률 추가
-            if(l > 0){
-                kospiYield.add(kospiStocks.get(l).getYieldPct()*100);
-            }else{
-                kospiYield.add(0.0);
-            }
+        // 코스피 수익금 계산
+        List<Double> kospiYieldMoney = kospiStocks.
+                stream().
+                map(Stock:: getClose).
+                map(s -> s*kospiNum).
+                collect(Collectors.toList());
 
-            // kosdaq
-            // 수익금 추가
-            kosdaqYieldMoney.add(kosdaqStocks.get(l).getClose() *kosdaqNum);
-            // 수익률 추가
-            if(l > 0){
-                kosdaqYield.add(kosdaqStocks.get(l).getYieldPct()*100);
-            }else{
-                kosdaqYield.add(0.0);
-            }
+        // 코스피 수익률 계산
+        List<Double> kospiYield = kospiStocks.
+                stream().
+                map(Stock :: getYieldPct).
+                map(s -> s*100).
+                collect(Collectors.toList());
 
-        }
+        // 코스닥 수익금 계산
+        List<Double> kosdaqYieldMoney = kosdaqStocks.
+                stream().
+                map(Stock :: getClose).
+                map(s -> s*kosdaqNum).
+                collect(Collectors.toList());
+
+        // 코스닥 수익률계산
+        List<Double> kosdaqYield = kosdaqStocks.
+                stream().
+                map(Stock :: getYieldPct).
+                map(s -> s*100).
+                collect(Collectors.toList());
+
+
+        // 첫달의 수익률은 0 : 코스피
+        kospiYield.set(0, 0.0);
+
+        // 첫달의 수익률은 0 : 코스닥
+        kosdaqYield.set(0, 0.0);
+
+//        List<Double> kospiYield = new ArrayList<>();
+//        List<Double> kospiYieldMoney = new ArrayList<>();
+//
+//        List<Double> kosdaqYield = new ArrayList<>();
+//        List<Double> kosdaqYieldMoney = new ArrayList<>();
+//
+//
+//        for (int l =0 ; l < kospiStocks.size(); l++){
+//
+//            // kospi
+//            // 수익금 추가
+//            kospiYieldMoney.add(kospiStocks.get(l).getClose()*kospiNum);
+//            // 수익률 추가
+//            if(l > 0){
+//                kospiYield.add(kospiStocks.get(l).getYieldPct()*100);
+//            }else{
+//                kospiYield.add(0.0);
+//            }
+//
+//            // kosdaq
+//            // 수익금 추가
+//            kosdaqYieldMoney.add(kosdaqStocks.get(l).getClose() *kosdaqNum);
+//            // 수익률 추가
+//            if(l > 0){
+//                kosdaqYield.add(kosdaqStocks.get(l).getYieldPct()*100);
+//            }else{
+//                kosdaqYield.add(0.0);
+//            }
+//
+//        }
 
 
         BacktestingResponseDto backtestingResponseDto =
                 new BacktestingResponseDto(YearMonth.from(startDate), YearMonth.from(endDate),
-                        bestMonth, bestMoney-seedMoney, worstMonth, worstMoney-seedMoney,
+                        bestMonth, bestMoney, worstMonth, worstMoney,
                         seedMoney,stockList, stockCodes,buyMoney,
                         monthYieldMoneys.get(monthYieldMoneys.size()-1),
                         monthYieldMoneys.get(monthYieldMoneys.size()-1) - seedMoney,finalYield,

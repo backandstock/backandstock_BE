@@ -1,5 +1,6 @@
 package com.project.minibacktesting_be.controller;
 
+import com.project.minibacktesting_be.dto.backtesting.BacktestingDataDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 
 
@@ -7,6 +8,8 @@ import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
