@@ -1,18 +1,12 @@
-package com.project.minibacktesting_be.service;
+package com.project.minibacktesting_be.backtesting;
 
-
-import com.project.minibacktesting_be.backtesting.BacktestingCal;
-import com.project.minibacktesting_be.dto.StockSearchResponseDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingDataDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.model.Stock;
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -23,21 +17,14 @@ import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
-@Service
-public class StockService {
+@Component
+public class BacktestingCal {
 
-    private final StockRepository stockRepository;
+    private static StockRepository stockRepository;
+
+    public static BacktestingResponseDto getResult(BacktestingRequestDto backtestingRequestDto) {
 
 
-//    public BacktestingResponseDto backTestingCal(BacktestingRequestDto backtestingRequestDto) {
-//        return getResult(backtestingRequestDto);
-//    }
-
-    public BacktestingResponseDto backTestingCal(BacktestingRequestDto backtestingRequestDto) {
-        return getResult(backtestingRequestDto);
-    }
-
-    private BacktestingResponseDto getResult(BacktestingRequestDto backtestingRequestDto) {
         //백테스팅 계산하기
         LocalDate startDate  = backtestingRequestDto.getStartDate();
         LocalDate endDate = backtestingRequestDto.getEndDate().minusDays(1);
@@ -290,18 +277,4 @@ public class StockService {
         return backtestingResponseDto;
     }
 
-    //주식 종목 검색
-    @Transactional(readOnly = true)
-    public List<StockSearchResponseDto> getStockInfo(String keyword, String type) {
-        List<StockSearchResponseDto> stockSearchResponseDtoList;
-        if(type.equals("code")){
-            Pageable pageable = PageRequest.of(0, 10);
-            stockSearchResponseDtoList = stockRepository.findStockByCode(keyword, pageable);
-            return stockSearchResponseDtoList;
-        } else {
-            Pageable pageable = PageRequest.of(0, 10);
-            stockSearchResponseDtoList = stockRepository.findStockByName(keyword, pageable);
-            return stockSearchResponseDtoList;
-        }
-    }
 }
