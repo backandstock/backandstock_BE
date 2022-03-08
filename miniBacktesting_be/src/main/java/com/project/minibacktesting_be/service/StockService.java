@@ -49,21 +49,20 @@ public class StockService {
             startYearMonth = startYearMonth.plusMonths(1);
 
         }
-        List<Double> targetPrices = new ArrayList<>();
+
+//        List<Double> targetPrices = new ArrayList<>();
 //         스트림으로 할 수 있는 방법을 찾아보자
 //         주식의 비율을 충족 시키기 위해선 해당 주식을 얼마 사야 할까?
-        for (Integer targetRatio : ratioList){
-            double targetPrice = targetRatio* 0.01 *seedMoney;
-            targetPrices.add(targetPrice);
-        }
+//        for (Integer targetRatio : ratioList){
+//            double targetPrice = targetRatio* 0.01 *seedMoney;
+//            targetPrices.add(targetPrice);
+//        }
 
-        // 스트림 : 주식의 비율을 충족 시키기 위해선 해당 주식을 얼마 사야 할까?
-//        List<Double> targetPrices = ratioList.
-//                stream().
-//                map(s -> s*0.01*seedMoney).
-//                collect(Collectors.toList());
-
-
+//         스트림 : 주식의 비율을 충족 시키기 위해선 해당 주식을 얼마 사야 할까?
+        List<Double> targetPrices = ratioList.
+                stream().
+                map(s -> s*0.01*seedMoney).
+                collect(Collectors.toList());
 
         List<BacktestingDataDto> backtestingDataDtos= new ArrayList<>();
         List<String> stockCodes = new ArrayList<>();
@@ -78,9 +77,6 @@ public class StockService {
             // 타겟 주식의 정보 가져오기
             List<Stock> stocks = stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate(targetStockName, startDate, endDate);
 
-//            if (stocks.size() == 0) {
-//                throw new IllegalArgumentException("설정하신 기간에 따른 "+targetStockName + "의 데이터가 없습니다.");
-//            }
 
             // 주식 코드 가져오기
             stockCodes.add(stocks.get(0).getStockCode());
@@ -93,7 +89,7 @@ public class StockService {
             // 주식 목표 금액에 맞추기 위해 필요한 주식 수
             Long firstMonthPrice = stocks.get(0).getClose();
             Double stockNum = targetPrice / firstMonthPrice;
-//
+
 //            List<YearMonth> months =  new ArrayList<>();
 //            List<Long> stockPrices =  new ArrayList<>();
 //            List<Double> yieldMoneys =  new ArrayList<>();
