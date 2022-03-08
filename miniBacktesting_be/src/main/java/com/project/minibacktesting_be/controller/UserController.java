@@ -1,7 +1,7 @@
 package com.project.minibacktesting_be.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.project.minibacktesting_be.dto.*;
+import com.project.minibacktesting_be.dto.user.*;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import com.project.minibacktesting_be.service.KakaoUserService;
 import com.project.minibacktesting_be.service.UserService;
@@ -34,8 +34,8 @@ public class UserController {
     // 회원정보 수정
     @PutMapping("/user/edit")
     public UserInfoEditRequestDto userInfoEdit(@RequestParam("nickname") String nickname,
-                             @RequestParam(value = "profileImage", required = false) MultipartFile multipartFile,
-                             @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+                                               @RequestParam(value = "profileImage", required = false) MultipartFile multipartFile,
+                                               @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return userService.userInfoEdit(nickname, multipartFile, userDetails);
     }
 

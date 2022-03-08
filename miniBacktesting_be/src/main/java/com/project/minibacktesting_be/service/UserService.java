@@ -1,8 +1,8 @@
 package com.project.minibacktesting_be.service;
 
-import com.project.minibacktesting_be.dto.SignupDto;
-import com.project.minibacktesting_be.dto.UserInfoEditRequestDto;
-import com.project.minibacktesting_be.dto.UserResignResponseDto;
+import com.project.minibacktesting_be.dto.user.SignupDto;
+import com.project.minibacktesting_be.dto.user.UserInfoEditRequestDto;
+import com.project.minibacktesting_be.dto.user.UserResignResponseDto;
 import com.project.minibacktesting_be.model.User;
 import com.project.minibacktesting_be.repository.UserRepository;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;

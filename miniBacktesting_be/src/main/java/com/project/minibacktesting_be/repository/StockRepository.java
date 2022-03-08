@@ -11,7 +11,21 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface StockRepository extends JpaRepository<Stock, Long> {
+
+    // 백테스팅 대상 주식 찾기
     List<Stock> findByStockNameAndCloseDateBetweenOrderByCloseDate(String targetStockName, LocalDate startDate, LocalDate endDate);
+
+    // 수익률 top5 찾기
+    List<Stock> findTop5ByMarketAndCloseDateBetweenOrderByYieldPctDesc(String option, LocalDate startDate, LocalDate endDate);
+
+    // 거래량 top5찾기
+    List<Stock> findTop5ByCloseDateBetweenOrderByVolumeDesc(LocalDate startDate, LocalDate endDate);
+
+    // 거래대금 top5 찾기
+    List<Stock> findTop5ByCloseDateBetweenOrderByTransactionDesc(LocalDate startDate, LocalDate endDate);
+
+
+
 
     @Query("select new com.project.minibacktesting_be.dto.StockSearchResponseDto(t.stockName, t.stockCode) " +
             "from Stock t " +
