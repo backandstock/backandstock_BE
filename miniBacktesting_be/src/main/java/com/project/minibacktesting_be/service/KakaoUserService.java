@@ -3,7 +3,7 @@ package com.project.minibacktesting_be.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.minibacktesting_be.dto.KakaoUserInfoDto;
+import com.project.minibacktesting_be.dto.user.KakaoUserInfoDto;
 import com.project.minibacktesting_be.model.User;
 import com.project.minibacktesting_be.repository.UserRepository;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;

@@ -1,4 +1,4 @@
-package com.project.minibacktesting_be.dto;
+package com.project.minibacktesting_be.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
