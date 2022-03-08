@@ -140,8 +140,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 백테스팅 결과 API 허용
         skipPathList.add("POST,/port/result");
 
-        skipPathList.add("GET,/stock/search/**");
-
         skipPathList.add("GET,/test");
 
         skipPathList.add("GET,/");
