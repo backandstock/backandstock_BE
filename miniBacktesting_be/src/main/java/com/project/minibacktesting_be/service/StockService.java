@@ -1,18 +1,11 @@
 package com.project.minibacktesting_be.service;
 
 
-
-import com.project.minibacktesting_be.dto.backtesting.BacktestingDataDto;
 import com.project.minibacktesting_be.dto.StockSearchResponseDto;
+import com.project.minibacktesting_be.dto.backtesting.BacktestingDataDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
-
-
 import com.project.minibacktesting_be.model.Stock;
-import com.project.minibacktesting_be.repository.StockRepository;
-import com.project.minibacktesting_be.model.StockInfo;
-import com.project.minibacktesting_be.repository.StockDataRepository;
-import com.project.minibacktesting_be.repository.StockInfoRepository;
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -32,9 +25,6 @@ import java.util.stream.Collectors;
 @Service
 public class StockService {
 
-    private final StockRepository stockRepository;
-    private final StockInfoRepository stockInfoRepository;
-    private final StockDataRepository stockDataRepository;
     private final StockRepository stockRepository;
 
 

@@ -1,13 +1,8 @@
 package com.project.minibacktesting_be.controller;
 
-import com.project.minibacktesting_be.dto.backtesting.BacktestingDataDto;
-import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
-
-
-import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.dto.StockSearchResponseDto;
-import com.project.minibacktesting_be.repository.StockDataRepository;
-import com.project.minibacktesting_be.repository.StockInfoRepository;
+import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
+import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
