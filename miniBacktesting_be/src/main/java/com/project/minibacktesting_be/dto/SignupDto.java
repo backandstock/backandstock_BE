@@ -11,5 +11,10 @@ public class SignupDto {
     private String username;
     private String password;
     private String nickname;
-    private String profileImg;
+
+    public SignupDto(String username, String nickname, String password) {
+        this.username = username;
+        this.nickname = nickname;
+        this.password = password;
+    }
 }
