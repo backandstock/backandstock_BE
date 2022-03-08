@@ -7,6 +7,7 @@ import com.project.minibacktesting_be.model.Stock;
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -20,9 +21,9 @@ import java.util.stream.Collectors;
 @Component
 public class BacktestingCal {
 
-    private static StockRepository stockRepository;
+    private final StockRepository stockRepository;
 
-    public static BacktestingResponseDto getResult(BacktestingRequestDto backtestingRequestDto) {
+    public BacktestingResponseDto getResult(BacktestingRequestDto backtestingRequestDto) {
 
 
         //백테스팅 계산하기
