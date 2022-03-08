@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class StockController  {
     public BacktestingResponseDto backtestingCal(@RequestBody BacktestingRequestDto backtestingRequestDto){
         return stockService.backTestingCal(backtestingRequestDto);
     }
+    
 
     //주식 종목 검색
     @GetMapping("/stock/search")
