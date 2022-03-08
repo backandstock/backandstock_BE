@@ -28,34 +28,54 @@ public class User {
     @Column
     private String profileImg;
 
-    User(Builder builder){
+    // 일반 회원가입인 경우 kakaoId는 null
+    @Column(unique = true)
+    private Long kakaoId;
+
+    User(Builder builder) {
         this.username = builder.username;
         this.nickname = builder.nickname;
         this.password = builder.password;
         this.profileImg = builder.profileImg;
+        this.kakaoId = builder.kakaoId;
     }
 
-    public static class Builder{
+    public static class Builder {
         private String username;
         private String nickname;
         private String password;
         private String profileImg;
+        private Long kakaoId;
 
         // 필수적인 필드들
-        public Builder(String username, String nickname, String password){
+        public Builder(String username, String nickname, String password) {
             this.username = username;
             this.nickname = nickname;
             this.password = password;
         }
 
         // 선택적인 필드들(null값 들어올수 있음)
-        public Builder profileImg(String profileImg){
-            this.profileImg= profileImg;
+        public Builder profileImg(String profileImg) {
+            this.profileImg = profileImg;
             return this;
         }
 
-        public User build(){
+        public Builder kakaoId(Long kakaoId) {
+            this.kakaoId = kakaoId;
+            return this;
+        }
+
+        public User build() {
             return new User(this);
         }
+    }
+
+    public void update(String nickname, String imgUrl) {
+        this.nickname = nickname;
+        this.profileImg = imgUrl;
+    }
+
+    public void update(String nickname) {
+        this.nickname = nickname;
     }
 }
