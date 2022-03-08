@@ -122,7 +122,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private JwtAuthFilter jwtFilter() throws Exception {
         List<String> skipPathList = new ArrayList<>();
-
         //로그인 유무가 걸러지는 곳.
         // Static 정보 접근 허용
         // 토큰 없이, 로그인 없이도 보여줄 수 있는 권한
@@ -136,6 +135,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/user/**");
         skipPathList.add("POST,/user/**");
         skipPathList.add("GET,/move/**");
+        // 주식검색하기 API 허용
+        skipPathList.add("GET,/stock/**");
+        // 백테스팅 결과 API 허용
+        skipPathList.add("POST,/port/result");
 
         skipPathList.add("GET,/stock/search/**");
 
