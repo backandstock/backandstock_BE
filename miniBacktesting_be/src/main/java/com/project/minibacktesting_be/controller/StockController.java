@@ -1,9 +1,6 @@
 package com.project.minibacktesting_be.controller;
 
-<<<<<<< HEAD
-=======
 import com.project.minibacktesting_be.dto.StockSearchResponseDto;
->>>>>>> 1569895a5954c4d2b4bc9cf427fb57569a66a30a
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.service.StockService;
