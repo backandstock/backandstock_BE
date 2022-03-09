@@ -15,7 +15,7 @@ public class CommunityController {
 
 
     // 주식 top 5 조회 하기
-    @GetMapping("/community/top5/{option}")
+    @GetMapping("/community/topFive/{option}")
     public TopFiveResponseDto getTop5Info(@PathVariable String option){
         return communityService.getTopFive(option);
     }

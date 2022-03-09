@@ -13,6 +13,6 @@ public class TopFiveResponseDto {
 
     List<String> stockNames;
     List<String> stockCodes;
-    List<Double> results;
+    List<String> results;
     List<Long> closes;
 }

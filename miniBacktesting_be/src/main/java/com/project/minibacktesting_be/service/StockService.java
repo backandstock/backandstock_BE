@@ -28,7 +28,7 @@ public class StockService {
 
     private final StockRepository stockRepository;
     private final BacktestingCal backtestingCal;
-    
+
 
     public BacktestingResponseDto backTestingCal(BacktestingRequestDto backtestingRequestDto) {
         return backtestingCal.getResult(backtestingRequestDto);

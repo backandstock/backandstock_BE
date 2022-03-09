@@ -6,6 +6,8 @@ import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,29 +27,32 @@ public class CommunityService {
 
 
         List<Stock> stocks;
-        List<Double> results;
+        List<String> results;
         if(option.equals("kospi")|| option.equals("kosdaq")){
             stocks = stockRepository.findTop5ByMarketAndCloseDateBetweenOrderByYieldPctDesc(option, startDate, endDate);
 
             results = stocks.
                     stream().
-                    map(Stock ::getYieldPct).
-                    map(i -> i*0.01).
+                    map(stock -> (stock.getYieldPct()*100)).
+                    map(stock -> stock.toString()).
                     collect(Collectors.toList());
 
         }else if(option.equals("volume")){
             stocks = stockRepository.findTop5ByCloseDateBetweenOrderByVolumeDesc(startDate, endDate);
             System.out.println(stocks.get(0).getVolume().doubleValue());
+            System.out.println(new BigDecimal(stocks.get(0).getVolume()).doubleValue());
+
             results = stocks.
                     stream().
-                    map(stock -> stock.getVolume().doubleValue()).
+                    map(stock -> stock.getVolume().toString()).
                     collect(Collectors.toList());
+
         }else{
             stocks = stockRepository.findTop5ByCloseDateBetweenOrderByTransactionDesc(startDate, endDate);
 
             results = stocks.
                     stream().
-                    map(stock -> stock.getTransaction().doubleValue()).
+                    map(stock -> stock.getTransaction().toString()).
                     collect(Collectors.toList());
         }
 
@@ -68,6 +73,13 @@ public class CommunityService {
 
 
         return new TopFiveResponseDto(stockNames, stockCodes, results, closes);
+
+
+
+        for( i ++ jdlkfjslj ){
+            Smatctwatch smakr= new (image.get(i),barnad.get(i),lowprice.get(i), categeT(i) )
+            smartwatchreapository.sava(swatj cjklskjg);
+        }
 
     }
 }
