@@ -15,5 +15,6 @@ public class BacktestingDataDto {
     private List<YearMonth> months; // 주식의 일자들
     private List<Long> stockPrices; // 해당 기간의 주식 데이터 리스트
     private List<Double> yieldMoneys; // 월마다 해당 주식의 수익금
+    private List<Double> yields; // 월 수익률
 
 }

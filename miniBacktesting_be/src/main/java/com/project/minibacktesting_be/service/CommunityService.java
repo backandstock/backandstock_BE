@@ -6,8 +6,6 @@ import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,8 +37,6 @@ public class CommunityService {
 
         }else if(option.equals("volume")){
             stocks = stockRepository.findTop5ByCloseDateBetweenOrderByVolumeDesc(startDate, endDate);
-            System.out.println(stocks.get(0).getVolume().doubleValue());
-            System.out.println(new BigDecimal(stocks.get(0).getVolume()).doubleValue());
 
             results = stocks.
                     stream().
@@ -71,15 +67,6 @@ public class CommunityService {
                 map(Stock :: getClose).
                 collect(Collectors.toList());
 
-
         return new TopFiveResponseDto(stockNames, stockCodes, results, closes);
-
-
-
-        for( i ++ jdlkfjslj ){
-            Smatctwatch smakr= new (image.get(i),barnad.get(i),lowprice.get(i), categeT(i) )
-            smartwatchreapository.sava(swatj cjklskjg);
-        }
-
     }
 }
