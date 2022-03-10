@@ -21,8 +21,6 @@ public class CommunityService {
         // 2월의 데이터를 가져오기 위해 startDate, endDate 설정함
         LocalDate startDate = LocalDate.parse("2022-02-01");
         LocalDate endDate = startDate.with(lastDayOfMonth());
-        System.out.println(endDate);
-
 
         List<Stock> stocks;
         List<String> results;
