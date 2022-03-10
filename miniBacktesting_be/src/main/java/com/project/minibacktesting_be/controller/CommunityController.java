@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommunityController {
     private final CommunityService communityService;
 
-
     // 주식 top 5 조회 하기
     @GetMapping("/community/topFive/{option}")
     public TopFiveResponseDto getTop5Info(@PathVariable String option){
