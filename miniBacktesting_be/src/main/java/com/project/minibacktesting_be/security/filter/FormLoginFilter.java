@@ -25,7 +25,6 @@ public class FormLoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         UsernamePasswordAuthenticationToken authRequest;
         try {
-            System.out.println();
             JsonNode requestBody = objectMapper.readTree(request.getInputStream());
             String username = requestBody.get("username").asText();
             String password = requestBody.get("password").asText();

@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -41,8 +42,8 @@ public class UserController {
 
     // 카카오 로그인
     @GetMapping("/user/kakao/callback")
-    public KakaoUserInfoDto kakaoLogin(@RequestParam String code) throws JsonProcessingException {
-        return kakaoUserService.kakaoLogin(code);
+    public KakaoUserInfoDto kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        return kakaoUserService.kakaoLogin(code, response);
     }
 
     // 회원탈퇴
