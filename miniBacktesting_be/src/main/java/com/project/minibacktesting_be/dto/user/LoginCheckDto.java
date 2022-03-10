@@ -9,12 +9,12 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class LoginCheckDto {
-    private String username;
+    private Long userId;
     private String nickname;
     private String profileImg;
 
     public LoginCheckDto(User user){
-        this.username = user.getUsername();
+        this.userId = user.getId();
         this.nickname = user.getNickname();
         this.profileImg = user.getProfileImg();
     }

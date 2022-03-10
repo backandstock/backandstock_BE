@@ -28,11 +28,4 @@ public class Comment extends Timestamped{
 
     @Column(nullable = false)
     private String nickname;
-
-    public static CommentBuilder builder(Long id) {
-        if(id == null) {
-            throw new IllegalArgumentException("필수 파라미터 누락");
-        }
-        return new CommentBuilder().id(id);
-    }
 }
