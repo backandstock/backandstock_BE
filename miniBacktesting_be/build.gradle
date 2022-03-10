@@ -8,6 +8,7 @@ group = 'com.project'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -46,6 +47,12 @@ dependencies {
     // Amazon S3
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.2'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+
+    // redis 설정
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2'
+
+
 }
 
 tasks.named('test') {

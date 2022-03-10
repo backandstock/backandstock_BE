@@ -2,6 +2,7 @@ package com.project.minibacktesting_be;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.annotation.PostConstruct;
@@ -11,6 +12,7 @@ import java.util.TimeZone;
 // TimeStamped null값 오류 제거하기위해 포함
 @EnableJpaAuditing
 @SpringBootApplication
+@EnableCaching
 public class MiniBacktestingBeApplication {
 
     @PostConstruct

@@ -19,7 +19,8 @@ public class StockController  {
 
     //백테스팅 계산하기
     @PostMapping("/port/result")
-    public BacktestingResponseDto backtestingCal(@RequestBody BacktestingRequestDto backtestingRequestDto){
+    public BacktestingResponseDto backtestingCal(
+            @RequestBody BacktestingRequestDto backtestingRequestDto){
         return stockService.backTestingCal(backtestingRequestDto);
     }
     
@@ -27,15 +28,19 @@ public class StockController  {
     //주식 종목 검색
     @GetMapping("/stock/search")
     public ResponseEntity<List<StockSearchResponseDto>> getStockInfo(
-            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-            @RequestParam(value = "type", required = false, defaultValue = "") String type){
+            @RequestParam(value = "keyword", required = false, defaultValue = "")
+                    String keyword,
+            @RequestParam(value = "type", required = false, defaultValue = "")
+                    String type){
         if(type.equals("") || type == null){
             throw new RuntimeException("type을 정확히 입력해주세요");
         }
+
         if(keyword.equals("") || keyword == null){
             throw new RuntimeException("종목이름이나 종목코드를 입력해주세요");
         }
-        List<StockSearchResponseDto> stockSearchResponseDtoList = stockService.getStockInfo(keyword, type);
+        List<StockSearchResponseDto> stockSearchResponseDtoList =
+                stockService.getStockInfo(keyword, type);
         return ResponseEntity.ok(stockSearchResponseDtoList);
     }
 

@@ -3,23 +3,20 @@ package com.project.minibacktesting_be.service;
 
 import com.project.minibacktesting_be.backtesting.BacktestingCal;
 import com.project.minibacktesting_be.dto.StockSearchResponseDto;
-import com.project.minibacktesting_be.dto.backtesting.BacktestingDataDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
-import com.project.minibacktesting_be.model.Stock;
+
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 @RequiredArgsConstructor
@@ -29,7 +26,8 @@ public class StockService {
     private final StockRepository stockRepository;
     private final BacktestingCal backtestingCal;
 
-
+    // 백테스팅 계산 하기
+    @Cacheable(key = "#backtestingRequestDto.getStartDate().toString()", value = "backtestingResult")
     public BacktestingResponseDto backTestingCal(BacktestingRequestDto backtestingRequestDto) {
         return backtestingCal.getResult(backtestingRequestDto);
     }

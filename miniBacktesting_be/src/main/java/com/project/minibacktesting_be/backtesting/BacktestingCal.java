@@ -6,6 +6,7 @@ import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.model.Stock;
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ public class BacktestingCal {
 
     private final StockRepository stockRepository;
 
-    public BacktestingResponseDto getResult(BacktestingRequestDto backtestingRequestDto) {
+   public BacktestingResponseDto getResult(BacktestingRequestDto backtestingRequestDto) {
 
 
         //백테스팅 계산하기
@@ -143,7 +144,7 @@ public class BacktestingCal {
                 monthYieldMoneys[k] = monthYieldMoneys[k] + targetMoney;
             }
             if (k > 0) {
-                // 수익률 구하기 (현재 수익 - 전달 수익 / 전달 수익  * 100)
+                // 수익률 구하기 ((현재 수익 - 전달 수익) / 전달 수익 ) * 100
                 double monthYield =
                         (monthYieldMoneys[k] - monthYieldMoneys[k - 1]) / monthYieldMoneys[k - 1];
                 monthYields[k] = monthYield * 100;
@@ -237,7 +238,7 @@ public class BacktestingCal {
                         seedMoney,stockList, stockCodes,buyMoney,
                         monthYieldMoneys[monthYieldMoneys.length-1],
                         monthYieldMoneys[monthYieldMoneys.length-1] - seedMoney,finalYield,
-                        yearMonthList, Arrays.asList(monthYields), Arrays.asList(monthYieldMoneys),
+                        yearMonthList.stream().map(YearMonth::toString).collect(Collectors.toList()), Arrays.asList(monthYields), Arrays.asList(monthYieldMoneys),
                         kospiYield, kospiYieldMoney,
                         kosdaqYield, kosdaqYieldMoney,
                         stockYieldMoneys, stockYields);
