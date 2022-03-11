@@ -19,7 +19,8 @@ public class PortfolioController {
 
     //포트폴리오 입력값 저장
     @PostMapping("/port")
-    public ResponseEntity<PortfolioResponseDto> savePortfolio(@RequestBody BacktestingRequestDto backtestingRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<PortfolioResponseDto> savePortfolio(@RequestBody BacktestingRequestDto backtestingRequestDto,
+                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
         PortfolioResponseDto portfolioResponseDto = portfolioService.savePortfolio(backtestingRequestDto, userDetails);
         return ResponseEntity.ok(portfolioResponseDto);
     }

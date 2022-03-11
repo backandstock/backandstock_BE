@@ -30,10 +30,5 @@ public class CommunityController {
     }
 
 
-    // 좋아요
-    @PostMapping ("/community")
-    public String postLikes(@RequestBody LikesRequestDto requestDto){
-        return communityService.postLikes(requestDto);
-    }
 
 }

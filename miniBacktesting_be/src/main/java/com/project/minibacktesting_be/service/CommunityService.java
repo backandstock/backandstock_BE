@@ -118,8 +118,5 @@ public class CommunityService {
     }
 
 
-    public String postLikes(LikesRequestDto requestDto) {
-        return null;
 
-    }
 }

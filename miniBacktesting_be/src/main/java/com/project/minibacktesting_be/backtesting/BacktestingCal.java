@@ -57,7 +57,6 @@ public class BacktestingCal {
 
 
 
-//        for (int i = 0; i < stockList.size(); i++) {
         for(String targetStockName : stockList){
 
             // 타겟 주식이 몇번째 값?
@@ -65,7 +64,8 @@ public class BacktestingCal {
 
             // 타겟 주식의 정보 가져오기
             List<Stock> stocks =
-                    stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate(targetStockName, startDate, endDate);
+                    stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate(
+                            targetStockName, startDate, endDate);
 
             // 주식 코드 가져오기
             stockCodes.add(stocks.get(0).getStockCode());
