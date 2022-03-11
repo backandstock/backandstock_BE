@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
+public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
 
     List<Portfolio> findAllByUser(User user);
     Page<Portfolio> findAllByMyBest(boolean mybest, Pageable pageable);

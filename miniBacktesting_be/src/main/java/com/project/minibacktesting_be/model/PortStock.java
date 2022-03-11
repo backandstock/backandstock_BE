@@ -30,9 +30,6 @@ public class PortStock {
     @JoinColumn(name = "PORTFOLIO_ID")
     private Portfolio portfolio;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "STOCK_ID")
-//    private Stock stock;
 
 
 }

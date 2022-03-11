@@ -11,13 +11,14 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
 public class BacktestingRequestDto {
 
     private LocalDate startDate;
     private LocalDate endDate;
     private Long seedMoney;
     private List<String> stockList;
-    private List<Long> ratioList;
+    private List<Integer> ratioList;
 
 
     public BacktestingRequestDto(Portfolio portfolio) {

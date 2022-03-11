@@ -37,7 +37,7 @@ public class Portfolio extends Timestamped{
     @Column(nullable = false)
     private boolean myBest;
 
-<<<<<<< HEAD
+
     @Column(nullable = false)
     private int likesCnt;
 
@@ -45,13 +45,13 @@ public class Portfolio extends Timestamped{
 //    private List<Likes> likes;
 
 //    @JsonManagedReference
-    @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<PortStock> portStocks;
-=======
+//    @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
+//    private List<PortStock> portStocks;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
->>>>>>> 96dc82ac65542f3e7abeaf77a7f595c353a3872e
+
 
     @JsonManagedReference
     @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
