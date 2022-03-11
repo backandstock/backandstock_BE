@@ -38,9 +38,15 @@ public class Portfolio extends Timestamped{
     @Column(nullable = false)
     private boolean myBest;
 
+    @Column(nullable = false)
+    private int likesCnt;
+
+//    @OneToMany(mappedBy = "portfolio",  orphanRemoval = true, cascade = CascadeType.ALL)
+//    private List<Likes> likes;
+
 //    @JsonManagedReference
-//    @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
-//    private List<PortStock> portStocks;
+    @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<PortStock> portStocks;
 
     public Portfolio(Long seedMoney,
                      LocalDate startDate,

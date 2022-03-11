@@ -1,11 +1,13 @@
 package com.project.minibacktesting_be.dto.backtesting;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import com.project.minibacktesting_be.model.PortStock;
+import com.project.minibacktesting_be.model.Portfolio;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -15,6 +17,24 @@ public class BacktestingRequestDto {
     private LocalDate endDate;
     private Long seedMoney;
     private List<String> stockList;
-    private List<Integer> ratioList;
+    private List<Long> ratioList;
+
+
+    public BacktestingRequestDto(Portfolio portfolio) {
+
+        this.startDate = portfolio.getStartDate();
+        this.endDate = portfolio.getEndDate();
+        this.seedMoney = portfolio.getSeedMoney();
+        this.stockList = portfolio.getPortStocks().
+                stream().
+                map(s -> s.getStockName()).
+                collect(Collectors.toList());
+
+        this.ratioList = portfolio.getPortStocks().
+                stream().
+                map(s -> s.getRatio()).
+                collect(Collectors.toList());
+    }
+
 
 }

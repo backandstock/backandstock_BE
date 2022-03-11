@@ -1,9 +1,7 @@
 package com.project.minibacktesting_be.model;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @NoArgsConstructor

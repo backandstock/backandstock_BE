@@ -18,11 +18,11 @@ public class PortStock {
     @Column(nullable = false)
     private Long ratio;
 
+    @Column(nullable = false)
+    private String stockName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PORTFOLIO_ID")
     private Portfolio portfolio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stockInfo_ID")
-    private StockInfo stockInfo;
 }
