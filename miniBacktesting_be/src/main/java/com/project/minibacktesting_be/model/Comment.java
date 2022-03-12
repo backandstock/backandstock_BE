@@ -23,7 +23,7 @@ public class Comment extends Timestamped{
     @JoinColumn(name = "PORTFOLIO_ID")
     private Portfolio portfolio;
 
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

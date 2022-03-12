@@ -85,56 +85,56 @@ public class PortfolioService {
         return portfolioSaveResponseDto;
     }
 
-//    //내 포트폴리오 전체 불러오기
-//    @Transactional(readOnly = true)
-//    public List<PortfolioResponseDto> getAllMyPortfolio(UserDetailsImpl userDetails) {
-//        List<PortfolioResponseDto> portfolioResponseDtoList = new ArrayList<>();
-//
-//        Optional<User> userTemp = userRepository.findById(userDetails.getUser().getId());
-//        User user = userTemp.get();
-//
-//        List<Portfolio> portfolioList = portfolioRepository.findAllByUser(user);
-//
-//        if(!portfolioList.isEmpty()) {
-//            for(Portfolio eachPortfolio : portfolioList){
-//                Long postId = eachPortfolio.getId();
-//                Boolean myBest = eachPortfolio.getMyBest();
-//
-//                LocalDate startDate  = eachPortfolio.getStartDate();
-//                LocalDate endDate = eachPortfolio.getEndDate();
-//                Long seedMoney = eachPortfolio.getSeedMoney();
-//
-//                List<PortStock> portStocks = portStockRepository.findByPortfolio(eachPortfolio);
-//                List<String> stockList = new ArrayList<>();
-//                for (PortStock portStockName : portStocks) {
-//                    stockList.add(portStockName.getStockName());
-//                }
-//                List<Integer> ratioList = new ArrayList<>();
-//                for (PortStock portStockRatio : portStocks) {
-//                    ratioList.add(portStockRatio.getRatio());
-//                }
-//
-//                BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
-//                backtestingRequestDto.setStartDate(startDate);
-//                backtestingRequestDto.setEndDate(endDate);
-//                backtestingRequestDto.setSeedMoney(seedMoney);
-//                backtestingRequestDto.setStockList(stockList);
-//                backtestingRequestDto.setRatioList(ratioList);
-//                BacktestingResponseDto myPortBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
-//
-////                BacktestingCal backtestingCal = new BacktestingCal(startDate, endDate, seedMoney, stockList, ratioList);
-////                backtestingCal
-//
-//                PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto();
-//                portfolioResponseDto.setPortId(postId);
-//                portfolioResponseDto.setMyBest(myBest);
-//                portfolioResponseDto.setPortBacktestingCal(myPortBacktestingCal);
-//
-//                portfolioResponseDtoList.add(portfolioResponseDto);
-//            }
-//        }
-//        return portfolioResponseDtoList;
-//    }
+    //내 포트폴리오 전체 불러오기
+    @Transactional(readOnly = true)
+    public List<PortfolioResponseDto> getAllMyPortfolio(UserDetailsImpl userDetails) {
+        List<PortfolioResponseDto> portfolioResponseDtoList = new ArrayList<>();
+
+        Optional<User> userTemp = userRepository.findById(userDetails.getUser().getId());
+        User user = userTemp.get();
+
+        List<Portfolio> portfolioList = portfolioRepository.findAllByUser(user);
+
+        if(!portfolioList.isEmpty()) {
+            for(Portfolio eachPortfolio : portfolioList){
+                Long postId = eachPortfolio.getId();
+                Boolean myBest = eachPortfolio.getMyBest();
+
+                LocalDate startDate  = eachPortfolio.getStartDate();
+                LocalDate endDate = eachPortfolio.getEndDate();
+                Long seedMoney = eachPortfolio.getSeedMoney();
+
+                List<PortStock> portStocks = portStockRepository.findByPortfolio(eachPortfolio);
+                List<String> stockList = new ArrayList<>();
+                for (PortStock portStockName : portStocks) {
+                    stockList.add(portStockName.getStockName());
+                }
+                List<Integer> ratioList = new ArrayList<>();
+                for (PortStock portStockRatio : portStocks) {
+                    ratioList.add(portStockRatio.getRatio());
+                }
+
+                BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
+                backtestingRequestDto.setStartDate(startDate);
+                backtestingRequestDto.setEndDate(endDate);
+                backtestingRequestDto.setSeedMoney(seedMoney);
+                backtestingRequestDto.setStockList(stockList);
+                backtestingRequestDto.setRatioList(ratioList);
+                BacktestingResponseDto myPortBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
+
+//                BacktestingCal backtestingCal = new BacktestingCal(startDate, endDate, seedMoney, stockList, ratioList);
+//                backtestingCal
+
+                PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto();
+                portfolioResponseDto.setPortId(postId);
+                portfolioResponseDto.setMyBest(myBest);
+                portfolioResponseDto.setPortBacktestingCal(myPortBacktestingCal);
+
+                portfolioResponseDtoList.add(portfolioResponseDto);
+            }
+        }
+        return portfolioResponseDtoList;
+    }
 
 //    //포트폴리오 하나 불러오기
 //    @Transactional(readOnly = true)

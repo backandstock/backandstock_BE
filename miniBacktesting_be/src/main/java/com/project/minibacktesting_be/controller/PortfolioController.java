@@ -25,12 +25,12 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioSaveResponseDto);
     }
 
-//    //내 포트폴리오 전체 불러오기
-//    @GetMapping("/port/mypage")
-//    public ResponseEntity<List<PortfolioResponseDto>> getAllMyPortfolio(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        List<PortfolioResponseDto> portfolioResponseDtoList = portfolioService.getAllMyPortfolio(userDetails);
-//        return ResponseEntity.ok(portfolioResponseDtoList);
-//    }
+    //내 포트폴리오 전체 불러오기
+    @GetMapping("/port/mypage")
+    public ResponseEntity<List<PortfolioResponseDto>> getAllMyPortfolio(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<PortfolioResponseDto> portfolioResponseDtoList = portfolioService.getAllMyPortfolio(userDetails);
+        return ResponseEntity.ok(portfolioResponseDtoList);
+    }
 
 //    //포트폴리오 하나 불러오기
 //    @GetMapping("/port/{portId}")
