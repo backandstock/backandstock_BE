@@ -3,8 +3,11 @@ package com.project.minibacktesting_be.backtesting;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingDataDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
+import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.model.Stock;
+import com.project.minibacktesting_be.model.User;
 import com.project.minibacktesting_be.repository.StockRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -17,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+//@Builder
 @RequiredArgsConstructor
 @Component
 public class BacktestingCal {
@@ -245,5 +248,14 @@ public class BacktestingCal {
 
         return backtestingResponseDto;
     }
+//    public static BacktestingCal getBacktestingCal(LocalDate startDate, LocalDate endDate, Long seedMoney
+//            , List<String> stockList, List<Integer> ratioList ) {
+//        Portfolio portfolio = Portfolio.builder()
+//                .startDate(startDate)
+//                .endDate(endDate)
+//                .seedMoney(seedMoney)
+//                .
+//    }
+
 
 }
