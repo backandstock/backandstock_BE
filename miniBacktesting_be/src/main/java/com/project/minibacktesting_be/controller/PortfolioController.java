@@ -46,11 +46,11 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioCompareResponseDtoList);
     }
 
-//    //포트폴리오 삭제
-//    @DeleteMapping("/port/{portId}")
-//    public HashMap<String, Long> deletePortfolio(@PathVariable Long portId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-//        return portfolioService.deletePortfolio(portId, userDetails);
-//    }
+    //포트폴리오 삭제
+    @DeleteMapping("/port/{portId}")
+    public HashMap<String, Long> deletePortfolio(@PathVariable Long portId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return portfolioService.deletePortfolio(portId, userDetails);
+    }
 
 //    //포트폴리오 자랑하기
 //    @PostMapping("/port/mybest")
