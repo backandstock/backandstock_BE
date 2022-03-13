@@ -2,6 +2,7 @@ package com.project.minibacktesting_be.controller;
 
 
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
+import com.project.minibacktesting_be.dto.portfolio.PortfolioDetailsResponseDto;
 import com.project.minibacktesting_be.dto.portfolio.PortfolioResponseDto;
 import com.project.minibacktesting_be.dto.portfolio.PortfolioSaveResponseDto;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
@@ -32,12 +33,12 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioResponseDtoList);
     }
 
-//    //포트폴리오 하나 불러오기
-//    @GetMapping("/port/{portId}")
-//    public ResponseEntity <PortfolioResponseDto> getPortfolio(@PathVariable Long portId){
-//        PortfolioResponseDto portfolioResponseDto = portfolioService.getPortfolio(portId);
-//        return ResponseEntity.ok(portfolioResponseDto);
-//    }
+    //포트폴리오 상세보기
+    @GetMapping("/port/details/{portId}")
+    public ResponseEntity <PortfolioDetailsResponseDto> getPortfolio(@PathVariable Long portId){
+        PortfolioDetailsResponseDto portfolioDetailsResponseDto = portfolioService.getPortfolio(portId);
+        return ResponseEntity.ok(portfolioDetailsResponseDto);
+    }
 
 //    //포트폴리오 삭제
 //    @DeleteMapping("/port/{portId}")
