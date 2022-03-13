@@ -7,10 +7,7 @@ import com.project.minibacktesting_be.dto.portfolio.*;
 import com.project.minibacktesting_be.model.PortStock;
 import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.model.User;
-import com.project.minibacktesting_be.repository.PortStockRepository;
-import com.project.minibacktesting_be.repository.PortfolioRepository;
-import com.project.minibacktesting_be.repository.StockRepository;
-import com.project.minibacktesting_be.repository.UserRepository;
+import com.project.minibacktesting_be.repository.*;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,11 +22,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class PortfolioService {
-    private final StockRepository stockRepository;
     private final UserRepository userRepository;
     private final PortfolioRepository portfolioRepository;
     private final PortStockRepository portStockRepository;
     private final BacktestingCal backtestingCal;
+    private final LikesRepository likesRepository;
+    private final CommentRepository commentRepository;
 
     //포트폴리오 저장
     @Transactional
@@ -226,21 +224,26 @@ public class PortfolioService {
         return portfolioCompareResponseDtoList;
     }
 
-//    //포트폴리오 삭제
-//    public HashMap<String, Long> deletePortfolio(Long portId, UserDetailsImpl userDetails) {
-//        Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
-//                () -> new NullPointerException("해당 포트폴리오를 찾을 수 없습니다.")
-//        );
-//
-//        if(!portfolio.getUser().getId().equals(userDetails.getUser().getId())){
-//            throw new IllegalArgumentException("나의 포트폴리오만 삭제 할 수 있습니다.");
-//        }
-//
-//        HashMap<String, Long> responseId = new HashMap<>();
-//        responseId.put("portId", portfolio.getId());
-//
-//        portfolioRepository.delete(portfolio);
-//
-//        return responseId;
-//    }
+    //포트폴리오 삭제
+    @Transactional
+    public HashMap<String, Long> deletePortfolio(Long portId, UserDetailsImpl userDetails) {
+        Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
+                () -> new NullPointerException("해당 포트폴리오를 찾을 수 없습니다.")
+        );
+
+        if(!portfolio.getUser().getId().equals(userDetails.getUser().getId())){
+            throw new IllegalArgumentException("나의 포트폴리오만 삭제 할 수 있습니다.");
+        }
+
+        HashMap<String, Long> responseId = new HashMap<>();
+        responseId.put("portId", portfolio.getId());
+
+
+        likesRepository.deleteAllByPortfolioId(portId);
+        commentRepository.deleteAllByPortfolioId(portId);
+        portStockRepository.deleteAllByPortfolioId(portId);
+        portfolioRepository.delete(portfolio);
+
+        return responseId;
+    }
 }
