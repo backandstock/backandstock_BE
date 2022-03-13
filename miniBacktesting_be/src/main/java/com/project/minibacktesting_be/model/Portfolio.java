@@ -38,7 +38,6 @@ public class Portfolio extends Timestamped{
     @Column(nullable = false)
     private boolean myBest;
 
-
     @Column(nullable = false)
     private int likesCnt;
 

@@ -232,7 +232,7 @@ public class PortfolioService {
         );
 
         if(!portfolio.getUser().getId().equals(userDetails.getUser().getId())){
-            throw new IllegalArgumentException("나의 포트폴리오만 삭제 할 수 있습니다.");
+            throw new IllegalArgumentException("나의 포트폴리오만 삭제할 수 있습니다.");
         }
 
         HashMap<String, Long> responseId = new HashMap<>();
@@ -245,5 +245,24 @@ public class PortfolioService {
         portfolioRepository.delete(portfolio);
 
         return responseId;
+    }
+
+    //포트폴리오 자랑하기
+    @Transactional
+    public PortfolioMyBestResponseDto myBestPortfolio(PortfolioMyBestRequestDto portfolioMyBestRequestDto, UserDetailsImpl userDetails) {
+        Portfolio portfolio = portfolioRepository.findById(portfolioMyBestRequestDto.getPortId()).orElseThrow(
+                () -> new IllegalArgumentException("포트폴리오가 존재하지 않습니다.")
+        );
+        if(!portfolio.getUser().getId().equals(userDetails.getUser().getId())){
+            throw new IllegalArgumentException("나의 포트폴리오만 자랑할 수 있습니다.");
+        }
+        if(portfolioMyBestRequestDto.isMyBest()){
+            portfolio.setMyBest(true);
+        } else {
+            portfolio.setMyBest(false);
+        }
+        PortfolioMyBestResponseDto portfolioMyBestResponseDto = new PortfolioMyBestResponseDto();
+        portfolioMyBestResponseDto.setMyBest(portfolio.getMyBest());
+        return portfolioMyBestResponseDto;
     }
 }

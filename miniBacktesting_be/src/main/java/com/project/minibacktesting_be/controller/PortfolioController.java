@@ -52,11 +52,12 @@ public class PortfolioController {
         return portfolioService.deletePortfolio(portId, userDetails);
     }
 
-//    //포트폴리오 자랑하기
-//    @PostMapping("/port/mybest")
-//    public ResponseEntity <PortfolioMyBestResponseDto> myBestPortfolio(@RequestBody PortfolioMyBestRequestDto portfolioMyBestRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-//        Port
-//    }
+    //포트폴리오 자랑하기
+    @PostMapping("/port/mybest")
+    public ResponseEntity <PortfolioMyBestResponseDto> myBestPortfolio(@RequestBody PortfolioMyBestRequestDto portfolioMyBestRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        PortfolioMyBestResponseDto portfolioMyBestResponseDto = portfolioService.myBestPortfolio(portfolioMyBestRequestDto, userDetails);
+        return ResponseEntity.ok(portfolioMyBestResponseDto);
+    }
 
 
 
