@@ -2,6 +2,7 @@ package com.project.minibacktesting_be.service;
 
 import com.project.minibacktesting_be.dto.likes.LikesRequestDto;
 import com.project.minibacktesting_be.dto.portfolio.PortfolioResponseDto;
+import com.project.minibacktesting_be.dto.portfolio.PortfolioSaveResponseDto;
 import com.project.minibacktesting_be.model.Likes;
 import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.model.User;
@@ -26,7 +27,7 @@ public class LikesService {
     private final UserRepository userRepository;
 
     @Transactional
-    public PortfolioResponseDto postLikes(LikesRequestDto requestDto,UserDetailsImpl userDetails) {
+    public PortfolioSaveResponseDto postLikes(LikesRequestDto requestDto,UserDetailsImpl userDetails) {
         // 포트폴리오 찾기
        Portfolio portfolio = portfolioRepository.findById(requestDto.getPortId()).orElseThrow(
                () -> new IllegalArgumentException("포트폴리오가 존재하지 않습니다. ")
@@ -54,9 +55,9 @@ public class LikesService {
         List<Likes> likesList = likesRepository.findByPortfolio(portfolio);
 
         portfolio.setLikesCnt(likesList.size());
-        PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto();
-        portfolioResponseDto.setPortId(portfolio.getId());
-        return portfolioResponseDto;
+        PortfolioSaveResponseDto portfolioSaveResponseDto = new PortfolioSaveResponseDto();
+        portfolioSaveResponseDto.setPortId(portfolio.getId());
+        return portfolioSaveResponseDto;
     }
 
 }

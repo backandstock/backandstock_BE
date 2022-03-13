@@ -46,6 +46,9 @@ public class Portfolio extends Timestamped{
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
 //    @OneToMany(mappedBy = "portfolio",  orphanRemoval = true, cascade = CascadeType.ALL)
 //    private List<Likes> likes;
 
