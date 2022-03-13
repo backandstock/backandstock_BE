@@ -3,9 +3,7 @@ package com.project.minibacktesting_be.service;
 import com.project.minibacktesting_be.backtesting.BacktestingCal;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
-import com.project.minibacktesting_be.dto.portfolio.PortfolioDetailsResponseDto;
-import com.project.minibacktesting_be.dto.portfolio.PortfolioResponseDto;
-import com.project.minibacktesting_be.dto.portfolio.PortfolioSaveResponseDto;
+import com.project.minibacktesting_be.dto.portfolio.*;
 import com.project.minibacktesting_be.model.PortStock;
 import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.model.User;
@@ -20,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -178,4 +177,70 @@ public class PortfolioService {
 
         return portfolioDetailsResponseDto;
     }
+
+    //포트폴리오 비교하기
+    @Transactional
+    public List<PortfolioCompareResponseDto> comparePortfolio(PortfolioCompareRequestDto portfolioCompareRequestDto, UserDetailsImpl userDetails) {
+        List<PortfolioCompareResponseDto> portfolioCompareResponseDtoList = new ArrayList<>();
+
+        Optional<User> userTemp = userRepository.findById(userDetails.getUser().getId());
+        User user = userTemp.get();
+        List<Portfolio> portfolioList = portfolioRepository.findAllByUser(user);
+
+        List<Long> portIdList = portfolioCompareRequestDto.getPortIdList();
+
+        for(int i = 0; i < portIdList.size(); i++){
+            Long comparePortId = portIdList.get(i);
+            for(Portfolio eachPort : portfolioList){
+                Long eachPortId = eachPort.getId();
+                if(comparePortId == eachPortId){
+                    LocalDate startDate = eachPort.getStartDate();
+                    LocalDate endDate = eachPort.getEndDate();
+                    Long seedMoney = eachPort.getSeedMoney();
+
+                    List<PortStock> portStocks = portStockRepository.findByPortfolio(eachPort);
+                    List<String> stockList = new ArrayList<>();
+                    for(PortStock portStockName : portStocks){
+                        stockList.add(portStockName.getStockName());
+                    }
+                    List<Integer> ratioList = new ArrayList<>();
+                    for(PortStock portStockRatio : portStocks){
+                        ratioList.add(portStockRatio.getRatio());
+                    }
+                    BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
+                    backtestingRequestDto.setStartDate(startDate);
+                    backtestingRequestDto.setEndDate(endDate);
+                    backtestingRequestDto.setSeedMoney(seedMoney);
+                    backtestingRequestDto.setStockList(stockList);
+                    backtestingRequestDto.setRatioList(ratioList);
+                    BacktestingResponseDto compareBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
+
+                    PortfolioCompareResponseDto portfolioCompareResponseDto = new PortfolioCompareResponseDto();
+                    portfolioCompareResponseDto.setPortId(comparePortId);
+                    portfolioCompareResponseDto.setPortBacktestingCal(compareBacktestingCal);
+
+                    portfolioCompareResponseDtoList.add(portfolioCompareResponseDto);
+                }
+            }
+        }
+        return portfolioCompareResponseDtoList;
+    }
+
+//    //포트폴리오 삭제
+//    public HashMap<String, Long> deletePortfolio(Long portId, UserDetailsImpl userDetails) {
+//        Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
+//                () -> new NullPointerException("해당 포트폴리오를 찾을 수 없습니다.")
+//        );
+//
+//        if(!portfolio.getUser().getId().equals(userDetails.getUser().getId())){
+//            throw new IllegalArgumentException("나의 포트폴리오만 삭제 할 수 있습니다.");
+//        }
+//
+//        HashMap<String, Long> responseId = new HashMap<>();
+//        responseId.put("portId", portfolio.getId());
+//
+//        portfolioRepository.delete(portfolio);
+//
+//        return responseId;
+//    }
 }

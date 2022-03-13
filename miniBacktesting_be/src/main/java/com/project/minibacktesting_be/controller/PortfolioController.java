@@ -2,9 +2,7 @@ package com.project.minibacktesting_be.controller;
 
 
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
-import com.project.minibacktesting_be.dto.portfolio.PortfolioDetailsResponseDto;
-import com.project.minibacktesting_be.dto.portfolio.PortfolioResponseDto;
-import com.project.minibacktesting_be.dto.portfolio.PortfolioSaveResponseDto;
+import com.project.minibacktesting_be.dto.portfolio.*;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import com.project.minibacktesting_be.service.PortfolioService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -40,9 +39,24 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioDetailsResponseDto);
     }
 
+    //포트폴리오 비교하기
+    @PostMapping("/port/compare")
+    public ResponseEntity<List<PortfolioCompareResponseDto>> comparePortfolio(@RequestBody PortfolioCompareRequestDto portfolioCompareRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<PortfolioCompareResponseDto> portfolioCompareResponseDtoList = portfolioService.comparePortfolio(portfolioCompareRequestDto, userDetails);
+        return ResponseEntity.ok(portfolioCompareResponseDtoList);
+    }
+
 //    //포트폴리오 삭제
 //    @DeleteMapping("/port/{portId}")
-//    public
+//    public HashMap<String, Long> deletePortfolio(@PathVariable Long portId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+//        return portfolioService.deletePortfolio(portId, userDetails);
+//    }
+
+//    //포트폴리오 자랑하기
+//    @PostMapping("/port/mybest")
+//    public ResponseEntity <PortfolioMyBestResponseDto> myBestPortfolio(@RequestBody PortfolioMyBestRequestDto portfolioMyBestRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+//        Port
+//    }
 
 
 
