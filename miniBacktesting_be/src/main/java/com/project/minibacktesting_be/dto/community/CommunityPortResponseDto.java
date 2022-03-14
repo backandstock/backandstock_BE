@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -12,6 +13,7 @@ import java.util.List;
 @Setter
 public class CommunityPortResponseDto {
 
+    Long portId;
     List<String> stockList;
     List<Integer> ratioList;
     Double finalYield;
@@ -19,5 +21,8 @@ public class CommunityPortResponseDto {
     LocalDate startDate;
     LocalDate endDate;
     List<Double> monthYieldMoney;
+    LocalDateTime createdAt;
+    Long likesCnt;
+    Long commentCnt;
 
 }

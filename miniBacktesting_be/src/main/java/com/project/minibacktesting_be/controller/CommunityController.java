@@ -23,10 +23,19 @@ public class CommunityController {
 
 
     // 자랑하기 포트폴리오 가져오기
-    @RequestMapping("/community")
+    @GetMapping("/community")
     public List<CommunityPortResponseDto> getCommunityPorts(@RequestParam("page") Integer page,
                                                             @RequestParam("size") Integer size){
         return communityService.getCommnunityPorts(page, size);
+    }
+
+    // 시간 옵션별로 포트폴리오 가져오기
+    @GetMapping("/community/recent")
+    public List<CommunityPortResponseDto> getRecentCommunityPort(
+            @RequestParam("option") String option,
+            @RequestParam("page") Integer page,
+            @RequestParam("size") Integer size){
+        return communityService.getRecentCommnunityPorts(option ,page, size);
     }
 
 
