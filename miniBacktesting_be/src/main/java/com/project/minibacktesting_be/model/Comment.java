@@ -34,6 +34,7 @@ public class Comment extends Timestamped{
     private String nickname;
 
     public void update(String content) {
+
         this.content = content;
     }
 }

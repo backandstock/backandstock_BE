@@ -39,7 +39,7 @@ public class Portfolio extends Timestamped{
     private boolean myBest;
 
     @Column(nullable = false)
-    private int likesCnt;
+    private Long likesCnt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
@@ -70,7 +70,7 @@ public class Portfolio extends Timestamped{
                 .startDate(startDate)
                 .endDate(endDate)
                 .seedMoney(seedMoney)
-                .likesCnt(0)
+                .likesCnt(0L)
                 .myBest(false)
                 .user(user)
                 .build();

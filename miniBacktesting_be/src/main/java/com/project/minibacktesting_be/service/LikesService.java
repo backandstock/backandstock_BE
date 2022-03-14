@@ -54,7 +54,7 @@ public class LikesService {
         // 해당 포스팅의 좋아요 수
         List<Likes> likesList = likesRepository.findByPortfolio(portfolio);
 
-        portfolio.setLikesCnt(likesList.size());
+        portfolio.setLikesCnt((long) likesList.size());
         PortfolioSaveResponseDto portfolioSaveResponseDto = new PortfolioSaveResponseDto();
         portfolioSaveResponseDto.setPortId(portfolio.getId());
         return portfolioSaveResponseDto;

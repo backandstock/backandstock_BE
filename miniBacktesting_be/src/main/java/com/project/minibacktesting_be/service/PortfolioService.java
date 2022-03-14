@@ -146,7 +146,7 @@ public class PortfolioService {
         LocalDate startDate  = portfolio.getStartDate();
         LocalDate endDate = portfolio.getEndDate();
         Long seedMoney = portfolio.getSeedMoney();
-        int likesCnt = portfolio.getLikesCnt();
+        long likesCnt = portfolio.getLikesCnt();
 
         List<PortStock> portStocks = portStockRepository.findByPortfolio(portfolio);
         List<String> stockList = new ArrayList<>();
@@ -169,7 +169,7 @@ public class PortfolioService {
         PortfolioDetailsResponseDto portfolioDetailsResponseDto = new PortfolioDetailsResponseDto();
         portfolioDetailsResponseDto.setPortId(portId);
         portfolioDetailsResponseDto.setMyBest(myBest);
-        portfolioDetailsResponseDto.setLikesCnt(likesCnt);
+        portfolioDetailsResponseDto.setLikesCnt((int) likesCnt);
         portfolioDetailsResponseDto.setCommentCnt(portfolio.getComments().size());
         portfolioDetailsResponseDto.setPortBacktestingCal(portBacktestingCal);
 
