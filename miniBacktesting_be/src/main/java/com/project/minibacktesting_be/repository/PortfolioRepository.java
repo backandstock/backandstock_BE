@@ -15,8 +15,10 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
     List<Portfolio> findAllByUser(User user);
     Page<Portfolio> findAllByMyBest(boolean mybest, Pageable pageable);
 
-    Page<Portfolio> findAllByCreatedAtBetweenAndMyBest(LocalDateTime start, LocalDateTime end,
-                                                       boolean mybest, Pageable pageable);
+    Page<Portfolio> findAllByMyBestAndCreatedAtBetween(boolean mybest,
+                                                       LocalDateTime start,
+                                                       LocalDateTime end,
+                                                       Pageable pageable);
 
     Page<Portfolio> findAllByMyBestOrderByCreatedAtDesc(boolean b, Pageable pageable);
 }
