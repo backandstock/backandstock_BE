@@ -79,4 +79,8 @@ public class Portfolio extends Timestamped{
     public Boolean getMyBest(){
         return this.myBest;
     }
+
+    public void updateMyBest(Boolean myBest){
+        this.myBest = myBest;
+    }
 }

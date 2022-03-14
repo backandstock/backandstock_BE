@@ -257,9 +257,9 @@ public class PortfolioService {
             throw new IllegalArgumentException("나의 포트폴리오만 자랑할 수 있습니다.");
         }
         if(portfolioMyBestRequestDto.isMyBest()){
-            portfolio.setMyBest(true);
+            portfolio.updateMyBest(true);
         } else {
-            portfolio.setMyBest(false);
+            portfolio.updateMyBest(false);
         }
         PortfolioMyBestResponseDto portfolioMyBestResponseDto = new PortfolioMyBestResponseDto();
         portfolioMyBestResponseDto.setMyBest(portfolio.getMyBest());
