@@ -28,9 +28,8 @@ public class ReplyService {
                 .nickname(userDetails.getUser().getNickname())
                 .comment(comment)
                 .deep(comment.getDeep()+1L)
-                .groupId(commentId)
+                .groupId(comment.getGroupId())
                 .build();
-        reply.replyRegistration(reply);
         return CommentRegisterResponseDto.builder().commentId(commentRepository.save(reply).getId()).build();
     }
 }

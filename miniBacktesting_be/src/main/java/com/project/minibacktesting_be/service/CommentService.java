@@ -33,13 +33,18 @@ public class CommentService {
         Validation.validationComment(requestDto.getContent());
 
         Comment comment = Comment.commentBuilder()
-                .nickname(requestDto.getNickname())
+                .nickname(userDetails.getUser().getNickname())
                 .content(requestDto.getContent())
                 .portfolio(portfolio)
                 .user(userDetails.getUser())
                 .build();
 
-        return CommentRegisterResponseDto.builder().commentId(commentRepository.save(comment).getId()).build();
+        // 저장시 대댓글 활용부분 저장
+        Comment savedComment = commentRepository.save(comment);
+        savedComment.firstRegistration(savedComment);
+        commentRepository.save(savedComment);
+
+        return CommentRegisterResponseDto.builder().commentId(savedComment.getId()).build();
     }
 
     public void updateComment(Long commentId, CommentUpdateRequestDto requestDto, UserDetailsImpl userDetails) {
@@ -50,7 +55,7 @@ public class CommentService {
         Validation.validationComment(requestDto.getContent());
 
         // 작성자 User와 로그인 User 체크
-        if(!userDetails.getUser().getId().equals(comment.getUser().getId())){
+        if (!userDetails.getUser().getId().equals(comment.getUser().getId())) {
             throw new IllegalArgumentException("댓글 수정은 작성자만 가능합니다.");
         }
 
@@ -66,7 +71,7 @@ public class CommentService {
 
         List<Comment> commentList = commentRepository.findAllByPortfolio(portfolio);
 
-        for(Comment c : commentList){
+        for (Comment c : commentList) {
             commentsResponseDtoList.add(new GetCommentsResponseDto(c));
         }
 
@@ -78,7 +83,7 @@ public class CommentService {
         Comment comment = PresentCheck.commentIsPresentCheck(commentId, commentRepository);
 
         // 작성자 User와 로그인 User 체크
-        if(!userDetails.getUser().getId().equals(comment.getUser().getId())){
+        if (!userDetails.getUser().getId().equals(comment.getUser().getId())) {
             throw new IllegalArgumentException("댓글 삭제는 작성자만 가능합니다.");
         }
 
