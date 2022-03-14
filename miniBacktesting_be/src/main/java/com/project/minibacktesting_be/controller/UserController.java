@@ -1,6 +1,7 @@
 package com.project.minibacktesting_be.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.project.minibacktesting_be.dto.MsgResponseDto;
 import com.project.minibacktesting_be.dto.user.*;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import com.project.minibacktesting_be.service.KakaoUserService;
@@ -22,8 +23,8 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/user/signup")
-    public void registerUser(@RequestBody SignupDto requestDto) {
-        userService.registerUser(requestDto);
+    public MsgResponseDto registerUser(@RequestBody SignupDto requestDto) {
+        return userService.registerUser(requestDto);
     }
 
     // 로그인 정보
@@ -48,7 +49,7 @@ public class UserController {
 
     // 회원탈퇴
     @DeleteMapping("/user/resign")
-    public UserResignResponseDto userResign(@AuthenticationPrincipal UserDetailsImpl userDetails) throws UnsupportedEncodingException {
-        return userService.userResign(userDetails);
+    public void userResign(@AuthenticationPrincipal UserDetailsImpl userDetails) throws UnsupportedEncodingException {
+        userService.userResign(userDetails);
     }
 }
