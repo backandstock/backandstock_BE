@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
@@ -83,75 +82,53 @@ public class CommunityService {
 
     public List<CommunityPortResponseDto> getCommnunityPorts(Integer page, Integer size) {
 
-//        Sort.Direction direction = Sort.Direction.DESC;
-//        Sort sort = Sort.by(direction, 'likesCnt');
-        Pageable pageable = PageRequest.of(page-1, size, Sort.by("likesCnt").descending());
-        Page<Portfolio> PagePortfolios =  portfolioRepository.findAllByMyBest(true,pageable);
+        // 좋아요, 시간 역순으로 정렬
+        Sort sort = Sort.by(Sort.Order.desc("likesCnt"),
+                Sort.Order.desc("createdAt"));
+        // 페이징 처리하기
+        Pageable pageable = PageRequest.of(page-1, size, sort);
+        
+        Page<Portfolio> pagePortfolios =
+                portfolioRepository.findAllByMyBest(true,pageable);
 
-        // 페이징
-//        Pageable pageable = PageRequest.of(page-1, size);
-//        Page<Product> foundProductList = productRepository.findAll(pageable);
-
-        // 포트폴리오들을 response dto에 담는 과정
-        List<CommunityPortResponseDto> communityPortResponseDtos= new ArrayList<>();
-
-        for(Portfolio portfolio : PagePortfolios) {
-            List<PortStock> portfolioStocks = portfolio.getPortStocks();
-            BacktestingRequestDto requestDto = new BacktestingRequestDto(portfolio);
-            BacktestingResponseDto results = backtestingCal.getResult(requestDto);
-            List<Double> monthYieldMoney = results.getMonthYieldMoney();
-
-            CommunityPortResponseDto portResponseDto = CommunityPortResponseDto.
-                    builder().
-                    portId(portfolio.getId()).
-                    stockList(requestDto.getStockList()).
-                    ratioList(requestDto.getRatioList()).
-                    finalYield(portfolio.getFinalYield()).
-                    seedMoney(portfolio.getSeedMoney()).
-                    startDate(portfolio.getStartDate()).
-                    endDate(portfolio.getEndDate()).
-                    monthYieldMoney(monthYieldMoney).
-                    createdAt(portfolio.getCreatedAt()).
-                    likesCnt(portfolio.getLikesCnt()).
-                    commentCnt((long) portfolio.getComments().size()).
-                    build();
-
-            communityPortResponseDtos.add(portResponseDto);
-        }
-
-        return communityPortResponseDtos.
-                stream().
-                sorted(Comparator.comparing(CommunityPortResponseDto::getCreatedAt)).
-                collect(Collectors.toList());
+        // 페이징 처리에서 필터링된 포트폴리오들을 반환함.
+        return getCommunityPortResponseDtos(pagePortfolios);
+//                stream().
+//                sorted(Comparator.comparing(CommunityPortResponseDto::getLikesCnt).
+//                        thenComparing(CommunityPortResponseDto::getCreatedAt).reversed()).
+//                collect(Collectors.toList());
     }
+
+
 
     public List<CommunityPortResponseDto> getRecentCommnunityPorts(String option,Integer page, Integer size) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        System.out.println("언제부터?");
-        System.out.println(currentDateTime);
-        Pageable pageable = PageRequest.of(page-1, size, Sort.by("likesCnt").descending());
 
-        LocalDateTime end = null;
+        Sort sort = Sort.by(Sort.Order.desc("likesCnt"),
+                Sort.Order.desc("createdAt"));
+        Pageable pageable = PageRequest.of(page-1, size, sort);
+
+        // 옵션에 따른 시작 일자 지정하기 (오늘, 이번주, 이번달에 자항하기 된 포트폴리오들)
+        LocalDateTime start = null;
         if(option.equals("today")){
-            end = currentDateTime.minusHours(24);
+            start = currentDateTime.minusHours(24);
         }else if(option.equals("week")){
-            end = currentDateTime.minusWeeks(1);
+            start = currentDateTime.minusWeeks(1);
         }else if(option.equals("month")){
-            end = currentDateTime.minusMonths(1);
+            start = currentDateTime.minusMonths(1);
         }
 
-        System.out.println("언제까지?");
-        System.out.println(end);
+        Page<Portfolio> pagePortfolios =
+                portfolioRepository.findAllByMyBestAndCreatedAtBetween(
+                         true, start, currentDateTime, pageable);
 
-        Page<Portfolio> PagePortfolios =
-                portfolioRepository.findAllByCreatedAtBetweenAndMyBest(
-                        end, currentDateTime,
-                        true, pageable);
+        return getCommunityPortResponseDtos(pagePortfolios);
+    }
 
-        // 찾아온 Product들을 PrductResponseDto에 담는 과정
+    private List<CommunityPortResponseDto> getCommunityPortResponseDtos(Page<Portfolio> pagePortfolios) {
         List<CommunityPortResponseDto> communityPortResponseDtos= new ArrayList<>();
 
-        for(Portfolio portfolio : PagePortfolios) {
+        for(Portfolio portfolio : pagePortfolios) {
             List<PortStock> portfolioStocks = portfolio.getPortStocks();
             BacktestingRequestDto requestDto = new BacktestingRequestDto(portfolio);
             BacktestingResponseDto results = backtestingCal.getResult(requestDto);
@@ -174,7 +151,6 @@ public class CommunityService {
 
             communityPortResponseDtos.add(portResponseDto);
         }
-
         return communityPortResponseDtos;
     }
 
