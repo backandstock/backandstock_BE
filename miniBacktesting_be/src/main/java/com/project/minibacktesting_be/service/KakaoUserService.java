@@ -80,11 +80,18 @@ public class KakaoUserService {
 
             // email: kakao email
 //            String email = kakaoUserInfo.getEmail();
-
-            kakaoUser = new User.Builder(kakaoUserInfoDto.getNickname(), kakaoUserInfoDto.getNickname(), encodedPassword)
-                    .kakaoId(kakaoId)
-                    .build();
+            if (kakaoUserInfoDto.getThumbnailUrl() != null) {
+                kakaoUser = new User.Builder(kakaoUserInfoDto.getNickname(), kakaoUserInfoDto.getNickname(), encodedPassword)
+                        .kakaoId(kakaoId)
+                        .profileImg(kakaoUserInfoDto.getThumbnailUrl())
+                        .build();
+            } else {
+                kakaoUser = new User.Builder(kakaoUserInfoDto.getNickname(), kakaoUserInfoDto.getNickname(), encodedPassword)
+                        .kakaoId(kakaoId)
+                        .build();
+            }
             userRepository.save(kakaoUser);
+
         }
         return kakaoUser;
     }
@@ -112,6 +119,14 @@ public class KakaoUserService {
         String nickname = jsonNode.get("properties")
                 .get("nickname").asText();
 
+        //thmbnail test
+        String thumbnailUrl = jsonNode.get("properties")
+                .get("thumbnail_image").asText();
+        if (thumbnailUrl != null) {
+            System.out.println("카카오 사용자 정보: " + id + ", " + nickname + ", " + thumbnailUrl);
+            return new KakaoUserInfoDto(id, nickname, thumbnailUrl);
+        }
+
         System.out.println("카카오 사용자 정보: " + id + ", " + nickname);
         return new KakaoUserInfoDto(id, nickname);
 
@@ -125,9 +140,10 @@ public class KakaoUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
+//        body.add("client_id", "e2ce9cb8e91f8d054da9bbbe0857e0fc");
         body.add("client_id", "4f269c2d7b614ed22a514496123b7a38");
-        body.add("redirect_uri", "http://localhost:3000/oauth/kakao/callback");
 //        body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
+        body.add("redirect_uri", "http://localhost:3000/oauth/kakao/callback");
         body.add("code", code);
 
         // HTTP 요청 보내기

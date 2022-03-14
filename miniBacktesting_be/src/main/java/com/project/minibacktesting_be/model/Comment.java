@@ -15,14 +15,16 @@ import javax.persistence.*;
 @Builder(builderMethodName = "commentBuilder")
 public class Comment extends Timestamped{
     @Id
-    @Column(name = "COMMENT_ID")
+    @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "PORTFOLIO_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
 
+    // cascadeType.ALL 설정시 오류발생.
+    // cascadeType.MERGE로 업데이트하는 방식으로 문제 해결
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
