@@ -8,10 +8,9 @@ import com.project.minibacktesting_be.model.Comment;
 import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.presentcheck.PresentCheck;
 import com.project.minibacktesting_be.repository.CommentRepository;
-import com.project.minibacktesting_be.repository.PortfolioReposirory;
+import com.project.minibacktesting_be.repository.PortfolioRepository;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import com.project.minibacktesting_be.vailidation.Validation;
-import com.project.minibacktesting_be.repository.PortfolioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -61,7 +60,7 @@ public class CommentService {
 
     public List<GetCommentsResponseDto> getComments(Long portId) {
         // DB 내부 portfolio 확인
-        Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioReposirory);
+        Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioRepository);
 
         List<GetCommentsResponseDto> commentsResponseDtoList = new ArrayList<>();
 

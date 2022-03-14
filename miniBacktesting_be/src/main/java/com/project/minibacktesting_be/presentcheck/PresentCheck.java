@@ -3,7 +3,7 @@ package com.project.minibacktesting_be.presentcheck;
 import com.project.minibacktesting_be.model.Comment;
 import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.repository.CommentRepository;
-import com.project.minibacktesting_be.repository.PortfolioReposirory;
+import com.project.minibacktesting_be.repository.PortfolioRepository;
 
 import java.util.Optional;
 
@@ -12,7 +12,7 @@ public class PresentCheck {
     // 캐스팅가능하다
     // 상위에 파인드 바이아이디
     //
-    public static Portfolio portfoliIsPresentCheck(Long id, PortfolioReposirory repository){
+    public static Portfolio portfoliIsPresentCheck(Long id, PortfolioRepository repository){
         Optional<Portfolio> optionalPortfolio = repository.findById(id);
         if(!optionalPortfolio.isPresent()){
             throw new IllegalArgumentException("해당 포트폴리오를 찾을 수 없습니다.");
