@@ -24,7 +24,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final S3Uploader s3Uploader;
 
-    //회원가입 시 이메일 중복 및 아이디 검사, 비밀번호 암호화
+    // 회원가입
     public MsgResponseDto registerUser(SignupDto signupDto){
         // 패스워드 암호화
         signupDto.setPassword(passwordEncoder.encode(signupDto.getPassword()));
