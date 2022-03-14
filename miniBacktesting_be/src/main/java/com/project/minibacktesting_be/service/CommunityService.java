@@ -11,11 +11,17 @@ import com.project.minibacktesting_be.model.Stock;
 import com.project.minibacktesting_be.repository.PortfolioRepository;
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,13 +33,18 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 @RequiredArgsConstructor
 @Service
 public class CommunityService {
+
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
     private final StockRepository stockRepository;
     private final PortfolioRepository portfolioRepository;
     private final BacktestingCal backtestingCal;
 
     public TopFiveResponseDto getTopFive(String option) {
         // 2월의 데이터를 가져오기 위해 startDate, endDate 설정함
-        LocalDate startDate = LocalDate.parse("2022-02-01");
+        LocalDate startDate =
+                LocalDate.parse("2022-02-01");
         LocalDate endDate = startDate.with(lastDayOfMonth());
 
         List<Stock> stocks;
@@ -125,30 +136,40 @@ public class CommunityService {
         return getCommunityPortResponseDtos(pagePortfolios);
     }
 
+
     private List<CommunityPortResponseDto> getCommunityPortResponseDtos(Page<Portfolio> pagePortfolios) {
-        List<CommunityPortResponseDto> communityPortResponseDtos= new ArrayList<>();
+        List<CommunityPortResponseDto> communityPortResponseDtos = new ArrayList<>();
 
-        for(Portfolio portfolio : pagePortfolios) {
-            List<PortStock> portfolioStocks = portfolio.getPortStocks();
-            BacktestingRequestDto requestDto = new BacktestingRequestDto(portfolio);
-            BacktestingResponseDto results = backtestingCal.getResult(requestDto);
-            List<Double> monthYieldMoney = results.getMonthYieldMoney();
+        for (Portfolio portfolio : pagePortfolios) {
+            CommunityPortResponseDto portResponseDto;
 
-            CommunityPortResponseDto portResponseDto = CommunityPortResponseDto.
-                    builder().
-                    portId(portfolio.getId()).
-                    stockList(requestDto.getStockList()).
-                    ratioList(requestDto.getRatioList()).
-                    finalYield(portfolio.getFinalYield()).
-                    seedMoney(portfolio.getSeedMoney()).
-                    startDate(portfolio.getStartDate()).
-                    endDate(portfolio.getEndDate()).
-                    monthYieldMoney(monthYieldMoney).
-                    createdAt(portfolio.getCreatedAt()).
-                    likesCnt(portfolio.getLikesCnt()).
-                    commentCnt((long) portfolio.getComments().size()).
-                    build();
+            ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 
+            if (vop.get("communityPort"+portfolio.getId()) != null) {
+                portResponseDto = (CommunityPortResponseDto) vop.get("communityPort"+portfolio.getId().toString());
+            } else {
+                List<PortStock> portfolioStocks = portfolio.getPortStocks();
+                BacktestingRequestDto requestDto = new BacktestingRequestDto(portfolio);
+                BacktestingResponseDto results = backtestingCal.getResult(requestDto);
+                List<Double> monthYieldMoney = results.getMonthYieldMoney();
+
+                portResponseDto = CommunityPortResponseDto.
+                        builder().
+                        portId(portfolio.getId()).
+                        stockList(requestDto.getStockList()).
+                        ratioList(requestDto.getRatioList()).
+                        finalYield(portfolio.getFinalYield()).
+                        seedMoney(portfolio.getSeedMoney()).
+                        startDate(portfolio.getStartDate().toString()).
+                        endDate(portfolio.getEndDate().toString()).
+                        monthYieldMoney(monthYieldMoney).
+                        createdAt(portfolio.getCreatedAt().toString()).
+                        likesCnt(portfolio.getLikesCnt()).
+                        commentCnt((long) portfolio.getComments().size()).
+                        build();
+
+               vop.set("communityPort"+portfolio.getId().toString(), portResponseDto);
+            }
             communityPortResponseDtos.add(portResponseDto);
         }
         return communityPortResponseDtos;
