@@ -1,6 +1,6 @@
 package com.project.minibacktesting_be.controller;
 
-import  com.project.minibacktesting_be.dto.comment.CommentRegisterRequestDto;
+import com.project.minibacktesting_be.dto.comment.CommentRegisterRequestDto;
 import com.project.minibacktesting_be.dto.comment.CommentRegisterResponseDto;
 import com.project.minibacktesting_be.dto.comment.CommentUpdateRequestDto;
 import com.project.minibacktesting_be.dto.comment.GetCommentsResponseDto;

@@ -11,6 +11,7 @@ import com.project.minibacktesting_be.repository.CommentRepository;
 import com.project.minibacktesting_be.repository.PortfolioReposirory;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import com.project.minibacktesting_be.vailidation.Validation;
+import com.project.minibacktesting_be.repository.PortfolioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final PortfolioReposirory portfolioReposirory;
+    private final PortfolioRepository portfolioRepository;
 
     public CommentRegisterResponseDto registerComment(Long portId, CommentRegisterRequestDto requestDto, UserDetailsImpl userDetails) {
         // DB 내부 portfolio 확인
-        Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioReposirory);
+        Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioRepository);
 
         //content 유효성검사
         Validation.validationComment(requestDto.getContent());

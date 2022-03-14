@@ -40,4 +40,10 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
             "group by t.stockCode, t.stockName " +
             "order by t.stockName ASC ")
     List<StockSearchResponseDto> findStockByName(@Param("keyword") String keyword, Pageable pageable);
+
+//    @Query("select s " +
+//           "from Stock s " +
+//            "where  s.stockName = :stockname " +
+//            "and    s.closeDate = :startDate")
+//    Stock findByStockNameAndDate(@Param("stockName") String stockName, @Param("startDate") LocalDate startDate);
 }

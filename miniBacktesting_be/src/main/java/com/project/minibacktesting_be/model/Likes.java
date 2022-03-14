@@ -1,9 +1,7 @@
 package com.project.minibacktesting_be.model;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @NoArgsConstructor
@@ -22,4 +20,9 @@ public class Likes {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
+
+    public Likes(Portfolio portfolio, User user){
+        this.portfolio = portfolio;
+        this.user = user;
+    }
 }

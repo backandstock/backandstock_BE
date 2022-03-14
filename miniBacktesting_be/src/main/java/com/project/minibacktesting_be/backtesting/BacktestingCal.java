@@ -3,8 +3,11 @@ package com.project.minibacktesting_be.backtesting;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingDataDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
+import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.model.Stock;
+import com.project.minibacktesting_be.model.User;
 import com.project.minibacktesting_be.repository.StockRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -17,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+//@Builder
 @RequiredArgsConstructor
 @Component
 public class BacktestingCal {
@@ -57,7 +60,6 @@ public class BacktestingCal {
 
 
 
-//        for (int i = 0; i < stockList.size(); i++) {
         for(String targetStockName : stockList){
 
             // 타겟 주식이 몇번째 값?
@@ -65,7 +67,8 @@ public class BacktestingCal {
 
             // 타겟 주식의 정보 가져오기
             List<Stock> stocks =
-                    stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate(targetStockName, startDate, endDate);
+                    stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate(
+                            targetStockName, startDate, endDate);
 
             // 주식 코드 가져오기
             stockCodes.add(stocks.get(0).getStockCode());
@@ -245,5 +248,14 @@ public class BacktestingCal {
 
         return backtestingResponseDto;
     }
+//    public static BacktestingCal getBacktestingCal(LocalDate startDate, LocalDate endDate, Long seedMoney
+//            , List<String> stockList, List<Integer> ratioList ) {
+//        Portfolio portfolio = Portfolio.builder()
+//                .startDate(startDate)
+//                .endDate(endDate)
+//                .seedMoney(seedMoney)
+//                .
+//    }
+
 
 }
