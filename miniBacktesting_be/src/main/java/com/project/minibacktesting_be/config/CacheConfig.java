@@ -24,7 +24,6 @@ public class CacheConfig {
     @Autowired
     RedisConnectionFactory connectionFactory;
 
-
     @Bean
     public CacheManager redisCacheManager() {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()

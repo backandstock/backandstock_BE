@@ -80,16 +80,19 @@ public class KakaoUserService {
 
             // email: kakao email
 //            String email = kakaoUserInfo.getEmail();
-            if (kakaoUserInfoDto.getThumbnailUrl() != null) {
-                kakaoUser = new User.Builder(kakaoUserInfoDto.getNickname(), kakaoUserInfoDto.getNickname(), encodedPassword)
-                        .kakaoId(kakaoId)
-                        .profileImg(kakaoUserInfoDto.getThumbnailUrl())
-                        .build();
-            } else {
-                kakaoUser = new User.Builder(kakaoUserInfoDto.getNickname(), kakaoUserInfoDto.getNickname(), encodedPassword)
-                        .kakaoId(kakaoId)
-                        .build();
-            }
+//            if (kakaoUserInfoDto.getThumbnailUrl() != null) {
+//                kakaoUser = new User.Builder(kakaoUserInfoDto.getNickname(), kakaoUserInfoDto.getNickname(), encodedPassword)
+//                        .kakaoId(kakaoId)
+//                        .profileImg(kakaoUserInfoDto.getThumbnailUrl())
+//                        .build();
+//            } else {
+//                kakaoUser = new User.Builder(kakaoUserInfoDto.getNickname(), kakaoUserInfoDto.getNickname(), encodedPassword)
+//                        .kakaoId(kakaoId)
+//                        .build();
+//            }
+            kakaoUser = new User.Builder(kakaoUserInfoDto.getNickname(), kakaoUserInfoDto.getNickname(), encodedPassword)
+                    .kakaoId(kakaoId)
+                    .build();
             userRepository.save(kakaoUser);
 
         }
@@ -119,13 +122,13 @@ public class KakaoUserService {
         String nickname = jsonNode.get("properties")
                 .get("nickname").asText();
 
-        //thmbnail test
-        String thumbnailUrl = jsonNode.get("properties")
-                .get("thumbnail_image").asText();
-        if (thumbnailUrl != null) {
-            System.out.println("카카오 사용자 정보: " + id + ", " + nickname + ", " + thumbnailUrl);
-            return new KakaoUserInfoDto(id, nickname, thumbnailUrl);
-        }
+//        //thmbnail test
+//        String thumbnailUrl = jsonNode.get("properties")
+//                .get("thumbnail_image").asText();
+//        if (thumbnailUrl != null) {
+//            System.out.println("카카오 사용자 정보: " + id + ", " + nickname + ", " + thumbnailUrl);
+//            return new KakaoUserInfoDto(id, nickname, thumbnailUrl);
+//        }
 
         System.out.println("카카오 사용자 정보: " + id + ", " + nickname);
         return new KakaoUserInfoDto(id, nickname);

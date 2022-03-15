@@ -1,16 +1,13 @@
 package com.project.minibacktesting_be.dto.community;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import lombok.*;
 import java.util.List;
 
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor // 생성자가 있어야 redis에서 자료를 가져 올 수 있다.
 public class CommunityPortResponseDto {
 
     Long portId;
@@ -18,11 +15,18 @@ public class CommunityPortResponseDto {
     List<Integer> ratioList;
     Double finalYield;
     Long seedMoney;
-    LocalDate startDate;
-    LocalDate endDate;
+
+
+    String startDate;
+
+    String endDate;
+
     List<Double> monthYieldMoney;
-    LocalDateTime createdAt;
+
+    String createdAt;
+
     Long likesCnt;
     Long commentCnt;
+
 
 }
