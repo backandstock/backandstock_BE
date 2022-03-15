@@ -49,7 +49,6 @@ public class Portfolio extends Timestamped{
     @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-
     @JsonManagedReference
     @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<PortStock> portStocks = new ArrayList<>();
