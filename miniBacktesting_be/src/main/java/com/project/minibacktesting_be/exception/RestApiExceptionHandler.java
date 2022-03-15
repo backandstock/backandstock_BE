@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 // exception 발생시 에러와 status를 보내준다.
 @RestControllerAdvice
 public class RestApiExceptionHandler {
-
     @ExceptionHandler(value = {IllegalArgumentException.class})
     public ResponseEntity<Object> handleApiRequestException(IllegalArgumentException ex) {
         RestApiException restApiException = new RestApiException();
