@@ -3,11 +3,14 @@ package com.project.minibacktesting_be.service;
 import com.project.minibacktesting_be.backtesting.BacktestingCal;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
+import com.project.minibacktesting_be.dto.community.CommunityPortDto;
 import com.project.minibacktesting_be.dto.community.CommunityPortResponseDto;
 import com.project.minibacktesting_be.dto.community.TopFiveResponseDto;
+import com.project.minibacktesting_be.model.Likes;
 import com.project.minibacktesting_be.model.PortStock;
 import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.model.Stock;
+import com.project.minibacktesting_be.repository.LikesRepository;
 import com.project.minibacktesting_be.repository.PortfolioRepository;
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +43,7 @@ public class CommunityService {
     private final StockRepository stockRepository;
     private final PortfolioRepository portfolioRepository;
     private final BacktestingCal backtestingCal;
+    private final LikesRepository likesRepository;
 
     public TopFiveResponseDto getTopFive(String option) {
         // 2월의 데이터를 가져오기 위해 startDate, endDate 설정함
@@ -141,19 +145,20 @@ public class CommunityService {
         List<CommunityPortResponseDto> communityPortResponseDtos = new ArrayList<>();
 
         for (Portfolio portfolio : pagePortfolios) {
-            CommunityPortResponseDto portResponseDto;
+            CommunityPortDto portResponseDto;
+            CommunityPortResponseDto communityPortResponseDto;
 
             ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 
             if (vop.get("communityPort"+portfolio.getId()) != null) {
-                portResponseDto = (CommunityPortResponseDto) vop.get("communityPort"+portfolio.getId().toString());
+                portResponseDto = (CommunityPortDto) vop.get("communityPort"+portfolio.getId().toString());
             } else {
                 List<PortStock> portfolioStocks = portfolio.getPortStocks();
                 BacktestingRequestDto requestDto = new BacktestingRequestDto(portfolio);
                 BacktestingResponseDto results = backtestingCal.getResult(requestDto);
                 List<Double> monthYieldMoney = results.getMonthYieldMoney();
 
-                portResponseDto = CommunityPortResponseDto.
+                portResponseDto = CommunityPortDto.
                         builder().
                         portId(portfolio.getId()).
                         stockList(requestDto.getStockList()).
@@ -164,13 +169,22 @@ public class CommunityService {
                         endDate(portfolio.getEndDate().toString()).
                         monthYieldMoney(monthYieldMoney).
                         createdAt(portfolio.getCreatedAt().toString()).
-                        likesCnt(portfolio.getLikesCnt()).
-                        commentCnt((long) portfolio.getComments().size()).
                         build();
 
                vop.set("communityPort"+portfolio.getId().toString(), portResponseDto);
             }
-            communityPortResponseDtos.add(portResponseDto);
+
+
+            List<String> likesUsers =  likesRepository.findNicknameByPortfolio(portfolio);
+
+            communityPortResponseDto = CommunityPortResponseDto.builder().
+                    communityPort(portResponseDto).
+                    likesCnt(portfolio.getLikesCnt()).
+                    commentCnt((long) portfolio.getComments().size()).
+                    likesUsers(likesUsers).
+                    build();
+
+            communityPortResponseDtos.add(communityPortResponseDto);
         }
         return communityPortResponseDtos;
     }
