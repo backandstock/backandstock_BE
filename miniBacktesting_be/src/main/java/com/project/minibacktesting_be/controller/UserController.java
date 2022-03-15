@@ -1,7 +1,6 @@
 package com.project.minibacktesting_be.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.project.minibacktesting_be.dto.MsgResponseDto;
 import com.project.minibacktesting_be.dto.user.*;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import com.project.minibacktesting_be.service.KakaoUserService;
@@ -23,8 +22,8 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/user/signup")
-    public MsgResponseDto registerUser(@RequestBody SignupDto requestDto) {
-        return userService.registerUser(requestDto);
+    public void registerUser(@RequestBody SignupDto requestDto) {
+        userService.registerUser(requestDto);
     }
 
     // 로그인 정보
