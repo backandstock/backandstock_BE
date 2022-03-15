@@ -18,17 +18,12 @@ public class ReplyService {
 
     public CommentRegisterResponseDto registerReply(Long commentId, CommentRegisterRequestDto requestDto, UserDetailsImpl userDetails) {
         Comment comment =  PresentCheck.commentIsPresentCheck(commentId, commentRepository);
-        if(comment.getDeep() > 1){
-            throw new IllegalArgumentException("대댓글은 3개까지만 작성 가능합니다.");
-        }
         Comment reply = Comment.commentBuilder()
                 .portfolio(comment.getPortfolio())
                 .user(userDetails.getUser())
                 .content(requestDto.getContent())
                 .nickname(userDetails.getUser().getNickname())
-                .comment(comment)
-                .deep(comment.getDeep()+1L)
-                .groupId(comment.getGroupId())
+                .parentComment(comment)
                 .build();
         return CommentRegisterResponseDto.builder().commentId(commentRepository.save(reply).getId()).build();
     }
