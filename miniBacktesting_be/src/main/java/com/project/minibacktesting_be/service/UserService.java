@@ -1,6 +1,5 @@
 package com.project.minibacktesting_be.service;
 
-import com.project.minibacktesting_be.dto.MsgResponseDto;
 import com.project.minibacktesting_be.dto.user.SignupDto;
 import com.project.minibacktesting_be.dto.user.UserInfoEditRequestDto;
 import com.project.minibacktesting_be.model.User;
@@ -25,21 +24,17 @@ public class UserService {
     private final S3Uploader s3Uploader;
 
     // 회원가입
-    public MsgResponseDto registerUser(SignupDto signupDto){
+    public void registerUser(SignupDto signupDto){
         // 패스워드 암호화
         signupDto.setPassword(passwordEncoder.encode(signupDto.getPassword()));
 
         // 회원가입 정보 유효성검사
-        MsgResponseDto msgResponseDto = Validation.validationRegisterUser(signupDto, userRepository);
-        if(!msgResponseDto.getMsg().equals("가입완료")){
-            return msgResponseDto;
-        }
+        Validation.validationRegisterUser(signupDto, userRepository);
 
         // 회원가입시 이미지 저장 안함
         User user = new User.Builder(signupDto.getUsername(), signupDto.getNickname(), signupDto.getPassword())
                 .build();
         userRepository.save(user);
-        return msgResponseDto;
     }
 
     // 유저정보 수정, 닉네임, 프로필 이미지 수정
@@ -58,10 +53,7 @@ public class UserService {
             userRepository.save(user);
         }
         // 닉네임 유효성 검사
-        String valadationResult = Validation.validationNickname(nickname, userRepository).getMsg();
-        if(!valadationResult.equals("가입완료")){
-            throw new IllegalArgumentException(valadationResult);
-        }
+        Validation.validationNickname(nickname, userRepository);
 
         user.update(nickname);
         userRepository.save(user);
