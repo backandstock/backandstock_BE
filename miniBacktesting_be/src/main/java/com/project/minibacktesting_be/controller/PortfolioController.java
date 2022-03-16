@@ -41,9 +41,9 @@ public class PortfolioController {
 
     //포트폴리오 비교하기
     @PostMapping("/port/compare")
-    public ResponseEntity<List<PortfolioCompareResponseDto>> comparePortfolio(@RequestBody PortfolioCompareRequestDto portfolioCompareRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<PortfolioCompareResponseDto> portfolioCompareResponseDtoList = portfolioService.comparePortfolio(portfolioCompareRequestDto, userDetails);
-        return ResponseEntity.ok(portfolioCompareResponseDtoList);
+    public ResponseEntity<PortfolioCompareDto.Response> comparePortfolio(@RequestBody PortfolioCompareDto.Request portCompareRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        PortfolioCompareDto.Response portCompareResponseDto = portfolioService.comparePortfolio(portCompareRequestDto, userDetails);
+        return ResponseEntity.ok(portCompareResponseDto);
     }
 
     //포트폴리오 삭제
@@ -54,8 +54,8 @@ public class PortfolioController {
 
     //포트폴리오 자랑하기
     @PostMapping("/port/mybest")
-    public ResponseEntity <PortfolioMyBestResponseDto> myBestPortfolio(@RequestBody PortfolioMyBestRequestDto portfolioMyBestRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        PortfolioMyBestResponseDto portfolioMyBestResponseDto = portfolioService.myBestPortfolio(portfolioMyBestRequestDto, userDetails);
+    public ResponseEntity <PortfolioMyBestDto.Response> myBestPortfolio(@RequestBody PortfolioMyBestDto.Request portfolioMyBestRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        PortfolioMyBestDto.Response portfolioMyBestResponseDto = portfolioService.myBestPortfolio(portfolioMyBestRequestDto, userDetails);
         return ResponseEntity.ok(portfolioMyBestResponseDto);
     }
 
