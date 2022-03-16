@@ -170,6 +170,7 @@ public class PortfolioService {
         portfolioDetailsResponseDto.setMyBest(myBest);
         portfolioDetailsResponseDto.setLikesCnt((int) likesCnt);
         portfolioDetailsResponseDto.setNickname(nickname);
+        portfolioDetailsResponseDto.setStockRatio(ratioList);
         portfolioDetailsResponseDto.setCommentCnt(portfolio.getComments().size());
         portfolioDetailsResponseDto.setPortBacktestingCal(portBacktestingCal);
 
