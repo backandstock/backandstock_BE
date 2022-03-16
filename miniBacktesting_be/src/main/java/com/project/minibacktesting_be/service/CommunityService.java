@@ -2,14 +2,10 @@ package com.project.minibacktesting_be.service;
 
 import com.project.minibacktesting_be.backtesting.BacktestingCal;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
-import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.dto.community.CommunityPortDto;
 import com.project.minibacktesting_be.dto.community.CommunityPortResponseDto;
 import com.project.minibacktesting_be.dto.community.TopFiveResponseDto;
-import com.project.minibacktesting_be.model.Likes;
-import com.project.minibacktesting_be.model.PortStock;
-import com.project.minibacktesting_be.model.Portfolio;
-import com.project.minibacktesting_be.model.Stock;
+import com.project.minibacktesting_be.model.*;
 import com.project.minibacktesting_be.repository.LikesRepository;
 import com.project.minibacktesting_be.repository.PortfolioRepository;
 import com.project.minibacktesting_be.repository.StockRepository;
@@ -21,14 +17,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+//
+//import org.springframework.data.redis.core.RedisTemplate;
+//import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
@@ -37,61 +35,70 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 @Service
 public class CommunityService {
 
-    @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+//    @Autowired
+//    RedisTemplate<String, Object> redisTemplate;
 
     private final StockRepository stockRepository;
     private final PortfolioRepository portfolioRepository;
     private final BacktestingCal backtestingCal;
     private final LikesRepository likesRepository;
 
-    public TopFiveResponseDto getTopFive(String option) {
+    public List<TopFiveResponseDto> getTopFive() {
         // 2월의 데이터를 가져오기 위해 startDate, endDate 설정함
+
+        ArrayList<String> options= new ArrayList<>(Arrays.asList("kospi","kosdaq","volume", "transaction"));
         LocalDate startDate =
                 LocalDate.parse("2022-02-01");
         LocalDate endDate = startDate.with(lastDayOfMonth());
 
         List<Stock> stocks;
         List<String> results;
-        if(option.equals("kospi")|| option.equals("kosdaq")){
-            stocks = stockRepository.findTop5ByMarketAndCloseDateBetweenOrderByYieldPctDesc(option, startDate, endDate);
-            results = stocks.
+
+
+        List<TopFiveResponseDto> topFiveResponseDtos = new ArrayList<>();
+
+
+        for(String option : options){
+
+            if(option.equals("kospi")|| option.equals("kosdaq")){
+                stocks = stockRepository.findTop5ByMarketAndCloseDateBetweenOrderByYieldPctDesc(option, startDate, endDate);
+                results = stocks.stream().
+                        map(stock -> (stock.getYieldPct()*100)).
+                        map(stock -> stock.toString()).
+                        collect(Collectors.toList());
+
+            }else if(option.equals("volume")){
+                stocks = stockRepository.findTop5ByCloseDateBetweenOrderByVolumeDesc(startDate, endDate);
+                results = stocks.stream().
+                        map(stock -> stock.getVolume().toString()).
+                        collect(Collectors.toList());
+
+            }else{
+                stocks = stockRepository.findTop5ByCloseDateBetweenOrderByTransactionDesc(startDate, endDate);
+                results = stocks.stream().
+                        map(stock -> stock.getTransaction().toString()).
+                        collect(Collectors.toList());
+            }
+            List<String> stockNames = stocks.
                     stream().
-                    map(stock -> (stock.getYieldPct()*100)).
-                    map(stock -> stock.toString()).
+                    map(Stock :: getStockName).
                     collect(Collectors.toList());
 
-        }else if(option.equals("volume")){
-            stocks = stockRepository.findTop5ByCloseDateBetweenOrderByVolumeDesc(startDate, endDate);
-            results = stocks.
+            List<String> stockCodes = stocks.
                     stream().
-                    map(stock -> stock.getVolume().toString()).
+                    map(Stock :: getStockCode).
                     collect(Collectors.toList());
 
-        }else{
-            stocks = stockRepository.findTop5ByCloseDateBetweenOrderByTransactionDesc(startDate, endDate);
-            results = stocks.
+            List<Long> closes = stocks.
                     stream().
-                    map(stock -> stock.getTransaction().toString()).
+                    map(Stock :: getClose).
                     collect(Collectors.toList());
+
+            TopFiveResponseDto topFiveResponseDto = new TopFiveResponseDto(option, stockNames, stockCodes, results, closes);
+            topFiveResponseDtos.add(topFiveResponseDto);
         }
 
-        List<String> stockNames = stocks.
-                stream().
-                map(Stock :: getStockName).
-                collect(Collectors.toList());
-
-        List<String> stockCodes = stocks.
-                stream().
-                map(Stock :: getStockCode).
-                collect(Collectors.toList());
-
-        List<Long> closes = stocks.
-                stream().
-                map(Stock :: getClose).
-                collect(Collectors.toList());
-
-        return new TopFiveResponseDto(stockNames, stockCodes, results, closes);
+        return topFiveResponseDtos;
     }
 
 
@@ -147,35 +154,45 @@ public class CommunityService {
         for (Portfolio portfolio : pagePortfolios) {
             CommunityPortDto portResponseDto;
             CommunityPortResponseDto communityPortResponseDto;
-
-            ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-
-            if (vop.get("communityPort"+portfolio.getId()) != null) {
-                portResponseDto = (CommunityPortDto) vop.get("communityPort"+portfolio.getId().toString());
-            } else {
+//
+//            ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+////
+//            if (vop.get("communityPort"+portfolio.getId()) != null) {
+//                portResponseDto = (CommunityPortDto) vop.get("communityPort"+portfolio.getId().toString());
+//                System.out.println("print redis");
+//            } else {
                 List<PortStock> portfolioStocks = portfolio.getPortStocks();
                 BacktestingRequestDto requestDto = new BacktestingRequestDto(portfolio);
-                BacktestingResponseDto results = backtestingCal.getResult(requestDto);
-                List<Double> monthYieldMoney = results.getMonthYieldMoney();
+//                BacktestingResponseDto results = backtestingCal.getResult(requestDto);
+//                List<Double> monthYieldMoney = results.getMonthYieldMoney();
+                System.out.println("else");
 
                 portResponseDto = CommunityPortDto.
                         builder().
+                        nickname(portfolio.getUser().getNickname()).
                         portId(portfolio.getId()).
                         stockList(requestDto.getStockList()).
                         ratioList(requestDto.getRatioList()).
                         finalYield(portfolio.getFinalYield()).
+                        finalYieldMoney((int) Math.round(((portfolio.getFinalYield()+100)*0.01)*
+                                portfolio.getSeedMoney())).
                         seedMoney(portfolio.getSeedMoney()).
                         startDate(portfolio.getStartDate().toString()).
                         endDate(portfolio.getEndDate().toString()).
-                        monthYieldMoney(monthYieldMoney).
                         createdAt(portfolio.getCreatedAt().toString()).
                         build();
+//
+//               vop.set("communityPort"+portfolio.getId().toString(), portResponseDto);
+//            }
 
-               vop.set("communityPort"+portfolio.getId().toString(), portResponseDto);
-            }
 
+            List<Likes> likesList=  likesRepository.findByPortfolio(portfolio);
 
-            List<String> likesUsers =  likesRepository.findNicknameByPortfolio(portfolio);
+            List<String> likesUsers = likesList.stream().
+                    map(Likes::getUser).
+                    map(User::getNickname).
+                    collect(Collectors.toList());
+
 
             communityPortResponseDto = CommunityPortResponseDto.builder().
                     communityPort(portResponseDto).

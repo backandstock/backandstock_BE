@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TopFiveResponseDto {
 
+    String option;
     List<String> stockNames;
     List<String> stockCodes;
     List<String> results;

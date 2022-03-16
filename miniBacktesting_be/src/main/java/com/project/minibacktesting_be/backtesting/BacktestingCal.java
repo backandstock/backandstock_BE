@@ -144,13 +144,15 @@ public class BacktestingCal {
                 // 해당 월의 종목 별 수익금 금액에 접근 한다.
                 Double targetMoney = targetYieldMoneys.get(k);
                 // monthYieldMoney인 종목별 수익금에 해당 금액을 추가 한다.
-                monthYieldMoneys[k] = monthYieldMoneys[k] + targetMoney;
+                monthYieldMoneys[k] =
+                        Math.round((monthYieldMoneys[k] + targetMoney)*10)/10.0;
             }
             if (k > 0) {
                 // 수익률 구하기 ((현재 수익 - 전달 수익) / 전달 수익 ) * 100
                 double monthYield =
                         (monthYieldMoneys[k] - monthYieldMoneys[k - 1]) / monthYieldMoneys[k - 1];
                 monthYields[k] = monthYield * 100;
+
             }
         }
 
