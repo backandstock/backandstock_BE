@@ -72,16 +72,15 @@ public class CommentService {
         List<Comment> commentList = commentRepository.findAllByPortfolio(portfolio);
 
         for (Comment comment : commentList) {
-            dtoList.add(new GetCommentsResponseDto(comment));
-
-            if(!dtoList.get(dtoList.size() - 1).getCommentId().equals(dtoList.get(dtoList.size() - 1).getParentId())){
-                GetCommentsResponseDto dto = dtoList.remove(dtoList.size() - 1);
+            if(!comment.getId().equals(comment.getParentComment().getId())){
                 for (GetCommentsResponseDto getCommentsResponseDto : dtoList) {
-                    if (getCommentsResponseDto.getCommentId().equals(dto.getParentId())) {
-                        getCommentsResponseDto.getReplyList().add(dto);
+                    if (getCommentsResponseDto.getCommentId().equals(comment.getParentComment().getId())) {
+                        getCommentsResponseDto.getReplyList().add(new GetCommentsResponseDto(comment));
                         break;
                     }
                 }
+            }else{
+                dtoList.add(new GetCommentsResponseDto(comment));
             }
         }
         return dtoList;
