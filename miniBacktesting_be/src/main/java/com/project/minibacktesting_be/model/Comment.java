@@ -37,23 +37,18 @@ public class Comment extends Timestamped{
 
     // 대댓글 구현용 필드 추가
     @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "comment_id")
     @JoinColumn
-    private Comment comment;
-
-    @Column
-    private Long deep;
-
-    @Column
-    private Long groupId;
+    private Comment parentComment;
 
     public void update(String content) {
         this.content = content;
     }
 
     public void firstRegistration(Comment comment){
-        this.comment = comment;
-        this.groupId = comment.getId();
-        this.deep = 0L;
+        this.parentComment = comment;
+    }
+
+    public void deleteComment(){
+        this.parentComment = null;
     }
 }
