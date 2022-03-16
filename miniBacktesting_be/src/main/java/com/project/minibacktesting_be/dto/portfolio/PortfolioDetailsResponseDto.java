@@ -15,6 +15,7 @@ public class PortfolioDetailsResponseDto {
     private boolean myBest;
     private int likesCnt;
     private int commentCnt;
+    private String nickname;
     private BacktestingResponseDto portBacktestingCal;
 
 }

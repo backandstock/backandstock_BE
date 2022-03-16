@@ -14,10 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.time.YearMonth;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -142,6 +140,7 @@ public class PortfolioService {
         );
 
         Boolean myBest = portfolio.getMyBest();
+        String nickname = portfolio.getUser().getNickname();
 
         LocalDate startDate  = portfolio.getStartDate();
         LocalDate endDate = portfolio.getEndDate();
@@ -170,6 +169,7 @@ public class PortfolioService {
         portfolioDetailsResponseDto.setPortId(portId);
         portfolioDetailsResponseDto.setMyBest(myBest);
         portfolioDetailsResponseDto.setLikesCnt((int) likesCnt);
+        portfolioDetailsResponseDto.setNickname(nickname);
         portfolioDetailsResponseDto.setCommentCnt(portfolio.getComments().size());
         portfolioDetailsResponseDto.setPortBacktestingCal(portBacktestingCal);
 
@@ -178,14 +178,17 @@ public class PortfolioService {
 
     //포트폴리오 비교하기
     @Transactional
-    public List<PortfolioCompareResponseDto> comparePortfolio(PortfolioCompareRequestDto portfolioCompareRequestDto, UserDetailsImpl userDetails) {
-        List<PortfolioCompareResponseDto> portfolioCompareResponseDtoList = new ArrayList<>();
-
+    public PortfolioCompareDto.Response comparePortfolio(PortfolioCompareDto.Request portCompareRequestDto, UserDetailsImpl userDetails) {
         Optional<User> userTemp = userRepository.findById(userDetails.getUser().getId());
         User user = userTemp.get();
+        //내 포트폴리오 리스트
         List<Portfolio> portfolioList = portfolioRepository.findAllByUser(user);
+        //비교할 포트폴리오 Id 리스트
+        List<Long> portIdList = portCompareRequestDto.getPortIdList();
 
-        List<Long> portIdList = portfolioCompareRequestDto.getPortIdList();
+        List<PortfolioRankDto> portfolioRankDtos = new ArrayList<>();
+        List<PortfolioHighYieldDto> portfolioHighYieldDtos = new ArrayList<>();
+        List<PortfolioLowYieldDto> portfolioLowYieldDtos = new ArrayList<>();
 
         for(int i = 0; i < portIdList.size(); i++){
             Long comparePortId = portIdList.get(i);
@@ -213,15 +216,72 @@ public class PortfolioService {
                     backtestingRequestDto.setRatioList(ratioList);
                     BacktestingResponseDto compareBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
 
-                    PortfolioCompareResponseDto portfolioCompareResponseDto = new PortfolioCompareResponseDto();
-                    portfolioCompareResponseDto.setPortId(comparePortId);
-                    portfolioCompareResponseDto.setPortBacktestingCal(compareBacktestingCal);
+                    PortfolioRankDto portfolioRankDto = PortfolioRankDto.builder()
+                            .portId(comparePortId)
+                            .finalYield(compareBacktestingCal.getFinalYield())
+                            .finalMoney(compareBacktestingCal.getFinalMoney())
+                            .stockName(stockList)
+                            .stockRatio(ratioList)
+                            .startDate(YearMonth.from(startDate))
+                            .endDate(YearMonth.from(endDate))
+                            .build();
+                    portfolioRankDtos.add(portfolioRankDto);
 
-                    portfolioCompareResponseDtoList.add(portfolioCompareResponseDto);
+                    List<String> months = compareBacktestingCal.getMonths();
+                    List<Double> monthYield = compareBacktestingCal.getMonthYield();
+                    Double highYield = Collections.max(monthYield);
+                    Double lowYield = Collections.min(monthYield);
+
+                    PortfolioHighYieldDto portfolioHighYieldDto = PortfolioHighYieldDto.builder()
+                            .portId(comparePortId)
+                            .highYield(highYield)
+                            .highYieldDate(YearMonth.parse(months.get(monthYield.indexOf(highYield))))
+                            .build();
+                    portfolioHighYieldDtos.add(portfolioHighYieldDto);
+
+                    PortfolioLowYieldDto portfolioLowYieldDto = PortfolioLowYieldDto.builder()
+                            .portId(comparePortId)
+                            .lowYield(lowYield)
+                            .lowYieldDate(YearMonth.parse(months.get(monthYield.indexOf(lowYield))))
+                            .build();
+                    portfolioLowYieldDtos.add(portfolioLowYieldDto);
                 }
             }
         }
-        return portfolioCompareResponseDtoList;
+        Collections.sort(portfolioRankDtos, (r1, r2) -> {
+            double r1FinalYield = r1.getFinalYield();
+            double r2FinalYield = r2.getFinalYield();
+            if(r1FinalYield == r2FinalYield){
+                return Double.compare(r1.getPortId(),r2.getPortId());
+            }
+            return Double.compare(r2FinalYield,r1FinalYield);
+        });
+
+        Collections.sort(portfolioHighYieldDtos, (h1, h2) -> {
+            double h1HighYield = h1.getHighYield();
+            double h2HighYield = h2.getHighYield();
+            if(h1HighYield == h2HighYield){
+                return Double.compare(h1.getPortId(),h2.getPortId());
+            }
+            return Double.compare(h2HighYield,h1HighYield);
+        });
+
+        Collections.sort(portfolioLowYieldDtos, (l1, l2) -> {
+            double l1LowYield = l1.getLowYield();
+            double l2LowYield = l2.getLowYield();
+            if(l1LowYield == l2LowYield){
+                return Double.compare(l1.getPortId(),l2.getPortId());
+            }
+            return Double.compare(l1LowYield,l2LowYield);
+        });
+
+        PortfolioCompareDto.Response portfolioCompareDto = PortfolioCompareDto.Response.builder()
+                .portfolioRanks(portfolioRankDtos)
+                .portfolioHighYield(portfolioHighYieldDtos.get(0))
+                .portfolioLowYield(portfolioLowYieldDtos.get(0))
+                .build();
+        return portfolioCompareDto;
+
     }
 
     //포트폴리오 삭제
@@ -249,7 +309,7 @@ public class PortfolioService {
 
     //포트폴리오 자랑하기
     @Transactional
-    public PortfolioMyBestResponseDto myBestPortfolio(PortfolioMyBestRequestDto portfolioMyBestRequestDto, UserDetailsImpl userDetails) {
+    public PortfolioMyBestDto.Response myBestPortfolio(PortfolioMyBestDto.Request portfolioMyBestRequestDto, UserDetailsImpl userDetails) {
         Portfolio portfolio = portfolioRepository.findById(portfolioMyBestRequestDto.getPortId()).orElseThrow(
                 () -> new IllegalArgumentException("포트폴리오가 존재하지 않습니다.")
         );
@@ -257,12 +317,13 @@ public class PortfolioService {
             throw new IllegalArgumentException("나의 포트폴리오만 자랑할 수 있습니다.");
         }
         if(portfolioMyBestRequestDto.isMyBest()){
-            portfolio.setMyBest(true);
+            portfolio.updateMyBest(true);
         } else {
-            portfolio.setMyBest(false);
+            portfolio.updateMyBest(false);
         }
-        PortfolioMyBestResponseDto portfolioMyBestResponseDto = new PortfolioMyBestResponseDto();
-        portfolioMyBestResponseDto.setMyBest(portfolio.getMyBest());
+        PortfolioMyBestDto.Response portfolioMyBestResponseDto = PortfolioMyBestDto.Response.builder()
+                .myBest(portfolio.getMyBest())
+                .build();
         return portfolioMyBestResponseDto;
     }
 }
