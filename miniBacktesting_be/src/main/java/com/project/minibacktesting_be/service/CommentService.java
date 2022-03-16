@@ -67,15 +67,23 @@ public class CommentService {
         // DB 내부 portfolio 확인
         Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioRepository);
 
-        List<GetCommentsResponseDto> commentsResponseDtoList = new ArrayList<>();
+        List<GetCommentsResponseDto> dtoList = new ArrayList<>();
 
         List<Comment> commentList = commentRepository.findAllByPortfolio(portfolio);
 
-        for (Comment c : commentList) {
-            commentsResponseDtoList.add(new GetCommentsResponseDto(c));
+        for (Comment comment : commentList) {
+            if(!comment.getId().equals(comment.getParentComment().getId())){
+                for (GetCommentsResponseDto getCommentsResponseDto : dtoList) {
+                    if (getCommentsResponseDto.getCommentId().equals(comment.getParentComment().getId())) {
+                        getCommentsResponseDto.getReplyList().add(new GetCommentsResponseDto(comment));
+                        break;
+                    }
+                }
+            }else{
+                dtoList.add(new GetCommentsResponseDto(comment));
+            }
         }
-
-        return commentsResponseDtoList;
+        return dtoList;
     }
 
     public void deleteComment(Long commentId, UserDetailsImpl userDetails) {
@@ -86,8 +94,9 @@ public class CommentService {
         if (!userDetails.getUser().getId().equals(comment.getUser().getId())) {
             throw new IllegalArgumentException("댓글 삭제는 작성자만 가능합니다.");
         }
-
+        comment.deleteComment();
+        List<Comment> comments = commentRepository.findAllByParentComment(comment);
+        commentRepository.deleteAll(comments);
         commentRepository.delete(comment);
-        log.info("댓글삭제완료");
     }
 }

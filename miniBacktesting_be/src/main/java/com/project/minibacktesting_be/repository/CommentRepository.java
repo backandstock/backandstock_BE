@@ -9,4 +9,5 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByPortfolio(Portfolio portfolio);
     void deleteAllByPortfolioId(Long portfolioId);
+    List<Comment> findAllByParentComment(Comment comment);
 }
