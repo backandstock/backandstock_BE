@@ -49,13 +49,13 @@ public class UserService {
                 s3Uploader.deleteFile(user.getProfileImg());
             }
             userInfoEditRequestDto.setProfileImgUrl(s3Uploader.upload(multipartFile, "images"));
-            user.update(nickname, userInfoEditRequestDto.getProfileImgUrl());
+            user.updateNicknameAndProfileImg(nickname, userInfoEditRequestDto.getProfileImgUrl());
             userRepository.save(user);
         }
         // 닉네임 유효성 검사
         Validation.validationNickname(nickname, userRepository);
 
-        user.update(nickname);
+        user.updateNickname(nickname);
         userRepository.save(user);
         return userInfoEditRequestDto;
     }

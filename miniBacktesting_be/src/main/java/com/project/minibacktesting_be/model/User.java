@@ -70,12 +70,12 @@ public class User {
         }
     }
 
-    public void update(String nickname, String imgUrl) {
+    public void updateNicknameAndProfileImg(String nickname, String imgUrl) {
         this.nickname = nickname;
         this.profileImg = imgUrl;
     }
 
-    public void update(String nickname) {
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
 }
