@@ -16,9 +16,9 @@ public class CommunityController {
     private final CommunityService communityService;
 
     // 주식 top 5 조회 하기
-    @GetMapping("/community/topFive/{option}")
-    public TopFiveResponseDto getTop5Info(@PathVariable String option){
-        return communityService.getTopFive(option);
+    @GetMapping("/community/topFive")
+    public List<TopFiveResponseDto> getTop5Info(){
+        return communityService.getTopFive();
     }
 
 
@@ -37,7 +37,5 @@ public class CommunityController {
             @RequestParam("size") Integer size){
         return communityService.getRecentCommnunityPorts(option ,page, size);
     }
-
-
 
 }
