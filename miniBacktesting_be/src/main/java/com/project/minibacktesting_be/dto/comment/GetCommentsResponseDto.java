@@ -3,7 +3,6 @@ package com.project.minibacktesting_be.dto.comment;
 import com.project.minibacktesting_be.model.Comment;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ public class GetCommentsResponseDto {
     private Long parentId;
     private LocalDateTime CreatedAt;
     private List<GetCommentsResponseDto> replyList = new ArrayList<>();
+    private String profileImg;
 
     public GetCommentsResponseDto(Comment c) {
         this.commentId = c.getId();
@@ -23,5 +23,6 @@ public class GetCommentsResponseDto {
         this.nickname = c.getNickname();
         this.parentId = c.getParentComment().getId();
         this.CreatedAt = c.getCreatedAt();
+        this.profileImg = c.getUser().getProfileImg();
     }
 }
