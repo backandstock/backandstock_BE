@@ -57,8 +57,7 @@ public class CommunityService {
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
         List<TopFiveResponseDto> topFiveResponseDtos = new ArrayList<>();
         TopFiveResponseDto topFiveResponseDto;
-
-
+        
 
         for(String option : options){
             if (vop.get("topFive"+option) != null) {
@@ -179,8 +178,7 @@ public class CommunityService {
                         stockList(requestDto.getStockList()).
                         ratioList(requestDto.getRatioList()).
                         finalYield(portfolio.getFinalYield()).
-                        finalYieldMoney((int) Math.round(((portfolio.getFinalYield()+100)*0.01)*
-                                portfolio.getSeedMoney())).
+                        finalYieldMoney(((portfolio.getFinalYield()+100)*0.01)*portfolio.getSeedMoney()).
                         seedMoney(portfolio.getSeedMoney()).
                         startDate(portfolio.getStartDate().toString()).
                         endDate(portfolio.getEndDate().toString()).

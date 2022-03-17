@@ -299,7 +299,6 @@ public class PortfolioService {
         HashMap<String, Long> responseId = new HashMap<>();
         responseId.put("portId", portfolio.getId());
 
-
         likesRepository.deleteAllByPortfolioId(portId);
         commentRepository.deleteAllByPortfolioId(portId);
         portStockRepository.deleteAllByPortfolioId(portId);
