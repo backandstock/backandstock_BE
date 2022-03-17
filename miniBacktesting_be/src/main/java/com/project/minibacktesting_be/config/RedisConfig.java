@@ -1,6 +1,7 @@
 package com.project.minibacktesting_be.config;
 
 
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,20 @@ public class RedisConfig {
         redisTemplate.setConnectionFactory(connectionFactory);
         return redisTemplate;
     }
+
+//    @Bean
+//    public RedisTemplate<String, Object> userRedisTemplate(RedisConnectionFactory connectionFactory, ObjectMapper objectMapper) {
+//        var serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+//
+//        var tpl = new RedisTemplate<String, Object>();
+//        tpl.setConnectionFactory(connectionFactory);
+//        tpl.setKeySerializer(new StringRedisSerializer());
+//        tpl.setValueSerializer(serializer);
+//        tpl.setHashKeySerializer(new StringRedisSerializer());
+//        tpl.setHashValueSerializer(serializer);
+//        return tpl; }
+
+
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {

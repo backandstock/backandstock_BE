@@ -27,6 +27,4 @@ public class CommunityPortDto {
 
     String createdAt;
 
-
-
 }

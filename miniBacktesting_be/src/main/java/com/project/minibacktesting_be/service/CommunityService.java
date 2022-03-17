@@ -57,7 +57,7 @@ public class CommunityService {
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
         List<TopFiveResponseDto> topFiveResponseDtos = new ArrayList<>();
         TopFiveResponseDto topFiveResponseDto;
-        
+
 
         for(String option : options){
             if (vop.get("topFive"+option) != null) {

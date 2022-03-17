@@ -10,6 +10,9 @@ import com.project.minibacktesting_be.model.User;
 import com.project.minibacktesting_be.repository.*;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +23,11 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 public class PortfolioService {
+
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+
     private final UserRepository userRepository;
     private final PortfolioRepository portfolioRepository;
     private final PortStockRepository portStockRepository;
@@ -110,13 +118,24 @@ public class PortfolioService {
                     ratioList.add(portStockRatio.getRatio());
                 }
 
-                BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
-                backtestingRequestDto.setStartDate(startDate);
-                backtestingRequestDto.setEndDate(endDate);
-                backtestingRequestDto.setSeedMoney(seedMoney);
-                backtestingRequestDto.setStockList(stockList);
-                backtestingRequestDto.setRatioList(ratioList);
-                BacktestingResponseDto myPortBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
+                ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+                BacktestingResponseDto myPortBacktestingCal;
+
+                if(vop.get("port"+eachPortfolio.getId()) != null){
+                    myPortBacktestingCal = (BacktestingResponseDto) vop.get("port"+eachPortfolio.getId());
+                    System.out.println("redis port"+eachPortfolio.getId());
+                }else{
+                    BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
+                    backtestingRequestDto.setStartDate(startDate);
+                    backtestingRequestDto.setEndDate(endDate);
+                    backtestingRequestDto.setSeedMoney(seedMoney);
+                    backtestingRequestDto.setStockList(stockList);
+                    backtestingRequestDto.setRatioList(ratioList);
+                    myPortBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
+                    vop.set("port"+eachPortfolio.getId(), myPortBacktestingCal);
+                    System.out.println("db port"+eachPortfolio.getId());
+
+                }
 
 //                BacktestingCal backtestingCal = new BacktestingCal(startDate, endDate, seedMoney, stockList, ratioList);
 //                backtestingCal
@@ -157,13 +176,25 @@ public class PortfolioService {
             ratioList.add(portStockRatio.getRatio());
         }
 
-        BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
-        backtestingRequestDto.setStartDate(startDate);
-        backtestingRequestDto.setEndDate(endDate);
-        backtestingRequestDto.setSeedMoney(seedMoney);
-        backtestingRequestDto.setStockList(stockList);
-        backtestingRequestDto.setRatioList(ratioList);
-        BacktestingResponseDto portBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
+
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+        BacktestingResponseDto portBacktestingCal;
+
+        if(vop.get("port"+portfolio.getId()) != null){
+            portBacktestingCal = (BacktestingResponseDto) vop.get("port"+portfolio.getId());
+            System.out.println("redis portDetail" + portfolio.getId());
+        }else{
+            BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
+            backtestingRequestDto.setStartDate(startDate);
+            backtestingRequestDto.setEndDate(endDate);
+            backtestingRequestDto.setSeedMoney(seedMoney);
+            backtestingRequestDto.setStockList(stockList);
+            backtestingRequestDto.setRatioList(ratioList);
+            portBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
+            vop.set("port"+portfolio.getId(), portBacktestingCal);
+            System.out.println("db portDetail" + portfolio.getId());
+
+        }
 
         PortfolioDetailsResponseDto portfolioDetailsResponseDto = new PortfolioDetailsResponseDto();
         portfolioDetailsResponseDto.setPortId(portId);
@@ -296,6 +327,9 @@ public class PortfolioService {
             throw new IllegalArgumentException("나의 포트폴리오만 삭제할 수 있습니다.");
         }
 
+
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+
         HashMap<String, Long> responseId = new HashMap<>();
         responseId.put("portId", portfolio.getId());
 
@@ -303,6 +337,11 @@ public class PortfolioService {
         commentRepository.deleteAllByPortfolioId(portId);
         portStockRepository.deleteAllByPortfolioId(portId);
         portfolioRepository.delete(portfolio);
+
+        if(vop.get("port"+portfolio.getId()) != null){
+            vop.getOperations().delete("port"+portfolio.getId());
+            System.out.println("redis delete" + portfolio.getId());
+        }
 
         return responseId;
     }
