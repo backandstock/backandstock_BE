@@ -17,9 +17,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-//
-//import org.springframework.data.redis.core.RedisTemplate;
-//import org.springframework.data.redis.core.ValueOperations;
+
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+
 import org.springframework.stereotype.Service;
 
 
@@ -35,8 +36,8 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 @Service
 public class CommunityService {
 
-//    @Autowired
-//    RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
 
     private final StockRepository stockRepository;
     private final PortfolioRepository portfolioRepository;
@@ -47,54 +48,62 @@ public class CommunityService {
         // 2월의 데이터를 가져오기 위해 startDate, endDate 설정함
 
         ArrayList<String> options= new ArrayList<>(Arrays.asList("kospi","kosdaq","volume", "transaction"));
-        LocalDate startDate =
-                LocalDate.parse("2022-02-01");
+        LocalDate startDate =LocalDate.parse("2022-02-01");
         LocalDate endDate = startDate.with(lastDayOfMonth());
 
         List<Stock> stocks;
         List<String> results;
 
-
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
         List<TopFiveResponseDto> topFiveResponseDtos = new ArrayList<>();
+        TopFiveResponseDto topFiveResponseDto;
+
 
 
         for(String option : options){
+            if (vop.get("topFive"+option) != null) {
+                topFiveResponseDto = (TopFiveResponseDto) vop.get("topFive"+option);
+                System.out.println("redis"+option);}
 
-            if(option.equals("kospi")|| option.equals("kosdaq")){
-                stocks = stockRepository.findTop5ByMarketAndCloseDateBetweenOrderByYieldPctDesc(option, startDate, endDate);
-                results = stocks.stream().
-                        map(stock -> (stock.getYieldPct()*100)).
-                        map(stock -> stock.toString()).
+            else{
+                if(option.equals("kospi")|| option.equals("kosdaq")){
+                    stocks = stockRepository.findTop5ByMarketAndCloseDateBetweenOrderByYieldPctDesc(option, startDate, endDate);
+                    results = stocks.stream().
+                            map(stock -> (stock.getYieldPct()*100)).
+                            map(stock -> stock.toString()).
+                            collect(Collectors.toList());
+
+                }else if(option.equals("volume")){
+                    stocks = stockRepository.findTop5ByCloseDateBetweenOrderByVolumeDesc(startDate, endDate);
+                    results = stocks.stream().
+                            map(stock -> stock.getVolume().toString()).
+                            collect(Collectors.toList());
+
+                }else{
+                    stocks = stockRepository.findTop5ByCloseDateBetweenOrderByTransactionDesc(startDate, endDate);
+                    results = stocks.stream().
+                            map(stock -> stock.getTransaction().toString()).
+                            collect(Collectors.toList());
+                }
+                List<String> stockNames = stocks.
+                        stream().
+                        map(Stock :: getStockName).
                         collect(Collectors.toList());
 
-            }else if(option.equals("volume")){
-                stocks = stockRepository.findTop5ByCloseDateBetweenOrderByVolumeDesc(startDate, endDate);
-                results = stocks.stream().
-                        map(stock -> stock.getVolume().toString()).
+                List<String> stockCodes = stocks.
+                        stream().
+                        map(Stock :: getStockCode).
                         collect(Collectors.toList());
 
-            }else{
-                stocks = stockRepository.findTop5ByCloseDateBetweenOrderByTransactionDesc(startDate, endDate);
-                results = stocks.stream().
-                        map(stock -> stock.getTransaction().toString()).
+                List<Long> closes = stocks.
+                        stream().
+                        map(Stock :: getClose).
                         collect(Collectors.toList());
+
+                topFiveResponseDto = new TopFiveResponseDto(option, stockNames, stockCodes, results, closes);
+                vop.set("topFive"+option, topFiveResponseDto);
+                System.out.println("db"+option);
             }
-            List<String> stockNames = stocks.
-                    stream().
-                    map(Stock :: getStockName).
-                    collect(Collectors.toList());
-
-            List<String> stockCodes = stocks.
-                    stream().
-                    map(Stock :: getStockCode).
-                    collect(Collectors.toList());
-
-            List<Long> closes = stocks.
-                    stream().
-                    map(Stock :: getClose).
-                    collect(Collectors.toList());
-
-            TopFiveResponseDto topFiveResponseDto = new TopFiveResponseDto(option, stockNames, stockCodes, results, closes);
             topFiveResponseDtos.add(topFiveResponseDto);
         }
 
@@ -115,10 +124,6 @@ public class CommunityService {
 
         // 페이징 처리에서 필터링된 포트폴리오들을 반환함.
         return getCommunityPortResponseDtos(pagePortfolios);
-//                stream().
-//                sorted(Comparator.comparing(CommunityPortResponseDto::getLikesCnt).
-//                        thenComparing(CommunityPortResponseDto::getCreatedAt).reversed()).
-//                collect(Collectors.toList());
     }
 
 
@@ -130,7 +135,7 @@ public class CommunityService {
                 Sort.Order.desc("createdAt"));
         Pageable pageable = PageRequest.of(page-1, size, sort);
 
-        // 옵션에 따른 시작 일자 지정하기 (오늘, 이번주, 이번달에 자항하기 된 포트폴리오들)
+        // 옵션에 따른 시작 일자 지정하기 (오늘, 이번주, 이번달에 자랑하기 된 포트폴리오들)
         LocalDateTime start = null;
         if(option.equals("today")){
             start = currentDateTime.minusHours(24);
@@ -154,14 +159,14 @@ public class CommunityService {
         for (Portfolio portfolio : pagePortfolios) {
             CommunityPortDto portResponseDto;
             CommunityPortResponseDto communityPortResponseDto;
-//
-//            ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-////
-//            if (vop.get("communityPort"+portfolio.getId()) != null) {
-//                portResponseDto = (CommunityPortDto) vop.get("communityPort"+portfolio.getId().toString());
-//                System.out.println("print redis");
-//            } else {
-                List<PortStock> portfolioStocks = portfolio.getPortStocks();
+
+            ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+
+            if (vop.get("communityPort"+portfolio.getId()) != null) {
+                portResponseDto = (CommunityPortDto) vop.get("communityPort"+portfolio.getId().toString());
+                System.out.println("print redis");
+            } else {
+//                List<PortStock> portfolioStocks = portfolio.getPortStocks();
                 BacktestingRequestDto requestDto = new BacktestingRequestDto(portfolio);
 //                BacktestingResponseDto results = backtestingCal.getResult(requestDto);
 //                List<Double> monthYieldMoney = results.getMonthYieldMoney();
@@ -181,9 +186,9 @@ public class CommunityService {
                         endDate(portfolio.getEndDate().toString()).
                         createdAt(portfolio.getCreatedAt().toString()).
                         build();
-//
-//               vop.set("communityPort"+portfolio.getId().toString(), portResponseDto);
-//            }
+
+               vop.set("communityPort"+portfolio.getId().toString(), portResponseDto);
+            }
 
 
             List<Likes> likesList=  likesRepository.findByPortfolio(portfolio);
