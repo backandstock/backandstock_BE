@@ -226,7 +226,7 @@ public class PortfolioService {
             Long comparePortId = portIdList.get(i);
             for(Portfolio eachPort : portfolioList){
                 Long eachPortId = eachPort.getId();
-                if(comparePortId == eachPortId){
+                if(comparePortId.equals(eachPortId)){
                     LocalDate startDate = eachPort.getStartDate();
                     LocalDate endDate = eachPort.getEndDate();
                     Long seedMoney = eachPort.getSeedMoney();
@@ -240,13 +240,26 @@ public class PortfolioService {
                     for(PortStock portStockRatio : portStocks){
                         ratioList.add(portStockRatio.getRatio());
                     }
-                    BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
-                    backtestingRequestDto.setStartDate(startDate);
-                    backtestingRequestDto.setEndDate(endDate);
-                    backtestingRequestDto.setSeedMoney(seedMoney);
-                    backtestingRequestDto.setStockList(stockList);
-                    backtestingRequestDto.setRatioList(ratioList);
-                    BacktestingResponseDto compareBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
+
+                    ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+                    BacktestingResponseDto compareBacktestingCal;
+
+                    if(vop.get("port"+eachPortId) != null){
+                        compareBacktestingCal = (BacktestingResponseDto) vop.get("port"+eachPortId);
+                        System.out.println("redis portDetail" + eachPortId);
+                    }else{
+                        BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
+                        backtestingRequestDto.setStartDate(startDate);
+                        backtestingRequestDto.setEndDate(endDate);
+                        backtestingRequestDto.setSeedMoney(seedMoney);
+                        backtestingRequestDto.setStockList(stockList);
+                        backtestingRequestDto.setRatioList(ratioList);
+                        compareBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
+
+                        vop.set("port"+eachPortId, compareBacktestingCal);
+                        System.out.println("db port" + eachPortId);
+                    }
+
 
                     PortfolioRankDto portfolioRankDto = PortfolioRankDto.builder()
                             .portId(comparePortId)
