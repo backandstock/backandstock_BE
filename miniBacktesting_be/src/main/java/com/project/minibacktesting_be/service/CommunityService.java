@@ -166,10 +166,9 @@ public class CommunityService {
                 portResponseDto = (CommunityPortDto) vop.get("communityPort"+portfolio.getId().toString());
                 System.out.println("print redis");
             } else {
-//                List<PortStock> portfolioStocks = portfolio.getPortStocks();
+
                 BacktestingRequestDto requestDto = new BacktestingRequestDto(portfolio);
-//                BacktestingResponseDto results = backtestingCal.getResult(requestDto);
-//                List<Double> monthYieldMoney = results.getMonthYieldMoney();
+
                 System.out.println("else");
 
                 portResponseDto = CommunityPortDto.
