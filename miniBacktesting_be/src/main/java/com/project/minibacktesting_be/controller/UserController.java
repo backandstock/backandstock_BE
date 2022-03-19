@@ -48,7 +48,7 @@ public class UserController {
 
     // 회원탈퇴
     @DeleteMapping("/user/resign")
-    public UserResignResponseDto userResign(@AuthenticationPrincipal UserDetailsImpl userDetails) throws UnsupportedEncodingException {
-        return userService.userResign(userDetails);
+    public void userResign(@AuthenticationPrincipal UserDetailsImpl userDetails) throws UnsupportedEncodingException {
+        userService.userResign(userDetails);
     }
 }

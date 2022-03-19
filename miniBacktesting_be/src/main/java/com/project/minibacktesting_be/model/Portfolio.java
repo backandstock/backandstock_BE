@@ -17,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Setter
 public class Portfolio extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -38,16 +39,16 @@ public class Portfolio extends Timestamped{
     @Column(nullable = false)
     private boolean myBest;
 
-
     @Column(nullable = false)
-    private int likesCnt;
+    private Long likesCnt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
 
-//    @OneToMany(mappedBy = "portfolio",  orphanRemoval = true, cascade = CascadeType.ALL)
-//    private List<Likes> likes;
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
@@ -67,7 +68,7 @@ public class Portfolio extends Timestamped{
                 .startDate(startDate)
                 .endDate(endDate)
                 .seedMoney(seedMoney)
-                .likesCnt(0)
+                .likesCnt(0L)
                 .myBest(false)
                 .user(user)
                 .build();
@@ -75,5 +76,9 @@ public class Portfolio extends Timestamped{
     }
     public Boolean getMyBest(){
         return this.myBest;
+    }
+
+    public void updateMyBest(Boolean myBest){
+        this.myBest = myBest;
     }
 }

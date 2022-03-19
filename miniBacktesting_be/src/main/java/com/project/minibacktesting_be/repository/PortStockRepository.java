@@ -11,4 +11,5 @@ public interface PortStockRepository extends JpaRepository<PortStock, Long> {
 
     List<PortStock> findByPortfolio(Portfolio portfolio);
 
+    void deleteAllByPortfolioId(Long portfolioId);
 }

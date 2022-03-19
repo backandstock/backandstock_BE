@@ -8,5 +8,4 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentRegisterRequestDto {
     private String content;
-    private String nickname;
 }

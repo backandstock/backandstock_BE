@@ -8,6 +8,12 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(indexes = {@Index(name = "searchName", columnList = "stockName"),
+        @Index(name = "searchCode", columnList = "stockCode"),
+        @Index(name = "top5MarketYield", columnList = "market,closeDate"),
+        @Index(name = "top5Volume", columnList = "closeDate"),
+        @Index(name = "top5Transaction", columnList = "closeDate"),
+        @Index(name = "backtestingCal", columnList = "closeDate,stockName")})
 public class Stock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

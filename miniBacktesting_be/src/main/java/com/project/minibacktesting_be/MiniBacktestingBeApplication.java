@@ -20,8 +20,6 @@ public class MiniBacktestingBeApplication {
         // timezone UTC 셋팅
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
     }
-
-
     public static void main(String[] args) {
         SpringApplication.run(MiniBacktestingBeApplication.class, args);
     }

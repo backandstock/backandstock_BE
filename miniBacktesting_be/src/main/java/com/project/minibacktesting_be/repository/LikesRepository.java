@@ -10,4 +10,7 @@ import java.util.List;
 public interface LikesRepository extends JpaRepository<Likes, Long> {
     List<Likes> findByPortfolio(Portfolio portfolio);
     List<Likes> findByPortfolioAndUser(Portfolio portfolio, User user);
+    List<String> findNicknameByPortfolio(Portfolio portfolio);
+
+    void deleteAllByPortfolioId(Long portfolioId);
 }
