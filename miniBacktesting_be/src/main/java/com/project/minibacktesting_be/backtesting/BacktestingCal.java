@@ -237,12 +237,9 @@ public class BacktestingCal {
 
 
         BacktestingResponseDto backtestingResponseDto =
-                new BacktestingResponseDto(YearMonth.from(startDate).toString(),
-                        YearMonth.from(endDate).toString(),
-                        bestMonth.toString(),
-                        bestMoney,
-                        worstMonth.toString(),
-                        worstMoney,
+                new BacktestingResponseDto(YearMonth.from(startDate),
+                        YearMonth.from(endDate),
+                        bestMonth, bestMoney, worstMonth, worstMoney,
                         seedMoney,stockList, stockCodes,buyMoney,
                         monthYieldMoneys[monthYieldMoneys.length-1],
                         monthYieldMoneys[monthYieldMoneys.length-1] - seedMoney,finalYield,

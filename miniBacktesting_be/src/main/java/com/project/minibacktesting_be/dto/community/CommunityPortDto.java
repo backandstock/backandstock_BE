@@ -15,7 +15,7 @@ public class CommunityPortDto {
     List<String> stockList;
     List<Integer> ratioList;
     Double finalYield;
-    Double finalYieldMoney;
+    Integer finalYieldMoney;
     Long seedMoney;
 
 
@@ -26,5 +26,7 @@ public class CommunityPortDto {
 //    List<Double> monthYieldMoney;
 
     String createdAt;
+
+
 
 }

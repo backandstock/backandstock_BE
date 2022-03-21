@@ -9,7 +9,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.YearMonthSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.YearMonth;
@@ -22,27 +21,26 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class BacktestingResponseDto {
 
 
-//    @JsonSerialize(using =  YearMonthSerializer.class)
-//    @JsonDeserialize(using = YearMonthDeserializer.class)
-    private String startDate; // 시작 일자 (주식을 산 날짜)
+    @JsonSerialize(using =  YearMonthSerializer.class)
+    @JsonDeserialize(using = YearMonthDeserializer.class)
+    private YearMonth startDate; // 시작 일자 (주식을 산 날짜)
 
-//    @JsonSerialize(using =  YearMonthSerializer.class)
-//    @JsonDeserialize(using = YearMonthDeserializer.class)
-    private String endDate; // 종료 일자 (주식을 파는 날짜)
+    @JsonSerialize(using =  YearMonthSerializer.class)
+    @JsonDeserialize(using = YearMonthDeserializer.class)
+    private YearMonth endDate; // 종료 일자 (주식을 파는 날짜)
 
-//    @JsonSerialize(using =  YearMonthSerializer.class)
-//    @JsonDeserialize(using = YearMonthDeserializer.class)
-    private String bestMonth; // 최고의 수익금을 기록한 달
+    @JsonSerialize(using =  YearMonthSerializer.class)
+    @JsonDeserialize(using = YearMonthDeserializer.class)
+    private YearMonth bestMonth; // 최고의 수익금을 기록한 달
 
     private Double bestMoney; // 최고의 수익금
 
-//    @JsonSerialize(using =  YearMonthSerializer.class)
-//    @JsonDeserialize(using = YearMonthDeserializer.class)
-    private String worstMonth; // 최악의 수익금을 기록한달
+    @JsonSerialize(using =  YearMonthSerializer.class)
+    @JsonDeserialize(using = YearMonthDeserializer.class)
+    private YearMonth worstMonth; // 최악의 수익금을 기록한달
     private Double worstMoney; // 최악의 수익금
     private Long seedMoney; // 초기 자본
 
