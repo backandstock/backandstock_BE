@@ -27,7 +27,6 @@ public class StockService {
     private final BacktestingCal backtestingCal;
 
     // 백테스팅 계산 하기
-//    @Cacheable(key = "#backtestingRequestDto.getStartDate().toString()", value = "backtestingResult")
     public BacktestingResponseDto backTestingCal(BacktestingRequestDto backtestingRequestDto) {
         return backtestingCal.getResult(backtestingRequestDto);
     }
