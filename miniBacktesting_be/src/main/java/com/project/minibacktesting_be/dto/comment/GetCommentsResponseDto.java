@@ -16,7 +16,6 @@ public class GetCommentsResponseDto {
     private LocalDateTime CreatedAt;
     private List<GetCommentsResponseDto> replyList = new ArrayList<>();
     private String profileImg;
-    private Long userId;
 
     public GetCommentsResponseDto(Comment c) {
         this.commentId = c.getId();
@@ -25,6 +24,5 @@ public class GetCommentsResponseDto {
         this.parentId = c.getParentComment().getId();
         this.CreatedAt = c.getCreatedAt();
         this.profileImg = c.getUser().getProfileImg();
-        this.userId = c.getUser().getId();
     }
 }
