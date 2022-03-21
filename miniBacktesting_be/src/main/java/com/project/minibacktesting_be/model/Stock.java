@@ -14,7 +14,6 @@ import java.time.LocalDate;
         @Index(name = "top5Volume", columnList = "closeDate"),
         @Index(name = "top5Transaction", columnList = "closeDate"),
         @Index(name = "backtestingCal", columnList = "closeDate,stockName")})
-
 public class Stock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
