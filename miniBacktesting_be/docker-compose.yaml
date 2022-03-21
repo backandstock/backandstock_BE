@@ -3,21 +3,19 @@ services:
   mysql:
     image: mysql
     environment:
-      MYSQL_DATABASE: springbootapp
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_ROOT_HOST: '%'
+     MYSQL_DATABASE: minibacktesting
+     MYSQL_ROOT_PASSWORD: back20220302
+     MYSQL_ROOT_HOST: '%'
     ports:
       - 3306:3306
-
   redis:
     image: redis
     ports:
       - 6379:6379
-
-  minibacktesting.app:
-    build: .
+  springboot:
+    image: pyuseon/back_n_stock:version3
     ports:
-      - 8080:8080
+      - 80:8080
     depends_on:
       - mysql
       - redis
