@@ -268,7 +268,6 @@ public class PortfolioService {
 //                        System.out.println("db port" + eachPortId);
                     }
 
-
                     PortfolioRankDto portfolioRankDto = PortfolioRankDto.builder()
                             .portId(comparePortId)
                             .finalYield(compareBacktestingCal.getFinalYield())
