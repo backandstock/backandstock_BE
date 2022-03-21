@@ -47,8 +47,8 @@ public class Portfolio extends Timestamped{
     private User user;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "portfolio", orphanRemoval = true, cascade = CascadeType.ALL)
