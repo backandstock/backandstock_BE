@@ -39,18 +39,17 @@ public class UserService {
 
     // 유저정보 수정, 닉네임, 프로필 이미지 수정
     @Transactional
-    public UserInfoEditRequestDto userInfoEdit(String nickname, MultipartFile multipartFile, UserDetailsImpl userDetails) throws IOException {
+    public UserInfoEditRequestDto   userInfoEdit(String nickname, MultipartFile multipartFile, UserDetailsImpl userDetails) throws IOException {
         User user = userDetails.getUser();
         UserInfoEditRequestDto userInfoEditRequestDto = new UserInfoEditRequestDto();
 
         if(multipartFile != null && !nickname.trim().isEmpty()){
-            // 기존 img가 있다면 S3서버에서 삭제
-            if(!user.getProfileImg().trim().isEmpty()){
+            // 기존 이미지가 있다면 S3서버에서 삭제
+            if(user.getProfileImg() != null){
                 s3Uploader.deleteFile(user.getProfileImg());
             }
             userInfoEditRequestDto.setProfileImgUrl(s3Uploader.upload(multipartFile, "images"));
             user.updateNicknameAndProfileImg(nickname, userInfoEditRequestDto.getProfileImgUrl());
-            userRepository.save(user);
         }
         // 닉네임 유효성 검사
         Validation.validationNickname(nickname, userRepository);
