@@ -17,7 +17,6 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Setter
 public class Portfolio extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
