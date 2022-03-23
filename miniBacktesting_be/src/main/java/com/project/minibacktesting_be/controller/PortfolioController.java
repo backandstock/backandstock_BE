@@ -19,41 +19,41 @@ public class PortfolioController {
     private final PortfolioService portfolioService;
 
     //포트폴리오 저장
-    @PostMapping("/port")
+    @PostMapping("/portfolios")
     public ResponseEntity<PortfolioSaveResponseDto> savePortfolio(@RequestBody BacktestingRequestDto backtestingRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         PortfolioSaveResponseDto portfolioSaveResponseDto = portfolioService.savePortfolio(backtestingRequestDto, userDetails);
         return ResponseEntity.ok(portfolioSaveResponseDto);
     }
 
     //내 포트폴리오 전체 불러오기
-    @GetMapping("/port/mypage")
+    @GetMapping("/portfolios")
     public ResponseEntity<List<PortfolioResponseDto>> getAllMyPortfolio(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<PortfolioResponseDto> portfolioResponseDtoList = portfolioService.getAllMyPortfolio(userDetails);
         return ResponseEntity.ok(portfolioResponseDtoList);
     }
 
     //포트폴리오 상세보기
-    @GetMapping("/port/details/{portId}")
+    @GetMapping("/portfolios/{portId}")
     public ResponseEntity <PortfolioDetailsResponseDto> getPortfolio(@PathVariable Long portId){
         PortfolioDetailsResponseDto portfolioDetailsResponseDto = portfolioService.getPortfolio(portId);
         return ResponseEntity.ok(portfolioDetailsResponseDto);
     }
 
     //포트폴리오 비교하기
-    @PostMapping("/port/compare")
+    @PostMapping("/portfolios/comparison")
     public ResponseEntity<PortfolioCompareDto.Response> comparePortfolio(@RequestBody PortfolioCompareDto.Request portCompareRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         PortfolioCompareDto.Response portCompareResponseDto = portfolioService.comparePortfolio(portCompareRequestDto, userDetails);
         return ResponseEntity.ok(portCompareResponseDto);
     }
 
     //포트폴리오 삭제
-    @DeleteMapping("/port/{portId}")
+    @DeleteMapping("/portfolios/{portId}")
     public HashMap<String, Long> deletePortfolio(@PathVariable Long portId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return portfolioService.deletePortfolio(portId, userDetails);
     }
 
     //포트폴리오 자랑하기
-    @PostMapping("/port/mybest")
+    @PostMapping("/portfolios/boast")
     public ResponseEntity <PortfolioMyBestDto.Response> myBestPortfolio(@RequestBody PortfolioMyBestDto.Request portfolioMyBestRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         PortfolioMyBestDto.Response portfolioMyBestResponseDto = portfolioService.myBestPortfolio(portfolioMyBestRequestDto, userDetails);
         return ResponseEntity.ok(portfolioMyBestResponseDto);

@@ -18,7 +18,7 @@ public class StockController  {
    private final StockService stockService;
 
     //백테스팅 계산하기
-    @PostMapping("/port/result")
+    @PostMapping("/stocks")
     public BacktestingResponseDto backtestingCal(
             @RequestBody BacktestingRequestDto backtestingRequestDto){
         return stockService.backTestingCal(backtestingRequestDto);
@@ -26,7 +26,7 @@ public class StockController  {
     
 
     //주식 종목 검색
-    @GetMapping("/stock/search")
+    @GetMapping("/stocks")
     public ResponseEntity<List<StockSearchResponseDto>> getStockInfo(
             @RequestParam(value = "keyword", required = false, defaultValue = "")
                     String keyword,

@@ -132,18 +132,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/h2-console/**");
         skipPathList.add("POST,/h2-console/**");
         // 회원 관리 API 허용
-        skipPathList.add("GET,/user/**");
-        skipPathList.add("POST,/user/**");
+        skipPathList.add("GET,/users/**");
+        skipPathList.add("POST,/users/**");
         skipPathList.add("GET,/move/**");
-        // 주식검색하기 API 허용
-        skipPathList.add("GET,/stock/**");
-        // 백테스팅 결과 API 허용
-        skipPathList.add("POST,/port/result");
-        //포트폴리오 상세보기 허용
-        skipPathList.add("GET,/port/details/**");
-        // 커뮤니티 리스트 보기 허용
-        skipPathList.add("GET,/community");
-        skipPathList.add("GET,/community/**");
+        // 주식검색하기 API, 백테스팅 결과 API, TOP5 API 허용
+        skipPathList.add("GET,/stocks/**");
+        skipPathList.add("GET,/stocks");
+
+        //포트폴리오 상세보기, 커뮤니티 리스트 보기 허용
+        skipPathList.add("GET,/portfolios/**");
 
         skipPathList.add("GET,/test");
 

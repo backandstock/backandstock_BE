@@ -17,7 +17,7 @@ public class ReplyController {
     private final ReplyService replyService;
 
     // 대댓글 작성하기
-    @PostMapping("/community/reply/{commentId}")
+    @PostMapping("/comments/{commentId}")
     public CommentRegisterResponseDto registerReply(@PathVariable Long commentId,
                                                     @RequestBody CommentRegisterRequestDto requestDto,
                                                     @AuthenticationPrincipal UserDetailsImpl userDetails){

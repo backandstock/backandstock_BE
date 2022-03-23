@@ -18,13 +18,13 @@ public class CommentController {
     private final CommentService commentService;
 
     // 코멘트 전체 가져오기
-    @GetMapping("/community/comment/{portId}")
+    @GetMapping("/portfolios/{portId}/comment")
     public List<GetCommentsResponseDto> getComments(@PathVariable Long portId){
         return commentService.getComments(portId);
     }
 
     // 코멘트 등록하기
-    @PostMapping("/community/comment/{portId}")
+    @PostMapping("/portfolios/{portId}/comment")
     public CommentRegisterResponseDto registerComment(@PathVariable Long portId,
                                                       @RequestBody CommentRegisterRequestDto requestDto,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -32,7 +32,7 @@ public class CommentController {
     }
 
     // 코멘트 수정하기
-    @PutMapping("/community/comment/{commentId}")
+    @PutMapping("/comments/{commentId}")
     public void updateComment(@PathVariable Long commentId,
                               @RequestBody CommentUpdateRequestDto requestDto,
                               @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -40,7 +40,7 @@ public class CommentController {
     }
 
     // 코멘트 삭제하기
-    @DeleteMapping("/community/comment/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public void deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         commentService.deleteComment(commentId, userDetails);
     }
