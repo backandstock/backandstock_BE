@@ -26,7 +26,7 @@ public class StockController  {
     
 
     //주식 종목 검색
-    @GetMapping("/stocks")
+    @GetMapping("/stocks/")
     public ResponseEntity<List<StockSearchResponseDto>> getStockInfo(
             @RequestParam(value = "keyword", required = false, defaultValue = "")
                     String keyword,

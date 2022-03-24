@@ -253,13 +253,5 @@ public class BacktestingCal {
 
         return backtestingResponseDto;
     }
-//    public static BacktestingCal getBacktestingCal(LocalDate startDate, LocalDate endDate, Long seedMoney
-//            , List<String> stockList, List<Integer> ratioList ) {
-//        Portfolio portfolio = Portfolio.builder()
-//                .startDate(startDate)
-//                .endDate(endDate)
-//                .seedMoney(seedMoney)
-//                .
-//    }
 
 }

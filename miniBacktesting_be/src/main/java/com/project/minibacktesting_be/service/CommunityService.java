@@ -190,9 +190,9 @@ public class CommunityService {
 
             List<Likes> likesList=  likesRepository.findByPortfolio(portfolio);
 
-            List<String> likesUsers = likesList.stream().
+            List<Long> likesUsers = likesList.stream().
                     map(Likes::getUser).
-                    map(User::getNickname).
+                    map(User::getId).
                     collect(Collectors.toList());
 
 
