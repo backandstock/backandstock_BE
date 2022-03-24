@@ -19,7 +19,7 @@ public class LikesController {
     private final LikesService likesService;
 
     // 좋아요
-    @PostMapping("/community/likes")
+    @PostMapping("/portfolios/{portId}/likes")
     public PortfolioSaveResponseDto postLikes(@RequestBody LikesRequestDto requestDto,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likesService.postLikes(requestDto, userDetails);

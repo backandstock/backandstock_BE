@@ -21,19 +21,19 @@ public class UserController {
     private final KakaoUserService kakaoUserService;
 
     // 회원가입
-    @PostMapping("/user/signup")
+    @PostMapping("/users")
     public void registerUser(@RequestBody SignupDto requestDto) {
         userService.registerUser(requestDto);
     }
 
     // 로그인 정보
-    @PostMapping("/islogin")
+    @PostMapping("/users/info")
     public LoginCheckDto userLoginCheck(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return new LoginCheckDto(userDetails.getUser());
     }
 
     // 회원정보 수정
-    @PutMapping("/user/edit")
+    @PutMapping("/users")
     public UserInfoEditRequestDto userInfoEdit(@RequestParam("nickname") String nickname,
                                                @RequestParam(value = "profileImage", required = false) MultipartFile multipartFile,
                                                @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
@@ -47,7 +47,7 @@ public class UserController {
     }
 
     // 회원탈퇴
-    @DeleteMapping("/user/resign")
+    @DeleteMapping("/users")
     public void userResign(@AuthenticationPrincipal UserDetailsImpl userDetails) throws UnsupportedEncodingException {
         userService.userResign(userDetails);
     }
