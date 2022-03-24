@@ -132,22 +132,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/h2-console/**");
         skipPathList.add("POST,/h2-console/**");
         // 회원 관리 API 허용
-        skipPathList.add("GET,/users/**");
-        skipPathList.add("POST,/users/**");
-        skipPathList.add("GET,/move/**");
+//        skipPathList.add("GET,/users/**");
+
         // 주식검색하기 API, 백테스팅 결과 API, TOP5 API 허용
-        skipPathList.add("GET,/stocks/**");
         skipPathList.add("POST,/stocks");
         skipPathList.add("GET,/stocks");
+        skipPathList.add("GET,/stocks/**");
 
         //포트폴리오 상세보기, 커뮤니티 리스트 보기 허용
         skipPathList.add("GET,/portfolios/**");
+        skipPathList.add("GET,/portfolios/boast");
+        skipPathList.add("GET,/portfolios/**/comments");
+        skipPathList.add("GET,/portfolios/latest");
+
+
 
         skipPathList.add("GET,/test");
 
         skipPathList.add("GET,/");
         skipPathList.add("GET,/basic.js");
-
         skipPathList.add("GET,/favicon.ico");
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
