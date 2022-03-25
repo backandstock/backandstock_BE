@@ -13,7 +13,6 @@ import java.util.List;
 public class EnviromentController {
 
     private final Environment environment;
-
     @GetMapping("/")
     public String checkProfiles(){
         // jar 파일 실행시에 환경변수 설정을 가져옴
