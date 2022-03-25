@@ -15,6 +15,6 @@ public class CommunityPortResponseDto {
     CommunityPortDto communityPort;
     Long likesCnt;
     Long commentCnt;
-    List<String> likesUsers;
+    List<Long> likesUsers;
 
 }

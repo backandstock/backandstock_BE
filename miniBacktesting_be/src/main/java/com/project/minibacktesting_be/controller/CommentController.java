@@ -18,13 +18,13 @@ public class CommentController {
     private final CommentService commentService;
 
     // 코멘트 전체 가져오기
-    @GetMapping("/portfolios/{portId}/comment")
+    @GetMapping("/portfolios/{portId}/comments")
     public List<GetCommentsResponseDto> getComments(@PathVariable Long portId){
         return commentService.getComments(portId);
     }
 
     // 코멘트 등록하기
-    @PostMapping("/portfolios/{portId}/comment")
+    @PostMapping("/portfolios/{portId}/comments")
     public CommentRegisterResponseDto registerComment(@PathVariable Long portId,
                                                       @RequestBody CommentRegisterRequestDto requestDto,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails){

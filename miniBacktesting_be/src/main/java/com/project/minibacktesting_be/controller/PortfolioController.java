@@ -26,7 +26,7 @@ public class PortfolioController {
     }
 
     //내 포트폴리오 전체 불러오기
-    @GetMapping("/portfolios")
+    @GetMapping("/users/portfolios")
     public ResponseEntity<List<PortfolioResponseDto>> getAllMyPortfolio(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<PortfolioResponseDto> portfolioResponseDtoList = portfolioService.getAllMyPortfolio(userDetails);
         return ResponseEntity.ok(portfolioResponseDtoList);

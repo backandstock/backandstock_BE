@@ -80,4 +80,8 @@ public class Portfolio extends Timestamped{
     public void updateMyBest(Boolean myBest){
         this.myBest = myBest;
     }
+
+    public void updateLikesCnt(Long likesCnt){
+        this.likesCnt = likesCnt;
+    }
 }
