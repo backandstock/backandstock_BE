@@ -5,7 +5,7 @@ jdk:
 # 1
 branches:
   only:
-    - master
+    - main
 
 # Travis CI 서버의 Home
 # 2
