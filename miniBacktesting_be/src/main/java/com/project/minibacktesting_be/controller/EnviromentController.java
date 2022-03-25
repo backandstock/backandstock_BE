@@ -18,8 +18,9 @@ public class EnviromentController {
         // jar 파일 실행시에 환경변수 설정을 가져옴
         List<String> profile = Arrays.asList(environment.getActiveProfiles());
         List<String> realProfiles = Arrays.asList("real", "dev");
-        String defaultProfile = profile.isEmpty() ? "default" : profile.get(0);
 
+        String defaultProfile = profile.isEmpty() ? "default" : profile.get(0);
+        // stream
         return profile.stream()
                 .filter(realProfiles::contains)
                 .findAny()
