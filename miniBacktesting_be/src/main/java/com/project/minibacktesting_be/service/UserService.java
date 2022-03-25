@@ -39,7 +39,7 @@ public class UserService {
 
     // 유저정보 수정, 닉네임, 프로필 이미지 수정
     @Transactional
-    public UserInfoEditRequestDto   userInfoEdit(String nickname, MultipartFile multipartFile, UserDetailsImpl userDetails) throws IOException {
+    public UserInfoEditRequestDto userInfoEdit(String nickname, MultipartFile multipartFile, UserDetailsImpl userDetails) throws IOException {
         User user = userDetails.getUser();
         UserInfoEditRequestDto userInfoEditRequestDto = new UserInfoEditRequestDto();
 

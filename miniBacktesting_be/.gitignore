@@ -38,6 +38,8 @@ out/
 
 ### application properties ###
 **/application.properties
+**/application-dev.properties
+**/application-real.properties
 
 #### docker #####
 docker-compose.yaml

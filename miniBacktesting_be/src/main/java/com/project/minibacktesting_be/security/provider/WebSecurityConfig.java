@@ -93,7 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // [로그아웃 기능]
                 .logout()
                 // 로그아웃 요청 처리 URL
-                .logoutUrl("/user/logout")
+                .logoutUrl("/users/logout")
                 .permitAll()
                 .and()
                 .exceptionHandling()
@@ -104,7 +104,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public FormLoginFilter formLoginFilter() throws Exception {
         FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager());
-        formLoginFilter.setFilterProcessesUrl("/user/login");
+        formLoginFilter.setFilterProcessesUrl("/users/login");
         formLoginFilter.setAuthenticationSuccessHandler(formLoginSuccessHandler());
         formLoginFilter.afterPropertiesSet();
         return formLoginFilter;
@@ -133,14 +133,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("POST,/h2-console/**");
         // 회원 관리 API 허용
         skipPathList.add("GET,/users/**");
-        skipPathList.add("POST,/users/**");
+//        skipPathList.add("POST,/users/**");
         skipPathList.add("GET,/move/**");
         // 주식검색하기 API, 백테스팅 결과 API, TOP5 API 허용
         skipPathList.add("GET,/stocks/**");
         skipPathList.add("GET,/stocks");
 
         //포트폴리오 상세보기, 커뮤니티 리스트 보기 허용
-        skipPathList.add("GET,/portfolios/**");
+//        skipPathList.add("GET,/portfolios/**");
 
         skipPathList.add("GET,/test");
 
