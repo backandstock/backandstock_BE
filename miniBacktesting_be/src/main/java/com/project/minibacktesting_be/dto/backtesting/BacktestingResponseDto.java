@@ -65,7 +65,9 @@ public class BacktestingResponseDto {
     private List<Double> kosdaqYield; // kosdaq 투자시 수익률
     private List<Double> kosdaqYieldMoney; // kosdaq 투자시 수익금
 
-    private List<List<Double>> stockYieldMoneys; // 주식별 수익금
-    private List<List<Double>> stockYields; // 주식별 수익률
+    private List<Double> stockYieldMoneys; // 주식별 최종 수익금
+//    private List<Double> stockYields;  주식별 수익률
+
+    private BacktestingYearDto backtestingYearDto; // 연도별 kospi, kosdaq, 수익률
 
 }
