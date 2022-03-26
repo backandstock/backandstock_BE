@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class BacktestingYearDto {
+
         private List<Integer> years; // 연단위 리스트
         private List<Double> yearYield; // 연단위 수익률
         private List<Double> kospiYearYield; // 연단위 코스피 수익률

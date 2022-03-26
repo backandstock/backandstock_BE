@@ -1,6 +1,7 @@
 package com.project.minibacktesting_be.dto.backtesting;
 
 
+import com.project.minibacktesting_be.model.PortStock;
 import com.project.minibacktesting_be.model.Portfolio;
 import lombok.*;
 

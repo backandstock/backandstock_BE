@@ -1,5 +1,7 @@
 package com.project.minibacktesting_be.service;
 
+import com.project.minibacktesting_be.dto.likes.LikesRequestDto;
+import com.project.minibacktesting_be.dto.portfolio.PortfolioResponseDto;
 import com.project.minibacktesting_be.dto.portfolio.PortfolioSaveResponseDto;
 import com.project.minibacktesting_be.model.Likes;
 import com.project.minibacktesting_be.model.Portfolio;
