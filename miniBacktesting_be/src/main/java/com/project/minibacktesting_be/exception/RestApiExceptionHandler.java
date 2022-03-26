@@ -17,5 +17,6 @@ public class RestApiExceptionHandler {
                 restApiException,
                 HttpStatus.BAD_REQUEST
         );
+
     }
 }
