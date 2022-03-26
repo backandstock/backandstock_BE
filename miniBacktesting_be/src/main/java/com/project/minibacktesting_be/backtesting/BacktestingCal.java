@@ -3,16 +3,14 @@ package com.project.minibacktesting_be.backtesting;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingDataDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
-import com.project.minibacktesting_be.model.Portfolio;
+import com.project.minibacktesting_be.dto.backtesting.BacktestingYearDto;
 import com.project.minibacktesting_be.model.Stock;
-import com.project.minibacktesting_be.model.User;
 import com.project.minibacktesting_be.repository.StockRepository;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +24,7 @@ import java.util.stream.Collectors;
 public class BacktestingCal {
 
     private final StockRepository stockRepository;
+    private final EachStockCal eachStockCal;
 
    public BacktestingResponseDto getResult(BacktestingRequestDto backtestingRequestDto) {
 
@@ -48,87 +47,25 @@ public class BacktestingCal {
 
         }
 
-//      스트림 : 주식의 비율을 충족 시키기 위해선 해당 주식을 얼마 사야 할까?
+//  스트림 : 주식의 비율을 충족 시키기 위해선 해당 주식을 얼마 사야 할까?
         List<Double> targetPrices = ratioList.
                 stream().
                 map(s -> s*0.01*seedMoney).
                 collect(Collectors.toList());
 
-        List<BacktestingDataDto> backtestingDataDtos= new ArrayList<>();
+
+        // 주식 코드 리스트
         List<String> stockCodes = new ArrayList<>();
+       // 주식별 목표 금액
         List<Double> buyMoney = new ArrayList<>();
 
 
-
-        for(String targetStockName : stockList){
-
-            // 타겟 주식이 몇번째 값?
-            int Idx = stockList.indexOf(targetStockName);
-
-            // 타겟 주식의 정보 가져오기
-            List<Stock> stocks =
-                    stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate(
-                            targetStockName, startDate, endDate);
-
-            // 주식 코드 가져오기
-            stockCodes.add(stocks.get(0).getStockCode());
-
-            // 주식 목표 금액
-            Double targetPrice = targetPrices.get(Idx);
-            buyMoney.add(targetPrice);
-
-            // 주식 목표 금액에 맞추기 위해 필요한 주식 수
-            Long firstMonthPrice = stocks.get(0).getClose();
-            Double stockNum = targetPrice / firstMonthPrice;
+        // 종목별로 수익률을 계산한다.
+       List<BacktestingDataDto> backtestingDataDtos =
+               eachStockCal.getStockCalResult(startDate, endDate, stockList, yearMonthList, targetPrices, stockCodes, buyMoney);
 
 
-            // 스트림을 활용해서 stock의 종가만 얻어냄
-            List<Long> stockPrices =  stocks.
-                    stream().
-                    map(Stock::getClose).
-                    collect(Collectors.toList());
-
-
-            // 스트림 : 날짜만 뽑아내기 (yearMonth로 변환)
-            List<YearMonth> months = stocks.
-                    stream().
-                    map(Stock::getCloseDate).
-                    map(d -> YearMonth.from(d)).
-                    collect(Collectors.toList());
-
-
-            // 리스트 갯수를 맞춰야 한다. (데이터 수가 다 같지 않으므로)
-            Double[] yieldMoneys = new Double[yearMonthList.size()];
-
-            for(int i = 0  ; i < yearMonthList.size(); i++){
-
-                YearMonth targetYearMonth = yearMonthList.get(i);
-                if(months.contains(targetYearMonth)){
-                     yieldMoneys[i] =
-                             stockPrices.get(months.indexOf(targetYearMonth))*stockNum;
-                }else{
-                    yieldMoneys[i] =stockPrices.get(0)*stockNum;
-                }
-            }
-
-            // 스트림 : 날짜만 뽑아내기 (yearMonth로 변환)
-            List<Double> yields = stocks.
-                    stream().
-                    map(Stock::getYieldPct).
-                    collect(Collectors.toList());
-
-
-            // 해당 종목의 backtest 내용 저장하기
-            BacktestingDataDto backtestingDataDto =
-                    new BacktestingDataDto(targetStockName, targetPrice,
-                            stockNum, months, stockPrices,
-                            Arrays.asList(yieldMoneys), yields);
-
-            backtestingDataDtos.add(backtestingDataDto);
-        }
-
-
-        // 전체 수익금을 위한 Array 만들기
+       // 전체 수익금을 위한 Array 만들기
         Double[]  monthYieldMoneys = new Double[yearMonthList.size()];
         Arrays.fill(monthYieldMoneys, 0.0);
 
@@ -143,7 +80,7 @@ public class BacktestingCal {
                 List<Double> targetYieldMoneys = dataDto.getYieldMoneys();
                 // 해당 월의 종목 별 수익금 금액에 접근 한다.
                 Double targetMoney = targetYieldMoneys.get(k);
-                // monthYieldMoney인 종목별 수익금에 해당 금액을 추가 한다.
+                // monthYieldMoney 종목별 수익금에 해당 금액을 추가 한다.
                 monthYieldMoneys[k] =
                         Math.round((monthYieldMoneys[k] + targetMoney)*10)/10.0;
             }
@@ -178,9 +115,9 @@ public class BacktestingCal {
 
         // 코스피 코스닥 투자시에는 얼마?
         List<Stock> kospiStocks =
-                stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate("KODEX 200", startDate, endDate);
+                stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate("kospiIndex", startDate, endDate);
         List<Stock> kosdaqStocks =
-                stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate("KODEX 코스닥 150", startDate, endDate);
+                stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate("kosdaqIndex", startDate, endDate);
 
         Double kospiNum = seedMoney.doubleValue()/kospiStocks.get(0).getClose();
         Double kosdaqNum = seedMoney.doubleValue()/(kosdaqStocks.get(0).getClose());
@@ -221,22 +158,41 @@ public class BacktestingCal {
         kosdaqYield.set(0, 0.0);
 
         // 주식별 월 수익금 리스트
-        List<List <Double>> stockYieldMoneys =
-                backtestingDataDtos.
-                        stream().
-                        map(BacktestingDataDto ::getYieldMoneys).
-                        collect(Collectors.toList());
+//        List<List <Double>> stockYieldMoneys =
+//                backtestingDataDtos.
+//                        stream().
+//                        map(BacktestingDataDto ::getYieldMoneys).
+//                        collect(Collectors.toList());
 
 
         // 주식별 월 수익금 리스트
-        List<List <Double>> stockYields =
-                backtestingDataDtos.
-                        stream().
-                        map(BacktestingDataDto ::getYields).
-                        collect(Collectors.toList());
+//        List<List <Double>> stockYields =
+//                backtestingDataDtos.
+//                        stream().
+//                        map(BacktestingDataDto ::getYields).
+//                        collect(Collectors.toList());
+
+        List<Double> stockYieldMoneys = new ArrayList<>();
+        List<Double> stockYields = new ArrayList<>();
+
+        // 종목별로 최종 수익만 뽑아서 보내주기
+        for(BacktestingDataDto targetDataDto : backtestingDataDtos){
+            Double targetYieldMoney =
+                    targetDataDto.getYieldMoneys().
+                            get(targetDataDto.getYieldMoneys().size()-1);
+            Double targetYield =
+                    targetDataDto.getYields().
+                            get(targetDataDto.getYields().size()-1);
+            stockYieldMoneys.add(targetYieldMoney);
+            stockYields.add(targetYield*100);
+        }
 
 
-        BacktestingResponseDto backtestingResponseDto =
+       BacktestingYearDto backtestingYearDto =
+               getYearYield(yearMonthList, Arrays.asList(monthYieldMoneys), kospiYieldMoney, kosdaqYieldMoney);
+
+
+       BacktestingResponseDto backtestingResponseDto =
                 new BacktestingResponseDto(YearMonth.from(startDate).toString(),
                         YearMonth.from(endDate).toString(),
                         bestMonth.toString(),
@@ -249,9 +205,71 @@ public class BacktestingCal {
                         yearMonthList.stream().map(YearMonth::toString).collect(Collectors.toList()), Arrays.asList(monthYields), Arrays.asList(monthYieldMoneys),
                         kospiYield, kospiYieldMoney,
                         kosdaqYield, kosdaqYieldMoney,
-                        stockYieldMoneys, stockYields);
+                        stockYieldMoneys,
+                        backtestingYearDto);
 
         return backtestingResponseDto;
     }
+
+    private BacktestingYearDto getYearYield(List<YearMonth> yearMonthList,
+                              List<Double> monthYieldMoneys,
+                              List<Double> kospiYieldMoneys,
+                              List<Double> kosdaqYieldMoneys) {
+        // 연도별 수익률 계산하기
+        int startMonth = yearMonthList.get(0).getMonthValue();
+        List<Integer> yearIdxs = new ArrayList<>();
+
+        // return을 위한 Backtesting YearDto
+
+
+        // 12월의 index만 가져오기
+        for(YearMonth targetYearMonth : yearMonthList){
+            if(targetYearMonth.getMonthValue() == 12){
+                yearIdxs.add(yearMonthList.indexOf(targetYearMonth));
+            }
+        }
+
+        // 마지막 달의 수익률 계산을 위한 부분
+        // 만약 2013년 6월까지 실험한다면 2012년 12월이 마지막이 된다.
+        // 2013년 6월의 수익도 필요하므로 2013년 6월을 가져오기 위한 코드가 필요하다.
+
+        // 만약 yearMonthList의 마지막 인덱스와 yearIdx(연도별 데이터를 가져오기위한 idx)의 마지막 값이 같지 않다면
+        if(yearMonthList.size()-1 != yearIdxs.get(yearIdxs.size() -1)){
+            // 마지막 일자의 인덱스를 가져온다.
+            yearIdxs.add(yearMonthList.size()-1);
+        }
+
+        List<Integer> years = new ArrayList<>(); // 연단위 수익률
+        List<Double> yearYield = new ArrayList<>(); // 연단위 수익률
+        List<Double> kospiYearYield = new ArrayList<>(); // 연단위 코스피 수익률
+        List<Double> kosdaqYearYield = new ArrayList<>(); // 연단위 코스닥 수익률
+
+        for(int y = 0; y < yearIdxs.size(); y++){
+            int targetYearIdx = yearIdxs.get(y);
+            int previousYearIdx = (y == 0)? 0:yearIdxs.get(y-1);
+
+            Double targetYearYield =
+                    ((monthYieldMoneys.get(targetYearIdx)-
+                            monthYieldMoneys.get(previousYearIdx))
+                            /(monthYieldMoneys.get(previousYearIdx)))*100 ;
+            Double targetKospiYearYield =
+                    ((kospiYieldMoneys.get(targetYearIdx)-
+                            kospiYieldMoneys.get(previousYearIdx))
+                            /(kospiYieldMoneys.get(previousYearIdx)))*100 ;
+
+            Double targetKosdaqYearYield =
+                    ((kosdaqYieldMoneys.get(targetYearIdx)-
+                            kosdaqYieldMoneys.get(previousYearIdx))
+                            /(kosdaqYieldMoneys.get(previousYearIdx)))*100 ;
+
+            years.add(yearMonthList.get(targetYearIdx).getYear());
+            yearYield.add(targetYearYield);
+            kospiYearYield.add(targetKospiYearYield);
+            kosdaqYearYield.add(targetKosdaqYearYield);
+        }
+        return new BacktestingYearDto(years, yearYield, kospiYearYield, kosdaqYearYield);
+    }
+
+
 
 }
