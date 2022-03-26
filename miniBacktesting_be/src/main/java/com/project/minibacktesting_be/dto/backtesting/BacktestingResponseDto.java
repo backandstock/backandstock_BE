@@ -7,11 +7,9 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.YearMonthDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.YearMonthSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -68,6 +66,10 @@ public class BacktestingResponseDto {
     private List<Double> stockYieldMoneys; // 주식별 최종 수익금
 //    private List<Double> stockYields;  주식별 수익률
 
-    private BacktestingYearDto backtestingYearDto; // 연도별 kospi, kosdaq, 수익률
+    private List<Integer> years; // 연단위 리스트
+    private List<Double> yearYield; // 연단위 수익률
+    private List<Double> kospiYearYield; // 연단위 코스피 수익률
+    private List<Double> kosdaqYearYield; // 연단위 코스닥 수익률
 
+    
 }
