@@ -247,6 +247,7 @@ public class BacktestingCal {
         for(int y = 0; y < yearIdxs.size(); y++){
             int targetYearIdx = yearIdxs.get(y);
             int previousYearIdx = (y == 0)? 0:yearIdxs.get(y-1);
+            
 
             Double targetYearYield =
                     ((monthYieldMoneys.get(targetYearIdx)-
