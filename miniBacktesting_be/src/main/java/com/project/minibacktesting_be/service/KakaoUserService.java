@@ -144,9 +144,9 @@ public class KakaoUserService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
 //        body.add("client_id", "e2ce9cb8e91f8d054da9bbbe0857e0fc");
-        body.add("client_id", "4f269c2d7b614ed22a514496123b7a38");
+        body.add("client_id", "697926f4f0e3abb13ba40a6525d912aa");
 //        body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
-        body.add("redirect_uri", "http://localhost:3000/oauth/kakao/callback");
+        body.add("redirect_uri", "https://backandstock.com/oauth/kakao/callback");
         body.add("code", code);
 
         // HTTP 요청 보내기
