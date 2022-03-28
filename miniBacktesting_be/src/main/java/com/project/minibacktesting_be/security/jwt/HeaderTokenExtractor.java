@@ -1,9 +1,9 @@
 package com.project.minibacktesting_be.security.jwt;
 
+import com.project.minibacktesting_be.exception.user.UserNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.NoSuchElementException;
 
 @Component
 public class HeaderTokenExtractor {
@@ -21,10 +21,10 @@ public class HeaderTokenExtractor {
          * 이셉션을(예외)를 던져주어야 합니다.
          */
         if (header == null || header.equals("") || header.length() < HEADER_PREFIX.length()) {
-            System.out.println("error request : " + request.getRequestURI());
-            throw new NoSuchElementException("올바른 JWT 정보가 아닙니다.");
+//            System.out.println("error request : " + request.getRequestURI());
+//            throw new NoSuchElementException("올바른 JWT 정보가 아닙니다.");
+            throw new UserNotFoundException("Incorrect JWT Information");
         }
-
         /*
          * - Token 값이 존재하는 경우 -
          * (bearer ) 부분만 제거 후 token 값 반환

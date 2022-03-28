@@ -11,6 +11,7 @@ import com.project.minibacktesting_be.repository.PortfolioRepository;
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class CommunityService {
 
     @Autowired
@@ -62,7 +64,8 @@ public class CommunityService {
         for(String option : options){
             if (vop.get("topFive"+option) != null) {
                 topFiveResponseDto = (TopFiveResponseDto) vop.get("topFive"+option);
-                System.out.println("redis"+option);}
+                log.info("redis topfive : {}", option);}
+
 
             else{
                 if(option.equals("kospi")|| option.equals("kosdaq")){
@@ -101,7 +104,7 @@ public class CommunityService {
 
                 topFiveResponseDto = new TopFiveResponseDto(option, stockNames, stockCodes, results, closes);
                 vop.set("topFive"+option, topFiveResponseDto);
-                System.out.println("db"+option);
+                log.info("db topfive : {}", option);
             }
             topFiveResponseDtos.add(topFiveResponseDto);
         }
@@ -113,8 +116,7 @@ public class CommunityService {
     public List<CommunityPortResponseDto> getCommnunityPorts(Integer page, Integer size) {
 
         // 좋아요, 시간 역순으로 정렬
-        Sort sort = Sort.by(Sort.Order.desc("likesCnt"),
-                Sort.Order.desc("createdAt"));
+        Sort sort = Sort.by(Sort.Order.desc("likesCnt"),Sort.Order.desc("createdAt"));
         // 페이징 처리하기
         Pageable pageable = PageRequest.of(page-1, size, sort);
         
@@ -163,12 +165,12 @@ public class CommunityService {
 
             if (vop.get("communityPort"+portfolio.getId()) != null) {
                 portResponseDto = (CommunityPortDto) vop.get("communityPort"+portfolio.getId().toString());
-                System.out.println("print redis");
+                log.info("redis communityPort : {}", portfolio.getId());
             } else {
 
                 BacktestingRequestDto requestDto = new BacktestingRequestDto(portfolio);
 
-                System.out.println("else");
+                log.info("db communityPort : {}", portfolio.getId());
 
                 portResponseDto = CommunityPortDto.
                         builder().

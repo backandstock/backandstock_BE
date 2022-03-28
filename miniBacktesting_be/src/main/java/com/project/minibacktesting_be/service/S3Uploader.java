@@ -3,6 +3,7 @@ package com.project.minibacktesting_be.service;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.project.minibacktesting_be.exception.user.S3FileConvertException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +31,7 @@ public class S3Uploader {
 
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
         File uploadFile = convert(multipartFile)
-                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
+                .orElseThrow(() -> new S3FileConvertException("MultipartFile -> File convert fail"));
         return upload(uploadFile, dirName);
     }
 

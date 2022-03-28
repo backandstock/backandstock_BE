@@ -73,6 +73,7 @@ public class Portfolio extends Timestamped{
                 .build();
         return portfolio;
     }
+
     public Boolean getMyBest(){
         return this.myBest;
     }

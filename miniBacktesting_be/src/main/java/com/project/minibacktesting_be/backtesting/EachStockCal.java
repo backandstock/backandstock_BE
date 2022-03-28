@@ -1,6 +1,6 @@
 package com.project.minibacktesting_be.backtesting;
 
-import com.project.minibacktesting_be.dto.backtesting.BacktestingDataDto;
+import com.project.minibacktesting_be.dto.backtesting.BacktestingEachStockDto;
 import com.project.minibacktesting_be.model.Stock;
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +19,15 @@ public class EachStockCal {
 
     private final StockRepository stockRepository;
 
-    public List<BacktestingDataDto> getStockCalResult(LocalDate startDate,
-                              LocalDate endDate,
-                              List<String> stockList,
-                              List<YearMonth> yearMonthList,
-                              List<Double> targetPrices,
-                             List<String> stockCodes,
-                             List<Double> buyMoney) {
-        List<BacktestingDataDto> backtestingDataDtos= new ArrayList<>();
+    public List<BacktestingEachStockDto> getStockCalResult(LocalDate startDate,
+                                                           LocalDate endDate,
+                                                           List<String> stockList,
+                                                           List<Integer> ratioList,
+                                                           List<YearMonth> yearMonthList,
+                                                           List<Double> targetPrices,
+                                                           List<String> stockCodes
+                                                           ) {
+        List<BacktestingEachStockDto> backtestingDataDtos= new ArrayList<>();
         for(String targetStockName : stockList){
 
             // 타겟 주식이 몇번째 값?
@@ -42,7 +43,7 @@ public class EachStockCal {
 
             // 주식 목표 금액
             Double targetPrice = targetPrices.get(Idx);
-            buyMoney.add(targetPrice);
+//            buyMoney.add(targetPrice);
 
             // 주식 목표 금액에 맞추기 위해 필요한 주식 수
             Long firstMonthPrice = stocks.get(0).getClose();
@@ -66,34 +67,62 @@ public class EachStockCal {
 
             // 리스트 갯수를 맞춰야 한다. (데이터 수가 다 같지 않으므로)
             Double[] yieldMoneys = new Double[yearMonthList.size()];
+            Long[] stockClose = new Long[yearMonthList.size()];
 
             for(int i = 0; i < yearMonthList.size(); i++){
+
 
                 YearMonth targetYearMonth = yearMonthList.get(i);
                 if(months.contains(targetYearMonth)){
                     yieldMoneys[i] =
                             stockPrices.get(months.indexOf(targetYearMonth))*stockNum;
+                    stockClose[i] =
+                            stockPrices.get(months.indexOf(targetYearMonth));
+
                 }else{
                     yieldMoneys[i] =stockPrices.get(0)*stockNum;
+                    stockClose[i] = stockPrices.get(0);
                 }
             }
 
-            // 스트림 : 날짜만 뽑아내기 (yearMonth로 변환)
-            List<Double> yields = stocks.
-                    stream().
-                    map(Stock::getYieldPct).
-                    collect(Collectors.toList());
+            // 스트림 : 수익률 뽑기 주식별 수익률은 필요 없으므로 삭제
+//            List<Double> yields = stocks.
+//                    stream().
+//                    map(Stock::getYieldPct).
+//                    collect(Collectors.toList());
+
 
 
             // 해당 종목의 backtest 내용 저장하기
-            BacktestingDataDto backtestingDataDto =
-                    new BacktestingDataDto(targetStockName, targetPrice,
-                            stockNum, months, stockPrices,
-                            Arrays.asList(yieldMoneys), yields);
+            BacktestingEachStockDto backtestingDataDto =
+                    new BacktestingEachStockDto(targetStockName, targetPrice,
+                            stockNum, months, Arrays.asList(stockClose),
+                            Arrays.asList(yieldMoneys));
 
             backtestingDataDtos.add(backtestingDataDto);
 
         }
+
+        int period = 3;
+
+
+//        if(option != 0 ){
+//            Long[][] rebalanceStock = new Long[stockList.size()][yearMonthList.size()];
+//            Long totalMoney
+//            for (int i = 0; i < yearMonthList.size(); i++){
+//                if(i % option == 0){
+//                   =
+//                }
+//
+//            }
+//        }
+
+
+
+
+
+
         return backtestingDataDtos;
     }
+
 }

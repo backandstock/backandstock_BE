@@ -4,9 +4,13 @@ import com.project.minibacktesting_be.backtesting.BacktestingCal;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.dto.portfolio.*;
+import com.project.minibacktesting_be.exception.portfolio.PortfolioNotFoundException;
+import com.project.minibacktesting_be.exception.portfolio.PortfolioSaveOverException;
+import com.project.minibacktesting_be.exception.user.UserMatchException;
 import com.project.minibacktesting_be.model.PortStock;
 import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.model.User;
+import com.project.minibacktesting_be.presentcheck.PresentCheck;
 import com.project.minibacktesting_be.repository.*;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +39,7 @@ public class PortfolioService {
     private final PortStockRepository portStockRepository;
     private final BacktestingCal backtestingCal;
     private final LikesRepository likesRepository;
+
     private final CommentRepository commentRepository;
 
     //포트폴리오 저장
@@ -48,7 +53,7 @@ public class PortfolioService {
         // 1. 포트폴리오 갯수 validation
         List<Portfolio> portfolioNum = portfolioRepository.findAllByUser(user);
         if(portfolioNum.size() > 2) {
-            throw new IllegalArgumentException("저장 가능한 포트폴리오는 최대 3개 입니다.");
+            throw new PortfolioSaveOverException("Saving portfolio excess error", userId);
         }
 
         // 2. 포트폴리오 저장
@@ -158,9 +163,12 @@ public class PortfolioService {
     //포트폴리오 상세보기
     @Transactional(readOnly = true)
     public PortfolioDetailsResponseDto getPortfolio(Long portId) {
-        Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
-                () -> new NullPointerException("해당 포트폴리오를 찾을 수 없습니다.")
-        );
+//        Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
+//                () -> new PortfolioNotFoundException(portId)
+//        );
+
+        Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioRepository);
+
 
         Boolean myBest = portfolio.getMyBest();
         String nickname = portfolio.getUser().getNickname();
@@ -266,7 +274,7 @@ public class PortfolioService {
                         vop.set("port"+eachPortId, compareBacktestingCal);
                         log.info("db port : {}", eachPortId);
 //                        System.out.println("db port" + eachPortId);
-                    }
+                }
 
                     PortfolioRankDto portfolioRankDto = PortfolioRankDto.builder()
                             .portId(comparePortId)
@@ -339,12 +347,17 @@ public class PortfolioService {
     //포트폴리오 삭제
     @Transactional
     public HashMap<String, Long> deletePortfolio(Long portId, UserDetailsImpl userDetails) {
-        Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
-                () -> new NullPointerException("해당 포트폴리오를 찾을 수 없습니다.")
-        );
+//        Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
+//                () -> new PortfolioNotFoundException(portId)
+//        );
 
-        if(!portfolio.getUser().getId().equals(userDetails.getUser().getId())){
-            throw new IllegalArgumentException("나의 포트폴리오만 삭제할 수 있습니다.");
+        Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioRepository);
+
+        if(!portfolio.getUser().getId().equals(userDetails.getUser().getId())) {
+            throw new UserMatchException("Delete portfolio user matching error",
+                    userDetails.getUser().getId(),
+                    portfolio.getUser().getId());
+
         }
 
 
@@ -370,11 +383,15 @@ public class PortfolioService {
     //포트폴리오 자랑하기
     @Transactional
     public PortfolioMyBestDto.Response myBestPortfolio(PortfolioMyBestDto.Request portfolioMyBestRequestDto, UserDetailsImpl userDetails) {
-        Portfolio portfolio = portfolioRepository.findById(portfolioMyBestRequestDto.getPortId()).orElseThrow(
-                () -> new IllegalArgumentException("포트폴리오가 존재하지 않습니다.")
-        );
+//        Portfolio portfolio = portfolioRepository.findById(portfolioMyBestRequestDto.getPortId()).orElseThrow(
+//                () -> new PortfolioNotFoundException(portfolioMyBestRequestDto.getPortId())
+//        );
+        Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portfolioMyBestRequestDto.getPortId(), portfolioRepository);
+
         if(!portfolio.getUser().getId().equals(userDetails.getUser().getId())){
-            throw new IllegalArgumentException("나의 포트폴리오만 자랑할 수 있습니다.");
+            throw new UserMatchException("Boast portfolio user matching error",
+                    userDetails.getUser().getId(),
+                    portfolio.getUser().getId());
         }
         if(portfolioMyBestRequestDto.isMyBest()){
             portfolio.updateMyBest(true);

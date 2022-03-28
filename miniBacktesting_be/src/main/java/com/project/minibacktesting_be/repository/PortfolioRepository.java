@@ -22,7 +22,6 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
                                                        LocalDateTime end,
                                                        Pageable pageable);
 
-    Page<Portfolio> findAllByMyBestOrderByCreatedAtDesc(boolean b, Pageable pageable);
 
     @Query("select distinct p " +
             "from Portfolio p join fetch p.portStocks " +

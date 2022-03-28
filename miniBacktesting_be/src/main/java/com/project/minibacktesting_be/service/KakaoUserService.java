@@ -9,6 +9,7 @@ import com.project.minibacktesting_be.repository.UserRepository;
 import com.project.minibacktesting_be.security.jwt.JwtTokenUtils;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -26,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class KakaoUserService {
@@ -130,7 +132,8 @@ public class KakaoUserService {
 //            return new KakaoUserInfoDto(id, nickname, thumbnailUrl);
 //        }
 
-        System.out.println("카카오 사용자 정보: " + id + ", " + nickname);
+//        System.out.println("카카오 사용자 정보: " + id + ", " + nickname);
+        log.info("카카오 사용자 정보 id: {},{}",id,nickname);
         return new KakaoUserInfoDto(id, nickname);
 
     }
@@ -143,9 +146,7 @@ public class KakaoUserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-//        body.add("client_id", "e2ce9cb8e91f8d054da9bbbe0857e0fc");
         body.add("client_id", "697926f4f0e3abb13ba40a6525d912aa");
-//        body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
         body.add("redirect_uri", "https://backandstock.com/oauth/kakao/callback");
         body.add("code", code);
 

@@ -4,6 +4,7 @@ import com.project.minibacktesting_be.dto.comment.CommentRegisterRequestDto;
 import com.project.minibacktesting_be.dto.comment.CommentRegisterResponseDto;
 import com.project.minibacktesting_be.dto.comment.CommentUpdateRequestDto;
 import com.project.minibacktesting_be.dto.comment.GetCommentsResponseDto;
+import com.project.minibacktesting_be.exception.user.UserMatchException;
 import com.project.minibacktesting_be.model.Comment;
 import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.presentcheck.PresentCheck;
@@ -56,7 +57,9 @@ public class CommentService {
 
         // 작성자 User와 로그인 User 체크
         if (!userDetails.getUser().getId().equals(comment.getUser().getId())) {
-            throw new IllegalArgumentException("댓글 수정은 작성자만 가능합니다.");
+            throw new UserMatchException("Comment update user matching error",
+                    userDetails.getUser().getId(),
+                    comment.getUser().getId());
         }
 
         comment.update(requestDto.getContent());
@@ -92,7 +95,9 @@ public class CommentService {
 
         // 작성자 User와 로그인 User 체크
         if (!userDetails.getUser().getId().equals(comment.getUser().getId())) {
-            throw new IllegalArgumentException("댓글 삭제는 작성자만 가능합니다.");
+            throw new UserMatchException("Comment delete user matching error",
+                    userDetails.getUser().getId(),
+                    comment.getUser().getId());
         }
         comment.deleteComment();
         List<Comment> comments = commentRepository.findAllByParentComment(comment);

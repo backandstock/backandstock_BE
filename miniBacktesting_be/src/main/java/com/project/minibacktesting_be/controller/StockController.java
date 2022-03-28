@@ -3,6 +3,7 @@ package com.project.minibacktesting_be.controller;
 import com.project.minibacktesting_be.dto.StockSearchResponseDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
+import com.project.minibacktesting_be.exception.stock.StockSearchException;
 import com.project.minibacktesting_be.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +34,13 @@ public class StockController  {
             @RequestParam(value = "type", required = false, defaultValue = "")
                     String type){
         if(type.equals("") || type == null){
-            throw new RuntimeException("type을 정확히 입력해주세요");
+            throw new StockSearchException("Stock search type input error",
+                    "Type input is null or does not exist.");
         }
 
         if(keyword.equals("") || keyword == null){
-            throw new RuntimeException("종목이름이나 종목코드를 입력해주세요");
+            throw new StockSearchException("Stock search keyword input error",
+                    "Keyword input is null or does not exist.");
         }
         List<StockSearchResponseDto> stockSearchResponseDtoList =
                 stockService.getStockInfo(keyword, type);

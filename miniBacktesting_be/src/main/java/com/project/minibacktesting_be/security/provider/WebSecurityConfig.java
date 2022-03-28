@@ -133,6 +133,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("POST,/h2-console/**");
         // 회원 관리 API 허용
         skipPathList.add("POST,/users");
+        skipPathList.add("GET,/users/kakao/callback");
 
         // 주식검색하기 API, 백테스팅 결과 API, TOP5 API 허용
         skipPathList.add("POST,/stocks");

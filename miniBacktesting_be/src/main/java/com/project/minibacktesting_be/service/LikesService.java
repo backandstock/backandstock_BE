@@ -1,11 +1,12 @@
 package com.project.minibacktesting_be.service;
 
-import com.project.minibacktesting_be.dto.likes.LikesRequestDto;
-import com.project.minibacktesting_be.dto.portfolio.PortfolioResponseDto;
 import com.project.minibacktesting_be.dto.portfolio.PortfolioSaveResponseDto;
+import com.project.minibacktesting_be.exception.portfolio.PortfolioNotFoundException;
+import com.project.minibacktesting_be.exception.user.UserNotFoundException;
 import com.project.minibacktesting_be.model.Likes;
 import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.model.User;
+import com.project.minibacktesting_be.presentcheck.PresentCheck;
 import com.project.minibacktesting_be.repository.LikesRepository;
 import com.project.minibacktesting_be.repository.PortfolioRepository;
 import com.project.minibacktesting_be.repository.UserRepository;
@@ -28,15 +29,14 @@ public class LikesService {
 
     @Transactional
     public PortfolioSaveResponseDto postLikes(Long portId,UserDetailsImpl userDetails) {
+
         // 포트폴리오 찾기
-       Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
-               () -> new IllegalArgumentException("포트폴리오가 존재하지 않습니다. ")
-       );
+//        Portfolio portfolio = getPortfolio(portId);
+        Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioRepository);
+
 
        // 유저 찾기
-        User user =  userRepository.findById(userDetails.getUser().getId()).orElseThrow(
-                () -> new IllegalArgumentException("유저가 존재하지 않습니다. ")
-        );
+        User user = getUser(userDetails);
 
         Likes likes = new Likes(portfolio, user);
         likesRepository.save(likes);
@@ -51,17 +51,14 @@ public class LikesService {
         return portfolioSaveResponseDto;
     }
 
+
+
     @Transactional
     public PortfolioSaveResponseDto postDislikes(Long portId,UserDetailsImpl userDetails) {
         // 포트폴리오 찾기
-        Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
-                () -> new IllegalArgumentException("포트폴리오가 존재하지 않습니다. ")
-        );
-
+        Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioRepository);
         // 유저 찾기
-        User user =  userRepository.findById(userDetails.getUser().getId()).orElseThrow(
-                () -> new IllegalArgumentException("유저가 존재하지 않습니다. ")
-        );
+        User user = getUser(userDetails);
 
         // likes 삭제하기
         List<Likes> likes = likesRepository.findByPortfolioAndUser(portfolio, user);
@@ -76,7 +73,12 @@ public class LikesService {
     }
 
 
-
+    private User getUser(UserDetailsImpl userDetails) {
+//        User user =
+        return userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                () -> new UserNotFoundException("User not Found")
+        );
+    }
 
 
 }
