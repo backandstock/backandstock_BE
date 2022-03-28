@@ -44,15 +44,19 @@ public class UserService {
         UserInfoEditRequestDto userInfoEditRequestDto = new UserInfoEditRequestDto();
 
         if(multipartFile != null && !nickname.trim().isEmpty()){
+            // 닉네임 유효성 검사
+            Validation.validationNickname(nickname, userRepository);
+
             // 기존 이미지가 있다면 S3서버에서 삭제
             if(user.getProfileImg() != null){
                 s3Uploader.deleteFile(user.getProfileImg());
             }
             userInfoEditRequestDto.setProfileImgUrl(s3Uploader.upload(multipartFile, "images"));
             user.updateNicknameAndProfileImg(nickname, userInfoEditRequestDto.getProfileImgUrl());
+        }else{
+            // 닉네임 유효성 검사
+            Validation.validationNickname(nickname, userRepository);
         }
-        // 닉네임 유효성 검사
-        Validation.validationNickname(nickname, userRepository);
 
         user.updateNickname(nickname);
         userRepository.save(user);
