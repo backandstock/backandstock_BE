@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         
-        # SQL 서버접속처리
+        # SQL 서버 접속처리
       - name: Setup MySQL
         uses: samin/mysql-action@v1
         with:
