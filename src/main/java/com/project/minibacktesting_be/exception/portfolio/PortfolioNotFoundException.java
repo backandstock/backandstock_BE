@@ -1,22 +1,13 @@
 package com.project.minibacktesting_be.exception.portfolio;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class PortfolioNotFoundException extends RuntimeException{
-    private long id;
+    private String message;
+    public PortfolioNotFoundException(String message) {
 
-    public PortfolioNotFoundException(long id) {
-        this.id = id;
+        this.message = message;
     }
 
-//    public long getId() {
-//        return id;
-//    }
-//
-//    public void setId(long id) {
-//        this.id = id;
-//    }
 }

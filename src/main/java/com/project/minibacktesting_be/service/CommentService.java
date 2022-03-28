@@ -57,8 +57,9 @@ public class CommentService {
 
         // 작성자 User와 로그인 User 체크
         if (!userDetails.getUser().getId().equals(comment.getUser().getId())) {
-            throw new UserMatchException("Comment update user matching error",
-                    userDetails.getUser().getId(),
+            throw new UserMatchException("Comment update user matching error - loginUserId : " +
+                    userDetails.getUser().getId() +
+                    " / portfolioUserId : " +
                     comment.getUser().getId());
         }
 
@@ -95,8 +96,9 @@ public class CommentService {
 
         // 작성자 User와 로그인 User 체크
         if (!userDetails.getUser().getId().equals(comment.getUser().getId())) {
-            throw new UserMatchException("Comment delete user matching error",
-                    userDetails.getUser().getId(),
+            throw new UserMatchException("Comment delete user matching error - loginUserId : " +
+                    userDetails.getUser().getId() +
+                    " / portfolioUserId : " +
                     comment.getUser().getId());
         }
         comment.deleteComment();
