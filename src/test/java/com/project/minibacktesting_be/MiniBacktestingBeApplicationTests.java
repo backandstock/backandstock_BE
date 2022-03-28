@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class MiniBacktestingBeApplicationTests {
 
     @Test
-    void contextLoads() {
+    public void contextLoads() {
     }
 
 }
