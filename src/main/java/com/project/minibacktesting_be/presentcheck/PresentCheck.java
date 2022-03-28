@@ -18,7 +18,7 @@ public class PresentCheck {
     public static Portfolio portfoliIsPresentCheck(Long id, PortfolioRepository repository){
         Optional<Portfolio> optionalPortfolio = repository.findById(id);
         if(!optionalPortfolio.isPresent()){
-            throw new PortfolioNotFoundException(id);
+            throw new PortfolioNotFoundException("No Portfolio is found with ID : "+ id);
         }
 
         return optionalPortfolio.get();
@@ -27,7 +27,7 @@ public class PresentCheck {
     public static Comment commentIsPresentCheck(Long commentId, CommentRepository repository){
         Optional<Comment> optionalComment = repository.findById(commentId);
         if(!optionalComment.isPresent()){
-            throw new CommentNotFoundException(commentId);
+            throw new CommentNotFoundException("No Comment is found with ID : "+commentId);
         }
 
         return optionalComment.get();

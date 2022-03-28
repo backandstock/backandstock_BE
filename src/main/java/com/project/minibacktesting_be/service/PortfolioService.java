@@ -53,7 +53,7 @@ public class PortfolioService {
         // 1. 포트폴리오 갯수 validation
         List<Portfolio> portfolioNum = portfolioRepository.findAllByUser(user);
         if(portfolioNum.size() > 2) {
-            throw new PortfolioSaveOverException("Saving portfolio excess error", userId);
+            throw new PortfolioSaveOverException("UserId : "+userId + " exceed maximum saving portfolio number.");
         }
 
         // 2. 포트폴리오 저장
@@ -347,15 +347,12 @@ public class PortfolioService {
     //포트폴리오 삭제
     @Transactional
     public HashMap<String, Long> deletePortfolio(Long portId, UserDetailsImpl userDetails) {
-//        Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
-//                () -> new PortfolioNotFoundException(portId)
-//        );
-
         Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioRepository);
 
         if(!portfolio.getUser().getId().equals(userDetails.getUser().getId())) {
-            throw new UserMatchException("Delete portfolio user matching error",
-                    userDetails.getUser().getId(),
+            throw new UserMatchException("Delete portfolio user matching error - loginUserId : " +
+                    userDetails.getUser().getId() +
+                    " / portfolioUserId : " +
                     portfolio.getUser().getId());
 
         }
@@ -383,14 +380,12 @@ public class PortfolioService {
     //포트폴리오 자랑하기
     @Transactional
     public PortfolioMyBestDto.Response myBestPortfolio(PortfolioMyBestDto.Request portfolioMyBestRequestDto, UserDetailsImpl userDetails) {
-//        Portfolio portfolio = portfolioRepository.findById(portfolioMyBestRequestDto.getPortId()).orElseThrow(
-//                () -> new PortfolioNotFoundException(portfolioMyBestRequestDto.getPortId())
-//        );
         Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portfolioMyBestRequestDto.getPortId(), portfolioRepository);
 
         if(!portfolio.getUser().getId().equals(userDetails.getUser().getId())){
-            throw new UserMatchException("Boast portfolio user matching error",
-                    userDetails.getUser().getId(),
+            throw new UserMatchException("Boast portfolio user matching error - loginUserId : " +
+                    userDetails.getUser().getId() +
+                    " / portfolioUserId : " +
                     portfolio.getUser().getId());
         }
         if(portfolioMyBestRequestDto.isMyBest()){

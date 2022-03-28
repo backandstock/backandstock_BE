@@ -34,13 +34,11 @@ public class StockController  {
             @RequestParam(value = "type", required = false, defaultValue = "")
                     String type){
         if(type.equals("") || type == null){
-            throw new StockSearchException("Stock search type input error",
-                    "Type input is null or does not exist.");
+            throw new StockSearchException("Type input is null or does not exist.");
         }
 
         if(keyword.equals("") || keyword == null){
-            throw new StockSearchException("Stock search keyword input error",
-                    "Keyword input is null or does not exist.");
+            throw new StockSearchException("Keyword input is null or does not exist.");
         }
         List<StockSearchResponseDto> stockSearchResponseDtoList =
                 stockService.getStockInfo(keyword, type);
