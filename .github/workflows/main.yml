@@ -10,6 +10,7 @@ on:
 # S3 bucket 이름 입력
 env:
   S3_BUCKET_NAME: jsm-bucket
+  PROJECT_NAME: miniBacktesting_be
 
 jobs:
   build:
@@ -46,3 +47,5 @@ jobs:
       - name: Upload to S3
         run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
         
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name logging-system-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name develop --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
