@@ -1,6 +1,5 @@
 package com.project.minibacktesting_be.service;
 
-import com.project.minibacktesting_be.backtesting.BacktestingCal;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.community.CommunityPortDto;
 import com.project.minibacktesting_be.dto.community.CommunityPortResponseDto;
@@ -30,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
@@ -43,7 +43,6 @@ public class CommunityService {
 
     private final StockRepository stockRepository;
     private final PortfolioRepository portfolioRepository;
-    private final BacktestingCal backtestingCal;
     private final LikesRepository likesRepository;
 
     public List<TopFiveResponseDto> getTopFive() {
@@ -104,6 +103,7 @@ public class CommunityService {
 
                 topFiveResponseDto = new TopFiveResponseDto(option, stockNames, stockCodes, results, closes);
                 vop.set("topFive"+option, topFiveResponseDto);
+                redisTemplate.expire("topFive"+option, 3, TimeUnit.DAYS);
                 log.info("db topfive : {}", option);
             }
             topFiveResponseDtos.add(topFiveResponseDto);
@@ -187,6 +187,7 @@ public class CommunityService {
                         build();
 
                vop.set("communityPort"+portfolio.getId().toString(), portResponseDto);
+               redisTemplate.expire("communityPort"+portfolio.getId().toString(), 3, TimeUnit.DAYS);
             }
 
 

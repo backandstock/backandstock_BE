@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -141,6 +142,7 @@ public class PortfolioService {
                     backtestingRequestDto.setRatioList(ratioList);
                     myPortBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
                     vop.set("port"+eachPortfolio.getId(), myPortBacktestingCal);
+                    redisTemplate.expire("port"+eachPortfolio.getId(), 3, TimeUnit.DAYS);
                     log.info("db port : {}", eachPortfolio.getId());
 //                    System.out.println("db port"+eachPortfolio.getId());
 
@@ -205,6 +207,7 @@ public class PortfolioService {
             backtestingRequestDto.setRatioList(ratioList);
             portBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
             vop.set("port"+portfolio.getId(), portBacktestingCal);
+            redisTemplate.expire("port"+portfolio.getId(), 3, TimeUnit.DAYS);
             log.info("db portDetail : {}", portfolio.getId());
 //            System.out.println("db portDetail" + portfolio.getId());
 
@@ -272,6 +275,7 @@ public class PortfolioService {
                         compareBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
 
                         vop.set("port"+eachPortId, compareBacktestingCal);
+                        redisTemplate.expire("port"+eachPortId, 3, TimeUnit.DAYS);
                         log.info("db port : {}", eachPortId);
 //                        System.out.println("db port" + eachPortId);
                 }
