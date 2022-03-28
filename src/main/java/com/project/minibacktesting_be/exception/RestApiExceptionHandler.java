@@ -1,12 +1,14 @@
 package com.project.minibacktesting_be.exception;
 
 import com.project.minibacktesting_be.exception.comment.CommentNotFoundException;
+import com.project.minibacktesting_be.exception.comment.CommentValidationException;
 import com.project.minibacktesting_be.exception.portfolio.PortfolioNotFoundException;
 import com.project.minibacktesting_be.exception.portfolio.PortfolioSaveOverException;
 import com.project.minibacktesting_be.exception.stock.StockSearchException;
 import com.project.minibacktesting_be.exception.user.S3FileConvertException;
 import com.project.minibacktesting_be.exception.user.UserMatchException;
 import com.project.minibacktesting_be.exception.user.UserNotFoundException;
+import com.project.minibacktesting_be.exception.user.UserRegisterValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -70,6 +72,16 @@ public class RestApiExceptionHandler {
     }
 
 
+    @ExceptionHandler(CommentValidationException.class)
+    public ResponseEntity<ApiErrorResponse> CommentValidationException(CommentValidationException exception) {
+        ApiErrorResponse response =
+                new ApiErrorResponse(exception.getMessage(),
+                        exception.getDetail(),
+                        HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
     @ExceptionHandler(UserMatchException.class)
     public ResponseEntity<ApiErrorResponse> UserMatchExceptionHandler(UserMatchException exception) {
         ApiErrorResponse response =
@@ -95,6 +107,16 @@ public class RestApiExceptionHandler {
         ApiErrorResponse response =
                 new ApiErrorResponse(exception.getMessage(),
                         "Image file converting error occur",
+                        HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(UserRegisterValidationException.class)
+    public ResponseEntity<ApiErrorResponse> UserRegisterValidationException(UserRegisterValidationException exception) {
+        ApiErrorResponse response =
+                new ApiErrorResponse(exception.getMessage(),
+                        exception.getDetail(),
                         HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
