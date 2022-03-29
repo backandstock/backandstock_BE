@@ -15,11 +15,11 @@ import java.util.TimeZone;
 @SpringBootApplication
 @EnableCaching
 public class MiniBacktestingBeApplication {
-    private static final String PROPERTIES =
-            "spring.config.location="
-//            +"classpath:/application.properties"
-//            +",classpath:/additional.properties";
-                    + "classpath:/additional.properties";
+//    private static final String PROPERTIES =
+//            "spring.config.location="
+////            +"classpath:/application.properties"
+////            +",classpath:/additional.properties";
+//                    + "classpath:/additional.properties";
 
     @PostConstruct
     public void started() {
@@ -28,10 +28,10 @@ public class MiniBacktestingBeApplication {
     }
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(MiniBacktestingBeApplication.class)
-                .properties(PROPERTIES)
-                .run(args);
-//        SpringApplication.run(MiniBacktestingBeApplication.class, args);
+//        new SpringApplicationBuilder(MiniBacktestingBeApplication.class)
+//                .properties(PROPERTIES)
+//                .run(args);
+        SpringApplication.run(MiniBacktestingBeApplication.class, args);
     }
 
 }
