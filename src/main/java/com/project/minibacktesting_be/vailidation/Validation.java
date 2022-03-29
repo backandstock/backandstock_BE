@@ -12,6 +12,7 @@ public class Validation {
     public static void validationComment(String content) {
         // content 확인
         // 공백, null 입력 제한
+
         if (content.trim().isEmpty()) {
             throw new CommentValidationException("Comment contents is empty.");
         }
