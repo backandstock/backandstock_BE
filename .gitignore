@@ -37,8 +37,8 @@ out/
 .vscode/
 
 ### application properties ###
-#**/application.properties
-#**/additional.properties
+**/application.properties
+**/additional.properties
 
 ### 로그 파일 ###
 logs
