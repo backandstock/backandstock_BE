@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class EachStockCal {
 
     private final StockRepository stockRepository;
+    private final RebalancingCal rebalancingCal;
 
     public List<BacktestingEachStockDto> getStockCalResult(LocalDate startDate,
                                                            LocalDate endDate,
@@ -25,7 +26,8 @@ public class EachStockCal {
                                                            List<Integer> ratioList,
                                                            List<YearMonth> yearMonthList,
                                                            List<Double> targetPrices,
-                                                           List<String> stockCodes
+                                                           List<String> stockCodes,
+                                                           Integer option
                                                            ) {
         List<BacktestingEachStockDto> backtestingDataDtos= new ArrayList<>();
         for(String targetStockName : stockList){
@@ -85,13 +87,6 @@ public class EachStockCal {
                 }
             }
 
-            // 스트림 : 수익률 뽑기 주식별 수익률은 필요 없으므로 삭제
-//            List<Double> yields = stocks.
-//                    stream().
-//                    map(Stock::getYieldPct).
-//                    collect(Collectors.toList());
-
-
 
             // 해당 종목의 backtest 내용 저장하기
             BacktestingEachStockDto backtestingDataDto =
@@ -103,26 +98,13 @@ public class EachStockCal {
 
         }
 
-        int period = 3;
+        if(option==0){
+            return backtestingDataDtos;
+        }else{
+            return rebalancingCal.getRebalnacingResult(backtestingDataDtos,
+                    ratioList, option);
+        }
 
-
-//        if(option != 0 ){
-//            Long[][] rebalanceStock = new Long[stockList.size()][yearMonthList.size()];
-//            Long totalMoney
-//            for (int i = 0; i < yearMonthList.size(); i++){
-//                if(i % option == 0){
-//                   =
-//                }
-//
-//            }
-//        }
-
-
-
-
-
-
-        return backtestingDataDtos;
     }
 
 }

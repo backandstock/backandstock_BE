@@ -68,7 +68,8 @@ public class BacktestingCal {
                        ratioList,
                        yearMonthList,
                        targetPrices,
-                       stockCodes);
+                       stockCodes,
+                       backtestingRequestDto.getRebalancing());
 //                       buyMoney);
 
 

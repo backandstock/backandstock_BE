@@ -19,7 +19,7 @@ public class BacktestingRequestDto {
     private Long seedMoney;
     private List<String> stockList;
     private List<Integer> ratioList;
-//    private Integer rebalancing;
+    private Integer rebalancing;
 
 
     public BacktestingRequestDto(Portfolio portfolio) {
