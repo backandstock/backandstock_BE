@@ -17,14 +17,16 @@ import java.util.TimeZone;
 public class MiniBacktestingBeApplication {
     private static final String PROPERTIES =
             "spring.config.location="
-            +"classpath:/application.properties"
-            +",classpath:/additional.properties";
+//            +"classpath:/application.properties"
+//            +",classpath:/additional.properties";
+                    + "classpath:/additional.properties";
 
     @PostConstruct
     public void started() {
         // timezone UTC 셋팅
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
     }
+
     public static void main(String[] args) {
         new SpringApplicationBuilder(MiniBacktestingBeApplication.class)
                 .properties(PROPERTIES)
