@@ -17,6 +17,7 @@ import java.util.TimeZone;
 public class MiniBacktestingBeApplication {
 //    private static final String PROPERTIES =
 //            "spring.config.location="
+
 ////            +"classpath:/application.properties"
 ////            +",classpath:/additional.properties";
 //                    + "classpath:/additional.properties";
