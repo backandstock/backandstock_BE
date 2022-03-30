@@ -4,7 +4,6 @@ import com.project.minibacktesting_be.backtesting.BacktestingCal;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.dto.portfolio.*;
-import com.project.minibacktesting_be.exception.portfolio.PortfolioNotFoundException;
 import com.project.minibacktesting_be.exception.portfolio.PortfolioSaveOverException;
 import com.project.minibacktesting_be.exception.user.UserMatchException;
 import com.project.minibacktesting_be.model.PortStock;
@@ -59,7 +58,10 @@ public class PortfolioService {
 
         // 2. 포트폴리오 저장
         Portfolio portfolio = Portfolio.createPortfolio(backtestingRequestDto.getStartDate(),
-                backtestingRequestDto.getEndDate(), backtestingRequestDto.getSeedMoney(), user);
+                backtestingRequestDto.getEndDate(),
+                backtestingRequestDto.getSeedMoney(),
+                user,
+                backtestingRequestDto.getRebalancingMonth());
 
         double finalYield;
         finalYield = backtestingCal.getResult(backtestingRequestDto).getFinalYield();
@@ -178,6 +180,7 @@ public class PortfolioService {
         LocalDate startDate  = portfolio.getStartDate();
         LocalDate endDate = portfolio.getEndDate();
         Long seedMoney = portfolio.getSeedMoney();
+        Integer rebalancingMonth = portfolio.getRebalancingMonth();
         long likesCnt = portfolio.getLikesCnt();
 
         List<PortStock> portStocks = portStockRepository.findByPortfolio(portfolio);
@@ -205,6 +208,7 @@ public class PortfolioService {
             backtestingRequestDto.setSeedMoney(seedMoney);
             backtestingRequestDto.setStockList(stockList);
             backtestingRequestDto.setRatioList(ratioList);
+            backtestingRequestDto.setRebalancingMonth(rebalancingMonth);
             portBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
             vop.set("port"+portfolio.getId(), portBacktestingCal);
             redisTemplate.expire("port"+portfolio.getId(), 3, TimeUnit.DAYS);
@@ -375,7 +379,6 @@ public class PortfolioService {
         if(vop.get("port"+portfolio.getId()) != null){
             vop.getOperations().delete("port"+portfolio.getId());
             log.info("redis delete : {}", portfolio.getId());
-//            System.out.println("redis delete" + portfolio.getId());
         }
 
         return responseId;

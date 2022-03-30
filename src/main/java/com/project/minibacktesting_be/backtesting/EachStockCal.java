@@ -27,7 +27,7 @@ public class EachStockCal {
                                                            List<YearMonth> yearMonthList,
                                                            List<Double> targetPrices,
                                                            List<String> stockCodes,
-                                                           Integer option
+                                                           Integer rebalancingMonth
                                                            ) {
         List<BacktestingEachStockDto> backtestingDataDtos= new ArrayList<>();
         for(String targetStockName : stockList){
@@ -98,11 +98,11 @@ public class EachStockCal {
 
         }
 
-        if(option==0){
+        if(rebalancingMonth==0){
             return backtestingDataDtos;
         }else{
             return rebalancingCal.getRebalnacingResult(backtestingDataDtos,
-                    ratioList, option);
+                    ratioList, rebalancingMonth);
         }
 
     }
