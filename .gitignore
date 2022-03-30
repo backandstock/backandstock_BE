@@ -38,8 +38,6 @@ out/
 
 ### application properties ###
 **/application.properties
-**/application-real1.properties
-**/application-real2.properties
 
 ### 로그 파일 ###
 logs

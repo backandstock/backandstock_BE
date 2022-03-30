@@ -2,6 +2,7 @@ package com.project.minibacktesting_be.service;
 
 import com.project.minibacktesting_be.dto.user.SignupDto;
 import com.project.minibacktesting_be.dto.user.UserInfoEditRequestDto;
+import com.project.minibacktesting_be.exception.user.UserRegisterValidationException;
 import com.project.minibacktesting_be.model.User;
 import com.project.minibacktesting_be.repository.UserRepository;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
@@ -43,19 +44,23 @@ public class UserService {
         User user = userDetails.getUser();
         UserInfoEditRequestDto userInfoEditRequestDto = new UserInfoEditRequestDto();
 
-        if(multipartFile != null && !nickname.trim().isEmpty()){
-            // 닉네임 유효성 검사
-            Validation.validationNickname(nickname, userRepository);
+        // 닉네임 유효성 검사
+        if (nickname.trim().isEmpty()) {
+            throw new UserRegisterValidationException("User nickname is empty.");
+            // 닉네임 중복확인
+        } else if (userRepository.findByNickname(nickname).isPresent()) {
+            if(!nickname.equals(userDetails.getUser().getNickname())){
+                throw new UserRegisterValidationException( "Nickname : " + nickname + "is already exist.");
+            }
+        }
 
+        if(multipartFile != null){
             // 기존 이미지가 있다면 S3서버에서 삭제
             if(user.getProfileImg() != null){
                 s3Uploader.deleteFile(user.getProfileImg());
             }
             userInfoEditRequestDto.setProfileImgUrl(s3Uploader.upload(multipartFile, "images"));
             user.updateNicknameAndProfileImg(nickname, userInfoEditRequestDto.getProfileImgUrl());
-        }else{
-            // 닉네임 유효성 검사
-            Validation.validationNickname(nickname, userRepository);
         }
 
         user.updateNickname(nickname);
