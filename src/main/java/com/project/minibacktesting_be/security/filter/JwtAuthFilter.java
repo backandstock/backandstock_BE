@@ -3,6 +3,7 @@ package com.project.minibacktesting_be.security.filter;
 import com.project.minibacktesting_be.security.jwt.HeaderTokenExtractor;
 import com.project.minibacktesting_be.security.jwt.JwtPreProcessingToken;
 import com.project.minibacktesting_be.security.provider.FilterSkipMatcher;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,8 @@ import java.io.PrintWriter;
  * Token 을 내려주는 Filter 가 아닌  client 에서 받아지는 Token 을 서버 사이드에서 검증하는 클레스 SecurityContextHolder 보관소에 해당
  * Token 값의 인증 상태를 보관 하고 필요할때 마다 인증 확인 후 권한 상태 확인 하는 기능
  */
+
+@Slf4j
 public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
 
     private final HeaderTokenExtractor extractor;
@@ -57,7 +60,7 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
 //            response.sendRedirect("/user/login");
 //            return null;
         }
-        System.out.println("tokenPayload :"+tokenPayload);
+        log.info("tokenPayload :"+tokenPayload);
 
         JwtPreProcessingToken jwtToken = new JwtPreProcessingToken(
                 extractor.extract(tokenPayload, request));

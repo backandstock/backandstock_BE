@@ -98,7 +98,7 @@ public class EachStockCal {
 
         }
 
-        if(rebalancingMonth==0){
+        if(rebalancingMonth==0 || rebalancingMonth >= yearMonthList.size()){
             return backtestingDataDtos;
         }else{
             return rebalancingCal.getRebalnacingResult(backtestingDataDtos,

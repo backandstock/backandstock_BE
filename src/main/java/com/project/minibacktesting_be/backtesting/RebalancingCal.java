@@ -26,6 +26,7 @@ public class RebalancingCal {
                 map(BacktestingEachStockDto::getStockPrices).
                 collect(Collectors.toList());
 
+
         // 주식 수익금만 모으기
         List<List<Double>> stockYieldMoneyList = backtestingEachStockDtos.
                 stream().
