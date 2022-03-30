@@ -19,7 +19,7 @@ public class BacktestingRequestDto {
     private Long seedMoney;
     private List<String> stockList;
     private List<Integer> ratioList;
-//    private Integer rebalancing;
+    private Integer rebalancingMonth;
 
 
     public BacktestingRequestDto(Portfolio portfolio) {
@@ -36,6 +36,7 @@ public class BacktestingRequestDto {
                 stream().
                 map(s -> s.getRatio()).
                 collect(Collectors.toList());
+        this.rebalancingMonth = portfolio.getRebalancingMonth();
     }
 
 

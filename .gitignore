@@ -1,5 +1,6 @@
 HELP.md
-.gradle/
+.gradle
+.gradle/**
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -38,10 +39,10 @@ out/
 
 ### application properties ###
 **/application.properties
-**/additional.properties
 
 ### 로그 파일 ###
 logs
 
 #### docker #####
 docker-compose.yaml
+

@@ -6,7 +6,6 @@ import com.project.minibacktesting_be.model.Comment;
 import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.repository.CommentRepository;
 import com.project.minibacktesting_be.repository.PortfolioRepository;
-import org.hibernate.tool.schema.spi.CommandAcceptanceException;
 
 import java.util.Optional;
 
