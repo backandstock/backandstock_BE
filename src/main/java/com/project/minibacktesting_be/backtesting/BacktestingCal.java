@@ -25,6 +25,7 @@ public class BacktestingCal {
     private final StockRepository stockRepository;
     private final EachStockCal eachStockCal;
     private final YearYieldCal yearYieldCal;
+    private final StockYieldCal stockYieldCal;
 
    public BacktestingResponseDto getResult(BacktestingRequestDto backtestingRequestDto) {
 
@@ -56,8 +57,6 @@ public class BacktestingCal {
 
         // 주식 코드 리스트
         List<String> stockCodes = new ArrayList<>();
-       // 주식별 목표 금액
-//        List<Double> buyMoney = new ArrayList<>();
 
 
         // 종목별로 수익률을 계산한다.
@@ -69,8 +68,7 @@ public class BacktestingCal {
                        yearMonthList,
                        targetPrices,
                        stockCodes,
-                       backtestingRequestDto.getRebalancing());
-//                       buyMoney);
+                       backtestingRequestDto.getRebalancingMonth());
 
 
        // 전체 수익금을 위한 Array 만들기
@@ -127,43 +125,13 @@ public class BacktestingCal {
         List<Stock> kosdaqStocks =
                 stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate("kosdaqIndex", startDate, endDate);
 
-        Double kospiNum = seedMoney.doubleValue()/kospiStocks.get(0).getClose();
-        Double kosdaqNum = seedMoney.doubleValue()/(kosdaqStocks.get(0).getClose());
 
-        // 코스피 수익금 계산
-        List<Double> kospiYieldMoney = kospiStocks.
-                stream().
-                map(Stock:: getClose).
-                map(s -> s*kospiNum).
-                collect(Collectors.toList());
+       List<Double> kospiYieldMoney = stockYieldCal.getStockYieldList(kospiStocks,seedMoney, "yieldMoney");
+       System.out.println(kospiYieldMoney);
+       List<Double> kospiYield = stockYieldCal.getStockYieldList(kospiStocks,seedMoney, "yieldPct");
 
-        // 코스피 수익률 계산
-        List<Double> kospiYield = kospiStocks.
-                stream().
-                map(Stock :: getYieldPct).
-                map(s -> s*100).
-                collect(Collectors.toList());
-
-        // 코스닥 수익금 계산
-        List<Double> kosdaqYieldMoney = kosdaqStocks.
-                stream().
-                map(Stock :: getClose).
-                map(s -> s*kosdaqNum).
-                collect(Collectors.toList());
-
-        // 코스닥 수익률계산
-        List<Double> kosdaqYield = kosdaqStocks.
-                stream().
-                map(Stock :: getYieldPct).
-                map(s -> s*100).
-                collect(Collectors.toList());
-
-
-        // 첫달의 수익률은 0 : 코스피
-        kospiYield.set(0, 0.0);
-
-        // 첫달의 수익률은 0 : 코스닥
-        kosdaqYield.set(0, 0.0);
+       List<Double> kosdaqYieldMoney = stockYieldCal.getStockYieldList(kosdaqStocks,seedMoney, "yieldMoney");
+       List<Double> kosdaqYield = stockYieldCal.getStockYieldList(kosdaqStocks,seedMoney, "yieldPct");
 
         List<Double> stockYieldMoneys = new ArrayList<>();
 //        List<Double> stockYields = new ArrayList<>();
@@ -185,24 +153,55 @@ public class BacktestingCal {
                yearYieldCal.getYearYield(yearMonthList, Arrays.asList(monthYieldMoneys), kospiYieldMoney, kosdaqYieldMoney);
 
 
+//       BacktestingResponseDto backtestingResponseDto =
+//                new BacktestingResponseDto(YearMonth.from(startDate).toString(),
+//                        YearMonth.from(endDate).toString(),
+//                        bestMonth.toString(),
+//                        bestMoney,
+//                        worstMonth.toString(),
+//                        worstMoney,
+//                        seedMoney,stockList, stockCodes,targetPrices,
+//                        monthYieldMoneys[monthYieldMoneys.length-1],
+//                        monthYieldMoneys[monthYieldMoneys.length-1] - seedMoney,finalYield,
+//                        yearMonthList.stream().map(YearMonth::toString).collect(Collectors.toList()), Arrays.asList(monthYields), Arrays.asList(monthYieldMoneys),
+//                        kospiYield, kospiYieldMoney,
+//                        kosdaqYield, kosdaqYieldMoney,
+//                        stockYieldMoneys,
+//                        backtestingYearDto.getYears(),
+//                        backtestingYearDto.getYearYield(),
+//                        backtestingYearDto.getKospiYearYield(),
+//                        backtestingYearDto.getKosdaqYearYield());
+
        BacktestingResponseDto backtestingResponseDto =
-                new BacktestingResponseDto(YearMonth.from(startDate).toString(),
-                        YearMonth.from(endDate).toString(),
-                        bestMonth.toString(),
-                        bestMoney,
-                        worstMonth.toString(),
-                        worstMoney,
-                        seedMoney,stockList, stockCodes,targetPrices,
-                        monthYieldMoneys[monthYieldMoneys.length-1],
-                        monthYieldMoneys[monthYieldMoneys.length-1] - seedMoney,finalYield,
-                        yearMonthList.stream().map(YearMonth::toString).collect(Collectors.toList()), Arrays.asList(monthYields), Arrays.asList(monthYieldMoneys),
-                        kospiYield, kospiYieldMoney,
-                        kosdaqYield, kosdaqYieldMoney,
-                        stockYieldMoneys,
-                        backtestingYearDto.getYears(),
-                        backtestingYearDto.getYearYield(),
-                        backtestingYearDto.getKospiYearYield(),
-                        backtestingYearDto.getKosdaqYearYield());
+               BacktestingResponseDto.builder()
+                       .startDate(YearMonth.from(startDate).toString())
+                       .endDate(YearMonth.from(startDate).toString())
+                       .rebalancingMonth(backtestingRequestDto.getRebalancingMonth())
+                       .bestMonth(bestMonth.toString())
+                       .bestMoney(bestMoney)
+                       .worstMonth(worstMonth.toString())
+                       .worstMoney(worstMoney)
+                       .seedMoney(seedMoney)
+                       .stockNames(stockList)
+                       .stockCodes(stockCodes)
+                       .buyMoney(targetPrices)
+                       .finalMoney(monthYieldMoneys[monthYieldMoneys.length-1])
+                       .yieldMoney(monthYieldMoneys[monthYieldMoneys.length-1] - seedMoney)
+                       .finalYield(finalYield)
+                       .months(yearMonthList.stream().map(YearMonth::toString).collect(Collectors.toList()))
+                       .monthYield(Arrays.asList(monthYields))
+                       .monthYieldMoney(Arrays.asList(monthYieldMoneys))
+                       .kospiYield(kospiYield)
+                       .kospiYieldMoney(kospiYieldMoney)
+                       .kosdaqYield(kosdaqYield)
+                       .kosdaqYieldMoney(kosdaqYieldMoney)
+                       .stockYieldMoneys(stockYieldMoneys)
+                       .years(backtestingYearDto.getYears())
+                       .yearYield(backtestingYearDto.getYearYield())
+                       .kospiYearYield(backtestingYearDto.getKospiYearYield())
+                       .kosdaqYearYield(backtestingYearDto.getKosdaqYearYield())
+                       .build();
+
 
         return backtestingResponseDto;
     }
