@@ -1,6 +1,7 @@
 package com.project.minibacktesting_be.security;
 
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.annotation.Resource;
 
+@Slf4j
 public class FormLoginAuthProvider implements AuthenticationProvider {
 
     @Resource(name="userDetailsServiceImpl")
@@ -28,23 +30,23 @@ public class FormLoginAuthProvider implements AuthenticationProvider {
         String username = token.getName();
         String password = (String) token.getCredentials();
 
-        System.out.println("auth : " + username +" 변수타입 : " +username.getClass().getName());
-        System.out.println("auth : " + password +" 변수타입 : " +password.getClass().getName());
+        log.info("auth : " + username +" 변수타입 : " +username.getClass().getName());
+        log.info("auth : " + password +" 변수타입 : " +password.getClass().getName());
 
         // UserDetailsService 를 통해 DB에서 username 으로 사용자 조회
 
         UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
 
-        System.out.println("userDetails : " + userDetails);
+        log.info("userDetails : " + userDetails);
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
 
-            System.out.println("userDetails.getPassword() : " +userDetails.getPassword());
-            System.out.println("Auth에서 비밀번호 일치 확인 : " + passwordEncoder.matches(password, userDetails.getPassword()));
+            log.info("userDetails.getPassword() : " +userDetails.getPassword());
+            log.info("Auth에서 비밀번호 일치 확인 : " + passwordEncoder.matches(password, userDetails.getPassword()));
 
             throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
         }
-        System.out.println("UsernamePasswordAuthenticationToken 성공" );
+        log.info("UsernamePasswordAuthenticationToken 성공" );
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
