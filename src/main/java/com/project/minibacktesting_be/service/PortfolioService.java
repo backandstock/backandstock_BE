@@ -117,6 +117,7 @@ public class PortfolioService {
                 LocalDate startDate  = eachPortfolio.getStartDate();
                 LocalDate endDate = eachPortfolio.getEndDate();
                 Long seedMoney = eachPortfolio.getSeedMoney();
+                Integer rebalancingMonth = eachPortfolio.getRebalancingMonth();
 
                 List<PortStock> portStocks = eachPortfolio.getPortStocks();
                 List<String> stockList = new ArrayList<>();
@@ -142,6 +143,7 @@ public class PortfolioService {
                     backtestingRequestDto.setSeedMoney(seedMoney);
                     backtestingRequestDto.setStockList(stockList);
                     backtestingRequestDto.setRatioList(ratioList);
+                    backtestingRequestDto.setRebalancingMonth(rebalancingMonth);
                     myPortBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
                     vop.set("port"+eachPortfolio.getId(), myPortBacktestingCal);
                     redisTemplate.expire("port"+eachPortfolio.getId(), 3, TimeUnit.DAYS);

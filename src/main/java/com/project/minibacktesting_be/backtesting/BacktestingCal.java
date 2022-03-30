@@ -152,30 +152,10 @@ public class BacktestingCal {
        BacktestingYearDto backtestingYearDto =
                yearYieldCal.getYearYield(yearMonthList, Arrays.asList(monthYieldMoneys), kospiYieldMoney, kosdaqYieldMoney);
 
-
-//       BacktestingResponseDto backtestingResponseDto =
-//                new BacktestingResponseDto(YearMonth.from(startDate).toString(),
-//                        YearMonth.from(endDate).toString(),
-//                        bestMonth.toString(),
-//                        bestMoney,
-//                        worstMonth.toString(),
-//                        worstMoney,
-//                        seedMoney,stockList, stockCodes,targetPrices,
-//                        monthYieldMoneys[monthYieldMoneys.length-1],
-//                        monthYieldMoneys[monthYieldMoneys.length-1] - seedMoney,finalYield,
-//                        yearMonthList.stream().map(YearMonth::toString).collect(Collectors.toList()), Arrays.asList(monthYields), Arrays.asList(monthYieldMoneys),
-//                        kospiYield, kospiYieldMoney,
-//                        kosdaqYield, kosdaqYieldMoney,
-//                        stockYieldMoneys,
-//                        backtestingYearDto.getYears(),
-//                        backtestingYearDto.getYearYield(),
-//                        backtestingYearDto.getKospiYearYield(),
-//                        backtestingYearDto.getKosdaqYearYield());
-
        BacktestingResponseDto backtestingResponseDto =
                BacktestingResponseDto.builder()
                        .startDate(YearMonth.from(startDate).toString())
-                       .endDate(YearMonth.from(startDate).toString())
+                       .endDate(YearMonth.from(endDate).toString())
                        .rebalancingMonth(backtestingRequestDto.getRebalancingMonth())
                        .bestMonth(bestMonth.toString())
                        .bestMoney(bestMoney)
