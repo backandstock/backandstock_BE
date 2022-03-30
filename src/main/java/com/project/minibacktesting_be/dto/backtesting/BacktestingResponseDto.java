@@ -17,6 +17,7 @@ import java.util.List;
 // https://m.blog.naver.com/writer0713/221615276956
 // https://stackoverflow.com/questions/27952472/serialize-deserialize-java-8-java-time-with-jackson-json-mapper
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,22 +25,16 @@ import java.util.List;
 public class BacktestingResponseDto {
 
 
-//    @JsonSerialize(using =  YearMonthSerializer.class)
-//    @JsonDeserialize(using = YearMonthDeserializer.class)
     private String startDate; // 시작 일자 (주식을 산 날짜)
 
-//    @JsonSerialize(using =  YearMonthSerializer.class)
-//    @JsonDeserialize(using = YearMonthDeserializer.class)
     private String endDate; // 종료 일자 (주식을 파는 날짜)
 
-//    @JsonSerialize(using =  YearMonthSerializer.class)
-//    @JsonDeserialize(using = YearMonthDeserializer.class)
-    private String bestMonth; // 최고의 수익금을 기록한 달
+    private Integer rebalancingMonth; // 리밸런싱 주기
 
+    private String bestMonth; // 최고의 수익금을 기록한 달
     private Double bestMoney; // 최고의 수익금
 
-//    @JsonSerialize(using =  YearMonthSerializer.class)
-//    @JsonDeserialize(using = YearMonthDeserializer.class)
+
     private String worstMonth; // 최악의 수익금을 기록한달
     private Double worstMoney; // 최악의 수익금
     private Long seedMoney; // 초기 자본

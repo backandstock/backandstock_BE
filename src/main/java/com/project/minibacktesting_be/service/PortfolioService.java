@@ -4,7 +4,6 @@ import com.project.minibacktesting_be.backtesting.BacktestingCal;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.dto.portfolio.*;
-import com.project.minibacktesting_be.exception.portfolio.PortfolioNotFoundException;
 import com.project.minibacktesting_be.exception.portfolio.PortfolioSaveOverException;
 import com.project.minibacktesting_be.exception.user.UserMatchException;
 import com.project.minibacktesting_be.model.PortStock;
@@ -24,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -58,7 +58,10 @@ public class PortfolioService {
 
         // 2. 포트폴리오 저장
         Portfolio portfolio = Portfolio.createPortfolio(backtestingRequestDto.getStartDate(),
-                backtestingRequestDto.getEndDate(), backtestingRequestDto.getSeedMoney(), user);
+                backtestingRequestDto.getEndDate(),
+                backtestingRequestDto.getSeedMoney(),
+                user,
+                backtestingRequestDto.getRebalancingMonth());
 
         double finalYield;
         finalYield = backtestingCal.getResult(backtestingRequestDto).getFinalYield();
@@ -114,6 +117,7 @@ public class PortfolioService {
                 LocalDate startDate  = eachPortfolio.getStartDate();
                 LocalDate endDate = eachPortfolio.getEndDate();
                 Long seedMoney = eachPortfolio.getSeedMoney();
+                Integer rebalancingMonth = eachPortfolio.getRebalancingMonth();
 
                 List<PortStock> portStocks = eachPortfolio.getPortStocks();
                 List<String> stockList = new ArrayList<>();
@@ -139,8 +143,10 @@ public class PortfolioService {
                     backtestingRequestDto.setSeedMoney(seedMoney);
                     backtestingRequestDto.setStockList(stockList);
                     backtestingRequestDto.setRatioList(ratioList);
+                    backtestingRequestDto.setRebalancingMonth(rebalancingMonth);
                     myPortBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
                     vop.set("port"+eachPortfolio.getId(), myPortBacktestingCal);
+                    redisTemplate.expire("port"+eachPortfolio.getId(), 3, TimeUnit.DAYS);
                     log.info("db port : {}", eachPortfolio.getId());
 //                    System.out.println("db port"+eachPortfolio.getId());
 
@@ -176,6 +182,7 @@ public class PortfolioService {
         LocalDate startDate  = portfolio.getStartDate();
         LocalDate endDate = portfolio.getEndDate();
         Long seedMoney = portfolio.getSeedMoney();
+        Integer rebalancingMonth = portfolio.getRebalancingMonth();
         long likesCnt = portfolio.getLikesCnt();
 
         List<PortStock> portStocks = portStockRepository.findByPortfolio(portfolio);
@@ -203,8 +210,10 @@ public class PortfolioService {
             backtestingRequestDto.setSeedMoney(seedMoney);
             backtestingRequestDto.setStockList(stockList);
             backtestingRequestDto.setRatioList(ratioList);
+            backtestingRequestDto.setRebalancingMonth(rebalancingMonth);
             portBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
             vop.set("port"+portfolio.getId(), portBacktestingCal);
+            redisTemplate.expire("port"+portfolio.getId(), 3, TimeUnit.DAYS);
             log.info("db portDetail : {}", portfolio.getId());
 //            System.out.println("db portDetail" + portfolio.getId());
 
@@ -272,6 +281,7 @@ public class PortfolioService {
                         compareBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
 
                         vop.set("port"+eachPortId, compareBacktestingCal);
+                        redisTemplate.expire("port"+eachPortId, 3, TimeUnit.DAYS);
                         log.info("db port : {}", eachPortId);
 //                        System.out.println("db port" + eachPortId);
                 }
@@ -371,7 +381,6 @@ public class PortfolioService {
         if(vop.get("port"+portfolio.getId()) != null){
             vop.getOperations().delete("port"+portfolio.getId());
             log.info("redis delete : {}", portfolio.getId());
-//            System.out.println("redis delete" + portfolio.getId());
         }
 
         return responseId;

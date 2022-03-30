@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +40,9 @@ public class Portfolio extends Timestamped{
     @Column(nullable = false)
     private Long likesCnt;
 
+    @Column(nullable = false)
+    private Integer rebalancingMonth;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
@@ -62,7 +64,7 @@ public class Portfolio extends Timestamped{
     }
 
     public static Portfolio createPortfolio(LocalDate startDate, LocalDate endDate, Long seedMoney
-            , User user) {
+            , User user, Integer rebalancingMonth) {
         Portfolio portfolio = Portfolio.builder()
                 .startDate(startDate)
                 .endDate(endDate)
@@ -70,6 +72,7 @@ public class Portfolio extends Timestamped{
                 .likesCnt(0L)
                 .myBest(false)
                 .user(user)
+                .rebalancingMonth(rebalancingMonth)
                 .build();
         return portfolio;
     }
