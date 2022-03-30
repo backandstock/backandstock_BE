@@ -20,6 +20,7 @@ if [ ! -z ${TARGET_PID} ]; then
   sudo kill ${TARGET_PID}
 fi
 
-nohup java -jar -Dspring.config.location=/home/ubuntu/miniBacktesting_be/build/libs/ -Dserver.port=${TARGET_PORT} /home/ubuntu/miniBacktesting_be/build/libs/* >/home/ubuntu/nohup.out 2>&1 &
+#nohup java -jar -Dspring.config.location=/home/ubuntu/miniBacktesting_be/build/libs/ -Dserver.port=${TARGET_PORT} /home/ubuntu/miniBacktesting_be/build/libs/* >/home/ubuntu/nohup.out 2>&1 &
+nohup java -jar -Dspring.config.location=/home/ubuntu/miniBacktesting_be/build/libs/ -Dserver.port=${TARGET_PORT} /home/ubuntu/miniBacktesting_be/build/libs/miniBacktesting_be-0.0.1-SNAPSHOT.jar &
 echo "> Now new WAS runs at ${TARGET_PORT}."
 exit 0
