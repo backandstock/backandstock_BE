@@ -278,6 +278,7 @@ public class PortfolioService {
                         backtestingRequestDto.setSeedMoney(seedMoney);
                         backtestingRequestDto.setStockList(stockList);
                         backtestingRequestDto.setRatioList(ratioList);
+                        backtestingRequestDto.setRebalancingMonth(eachPort.getRebalancingMonth());
                         compareBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
 
                         vop.set("port"+eachPortId, compareBacktestingCal);

@@ -48,7 +48,7 @@ public class YearYieldCal {
             int targetYearIdx = yearIdxs.get(y);
             int previousYearIdx = (y == 0)? 0:yearIdxs.get(y-1);
 
-
+        // 12월이 없는 경우 or 마지막 월이 12월이 아닌 경우 예외처리
             Double targetYearYield =
                     ((monthYieldMoneys.get(targetYearIdx)-
                             monthYieldMoneys.get(previousYearIdx))
