@@ -26,9 +26,7 @@ public class BacktestingResponseDto {
 
 
     private String startDate; // 시작 일자 (주식을 산 날짜)
-
     private String endDate; // 종료 일자 (주식을 파는 날짜)
-
     private Integer rebalancingMonth; // 리밸런싱 주기
 
     private String bestMonth; // 최고의 수익금을 기록한 달

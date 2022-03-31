@@ -146,11 +146,19 @@ public class CommunityService {
             start = currentDateTime.minusMonths(1);
         }
 
-        Page<Portfolio> pagePortfolios =
+        Page<Portfolio> pagePortfolios = null;
+        if(option.equals("all")){
+            Pageable pageableLatest = PageRequest.of(page-1, size, Sort.by(Sort.Order.desc("createdAt")));
+            pagePortfolios =
+                    portfolioRepository.findAllByMyBest(true, pageableLatest);
+        }else{
+            pagePortfolios =
                 portfolioRepository.findAllByMyBestAndCreatedAtBetween(
-                         true, start, currentDateTime, pageable);
+                        true, start, currentDateTime, pageable);
+        }
 
         return getCommunityPortResponseDtos(pagePortfolios);
+
     }
 
 

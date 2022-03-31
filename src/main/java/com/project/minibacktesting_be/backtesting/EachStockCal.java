@@ -1,6 +1,8 @@
 package com.project.minibacktesting_be.backtesting;
 
 import com.project.minibacktesting_be.dto.backtesting.BacktestingEachStockDto;
+import com.project.minibacktesting_be.exception.stock.StockNotFoundException;
+import com.project.minibacktesting_be.exception.stock.StockSearchException;
 import com.project.minibacktesting_be.model.Stock;
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,10 @@ public class EachStockCal {
             List<Stock> stocks =
                     stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate(
                             targetStockName, startDate, endDate);
+
+            if(stocks.size() == 0){
+                throw new StockNotFoundException(targetStockName);
+            }
 
             // 주식 코드 가져오기
             stockCodes.add(stocks.get(0).getStockCode());
