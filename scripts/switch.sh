@@ -21,7 +21,12 @@ echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | sudo tee /etc/nginx/
 
 echo "> Now Nginx proxies to ${TARGET_PORT}."
 
-sleep 60
+# Reload nginx
+sudo service nginx reload
+
+echo "> Nginx reloaded."
+
+sleep 120
 
 # Kill CurrentPort
 if [ ${TARGET_PORT} -eq 8081 ]; then
@@ -35,8 +40,3 @@ else
   echo "> ${KILL_PORT} 포트를 종료합니다."
   kill -9 ${IDLE_PID}
 fi
-
-# Reload nginx
-sudo service nginx reload
-
-echo "> Nginx reloaded."
