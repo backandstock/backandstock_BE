@@ -26,7 +26,7 @@ sudo service nginx reload
 
 echo "> Nginx reloaded."
 
-sleep 120
+#sleep 120
 
 # Kill CurrentPort
 if [ ${TARGET_PORT} -eq 8081 ]; then
