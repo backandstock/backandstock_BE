@@ -42,7 +42,11 @@ public class RebalancingCal {
         for (int dayIdx = 0;dayIdx < stockPriceList.get(0).size(); dayIdx++){
 
             log.info("---------------------------");
-            if(dayIdx != 0 & (dayIdx % option) == 0){
+            log.info(String.valueOf(dayIdx+1));
+            log.info(String.valueOf(stockPriceList.get(0).size()));
+            // 리밸런싱 주기에만 리밸런싱 함, 그리고 마지막 일자는 리밸런싱 제외함 (최종 수익이 산출되기 때문에)
+            if(dayIdx != 0 & (dayIdx % option) == 0 && (dayIdx+1) != stockPriceList.get(0).size()){
+
                 log.info("stockNum 계산 전");
                 log.info(String.valueOf(stockNumList));
 
@@ -65,11 +69,18 @@ public class RebalancingCal {
                         get(targetStockIdx).
                         set(dayIdx,targetStockPrice*stockNum);
 
+                log.info(String.valueOf(stockYieldMoneyList.get(targetStockIdx)));
+
                 // 수익금 리스트 변경하기
                 backtestingEachStockDtos.get(targetStockIdx).setYieldMoneys(stockYieldMoneyList.get(targetStockIdx));
 
             }
         }
+
+//        for(BacktestingEachStockDto backtestingEachStockDto:backtestingEachStockDtos){
+//            int targetStockIdx = backtestingEachStockDtos.indexOf(backtestingEachStockDto);
+//            backtestingEachStockDto.setYieldMoneys(stockYieldMoneyList.get(targetStockIdx));
+//        }
 
 
         return backtestingEachStockDtos;
