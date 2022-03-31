@@ -17,9 +17,22 @@ else
 fi
 
 # Change proxying port into target port
-echo "set \$service_url http://127.0.0.1:8081:${TARGET_PORT};" | sudo tee /etc/nginx/conf.d/service_url.inc
+echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | sudo tee /etc/nginx/conf.d/service_url.inc
 
 echo "> Now Nginx proxies to ${TARGET_PORT}."
+
+# Kill CurrentPort
+if [ ${TARGET_PORT} -eq 8081 ]; then
+  KILL_PORT=8082
+  IDLE_PID=$(lsof -ti tcp:${KILL_PORT})
+  echo "> ${KILL_PORT} 포트를 종료합니다."
+  kill -9 ${IDLE_PID}
+else
+  KILL_PORT=8081
+  IDLE_PID=$(lsof -ti tcp:${KILL_PORT})
+  echo "> ${KILL_PORT} 포트를 종료합니다."
+  kill -9 ${IDLE_PID}
+fi
 
 # Reload nginx
 sudo service nginx reload
