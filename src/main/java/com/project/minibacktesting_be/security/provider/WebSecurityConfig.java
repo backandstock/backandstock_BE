@@ -149,6 +149,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         skipPathList.add("GET,/test");
+        skipPathList.add("GET,/health");
 
         skipPathList.add("GET,/");
         skipPathList.add("GET,/basic.js");

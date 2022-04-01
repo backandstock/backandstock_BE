@@ -32,9 +32,6 @@ public class Comment extends Timestamped{
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String nickname;
-
     // 대댓글 구현용 필드 추가
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn

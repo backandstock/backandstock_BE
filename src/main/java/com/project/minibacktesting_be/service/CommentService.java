@@ -34,7 +34,6 @@ public class CommentService {
         Validation.validationComment(requestDto.getContent());
 
         Comment comment = Comment.commentBuilder()
-                .nickname(userDetails.getUser().getNickname())
                 .content(requestDto.getContent())
                 .portfolio(portfolio)
                 .user(userDetails.getUser())
