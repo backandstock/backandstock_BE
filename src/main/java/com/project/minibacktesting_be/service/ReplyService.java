@@ -22,7 +22,6 @@ public class ReplyService {
                 .portfolio(comment.getPortfolio())
                 .user(userDetails.getUser())
                 .content(requestDto.getContent())
-                .nickname(userDetails.getUser().getNickname())
                 .parentComment(comment)
                 .build();
         return CommentRegisterResponseDto.builder().commentId(commentRepository.save(reply).getId()).build();

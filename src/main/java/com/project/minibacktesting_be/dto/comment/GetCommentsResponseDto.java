@@ -21,7 +21,7 @@ public class GetCommentsResponseDto {
     public GetCommentsResponseDto(Comment c) {
         this.commentId = c.getId();
         this.content = c.getContent();
-        this.nickname = c.getNickname();
+        this.nickname = c.getUser().getNickname();
         this.parentId = c.getParentComment().getId();
         this.CreatedAt = c.getCreatedAt();
         this.profileImg = c.getUser().getProfileImg();
