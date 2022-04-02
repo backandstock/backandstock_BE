@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -50,13 +51,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(jwtAuthProvider);
     }
 
-//    @Override
-//    public void configure(WebSecurity web) {
-//        // h2-console 사용에 대한 허용 (CSRF, FrameOptions 무시)
-//        web
+    @Override
+    public void configure(WebSecurity web) {
+        // h2-console 사용에 대한 허용 (CSRF, FrameOptions 무시)
+        web
 //                .ignoring()
 //                .antMatchers("/h2-console/**");
-//    }
+
+                .ignoring()
+                .antMatchers("/h2-console/**")
+//                .antMatchers("/static/**","/css/**","/js/**","/images/**")
+//                .antMatchers("/swagger-ui/index.html", "/webjars/**", "/swagger/**")
+//                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**")
+        ;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
