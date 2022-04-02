@@ -32,8 +32,7 @@ public class YearYieldCal {
         // 마지막 달의 수익률 계산을 위한 부분
         // 만약 2013년 6월까지 실험한다면 2012년 12월이 마지막이 된다.
         // 2013년 6월의 수익도 필요하므로 2013년 6월을 가져오기 위한 코드가 필요하다.
-
-
+        // 12월의 값이 하나도 없다면 혹은 마지막 달이 12월이 아니라면 마지막달의 값이 필요하다.
         if(yearIdxs.size() == 0 || yearMonthList.size()-1 != yearIdxs.get(yearIdxs.size() -1)){
             // 마지막 일자의 인덱스를 가져온다.
             yearIdxs.add(yearMonthList.size()-1);

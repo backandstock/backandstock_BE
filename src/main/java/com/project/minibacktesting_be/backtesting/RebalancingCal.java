@@ -77,11 +77,6 @@ public class RebalancingCal {
             }
         }
 
-//        for(BacktestingEachStockDto backtestingEachStockDto:backtestingEachStockDtos){
-//            int targetStockIdx = backtestingEachStockDtos.indexOf(backtestingEachStockDto);
-//            backtestingEachStockDto.setYieldMoneys(stockYieldMoneyList.get(targetStockIdx));
-//        }
-
 
         return backtestingEachStockDtos;
 
