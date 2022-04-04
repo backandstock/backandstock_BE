@@ -120,9 +120,30 @@ public class CommentControllerTest {
 
     }
 
-
     @Test
     @Order(4)
+    @DisplayName("대댓글 작성하기")
+    @Transactional
+    void registerReply(){
+
+        CommentRequestDto commentRequestDto=
+                new CommentRequestDto("대댓글 가즈아!");
+
+        webTestClient.post()
+                .uri("/comments/{commentId}", commentId)
+                .header(HttpHeaders.AUTHORIZATION, "BEARER "+token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(commentRequestDto)
+                .exchange()
+                .expectStatus().isOk();
+
+    }
+
+
+
+
+    @Test
+    @Order(5)
     @DisplayName("코멘트 삭제하기")
     @Transactional
     void deleteComment(){
