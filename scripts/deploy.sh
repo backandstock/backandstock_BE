@@ -4,7 +4,7 @@
 #sudo ./gradlew bootJar # jar 파일 생성
 
 # 실행 중인 도커 컴포즈 확인
-EXIST_A=$(sudo docker-compose -p springboot-a -f docker-compose.a.yml ps | grep Up)
+EXIST_A=$(sudo docker-compose -p springboot-a -f /home/ubuntu/miniBacktesting_be/docker-compose.a.yml ps | grep Up)
 
 if [ -z "${EXIST_A}" ] # -z는 문자열 길이가 0이면 true. A가 실행 중이지 않다는 의미.
 then
@@ -25,7 +25,7 @@ echo "springboot-${START_CONTAINER} up"
 
 # 실행해야하는 컨테이너 docker-compose로 실행. -p는 docker-compose 프로젝트에 이름을 부여
 # -f는 docker-compose파일 경로를 지정
-sudo docker-compose -p springboot-${START_CONTAINER} -f docker-compose.${START_CONTAINER}.yml up -d --build
+sudo docker-compose -p springboot-${START_CONTAINER} -f /home/ubuntu/miniBacktesting_be/docker-compose.${START_CONTAINER}.yml up -d --build
 
 for cnt in {1..10} # 10번 실행
 do
@@ -64,5 +64,5 @@ sudo service nginx reload
 
 # 기존에 실행 중이었던 docker-compose는 종료시켜줍니다.
 echo "springboot-${TERMINATE_CONTAINER} down"
-sudo docker-compose -p springboot-${TERMINATE_CONTAINER} -f docker-compose.${TERMINATE_CONTAINER}.yml down
+sudo docker-compose -p springboot-${TERMINATE_CONTAINER} -f /home/ubuntu/miniBacktesting_be/docker-compose.${TERMINATE_CONTAINER}.yml down
 echo "success deployment"
