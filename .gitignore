@@ -44,5 +44,6 @@ out/
 logs
 
 #### docker #####
-docker-compose.yaml
+docker-compose.a.yaml
+docker-compose.b.yaml
 
