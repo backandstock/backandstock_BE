@@ -113,4 +113,15 @@ public class CommentService {
         commentRepository.deleteAll(comments);
         commentRepository.delete(comment);
     }
+
+    public CommentResponseDto registerReply(Long commentId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+        Comment comment =  PresentCheck.commentIsPresentCheck(commentId, commentRepository);
+        Comment reply = Comment.commentBuilder()
+                .portfolio(comment.getPortfolio())
+                .user(userDetails.getUser())
+                .content(requestDto.getContent())
+                .parentComment(comment)
+                .build();
+        return CommentResponseDto.builder().commentId(commentRepository.save(reply).getId()).build();
+    }
 }

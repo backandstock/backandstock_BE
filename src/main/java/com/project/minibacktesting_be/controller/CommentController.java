@@ -55,4 +55,16 @@ public class CommentController {
                 userDetails.getUser().getId(),commentId);
         commentService.deleteComment(commentId, userDetails);
     }
+
+
+
+    // 대댓글 작성하기
+    @PostMapping("/comments/{commentId}")
+    public CommentResponseDto registerReply(@PathVariable Long commentId,
+                                            @RequestBody CommentRequestDto requestDto,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        log.info("대댓글 작성하기 userId : {} commentId : {}",
+                userDetails.getUser().getId(),commentId);
+        return commentService.registerReply(commentId, requestDto, userDetails);
+    }
 }
