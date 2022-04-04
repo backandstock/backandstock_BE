@@ -3,9 +3,11 @@ package com.project.minibacktesting_be.security.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
+@Slf4j
 public final class JwtTokenUtils {
 
     private static final int SEC = 1;
@@ -33,13 +35,14 @@ public final class JwtTokenUtils {
                     .withClaim(CLAIM_EXPIRED_DATE, new Date(System.currentTimeMillis() + JWT_TOKEN_VALID_MILLI_SEC))
                     .sign(generateAlgorithm());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.info(e.getMessage());
         }
 
         return token;
     }
 
     private static Algorithm generateAlgorithm() {
+
         return Algorithm.HMAC256(JWT_SECRET);
     }
 }

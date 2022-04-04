@@ -32,9 +32,8 @@ public class YearYieldCal {
         // 마지막 달의 수익률 계산을 위한 부분
         // 만약 2013년 6월까지 실험한다면 2012년 12월이 마지막이 된다.
         // 2013년 6월의 수익도 필요하므로 2013년 6월을 가져오기 위한 코드가 필요하다.
-
-        // 만약 yearMonthList의 마지막 인덱스와 yearIdx(연도별 데이터를 가져오기위한 idx)의 마지막 값이 같지 않다면
-        if(yearMonthList.size()-1 != yearIdxs.get(yearIdxs.size() -1)){
+        // 12월의 값이 하나도 없다면 혹은 마지막 달이 12월이 아니라면 마지막달의 값이 필요하다.
+        if(yearIdxs.size() == 0 || yearMonthList.size()-1 != yearIdxs.get(yearIdxs.size() -1)){
             // 마지막 일자의 인덱스를 가져온다.
             yearIdxs.add(yearMonthList.size()-1);
         }
@@ -48,7 +47,7 @@ public class YearYieldCal {
             int targetYearIdx = yearIdxs.get(y);
             int previousYearIdx = (y == 0)? 0:yearIdxs.get(y-1);
 
-
+        // 12월이 없는 경우 or 마지막 월이 12월이 아닌 경우 예외처리
             Double targetYearYield =
                     ((monthYieldMoneys.get(targetYearIdx)-
                             monthYieldMoneys.get(previousYearIdx))

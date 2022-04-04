@@ -3,11 +3,16 @@ package com.project.minibacktesting_be.service;
 import com.project.minibacktesting_be.dto.user.SignupDto;
 import com.project.minibacktesting_be.dto.user.UserInfoEditRequestDto;
 import com.project.minibacktesting_be.exception.user.UserRegisterValidationException;
+import com.project.minibacktesting_be.model.Portfolio;
 import com.project.minibacktesting_be.model.User;
+import com.project.minibacktesting_be.repository.PortfolioRepository;
 import com.project.minibacktesting_be.repository.UserRepository;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import com.project.minibacktesting_be.vailidation.Validation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,14 +20,21 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class UserService {
 
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+
+    private final PortfolioRepository portfolioRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final S3Uploader s3Uploader;
+
 
     // 회원가입
     public void registerUser(SignupDto signupDto){
@@ -64,6 +76,7 @@ public class UserService {
         }
 
         user.updateNickname(nickname);
+
         userRepository.save(user);
         return userInfoEditRequestDto;
     }
@@ -73,6 +86,14 @@ public class UserService {
         if(userDetails.getUser().getProfileImg() != null){
             s3Uploader.deleteFile(userDetails.getUser().getProfileImg());
         }
+
+
+        List<Portfolio> portfolios = portfolioRepository.findAllByUser(userDetails.getUser());
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+        for(Portfolio portfolio:portfolios){
+            vop.getOperations().delete("port"+portfolio.getId());
+        }
+
         userRepository.delete(userDetails.getUser());
     }
 }

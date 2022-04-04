@@ -26,11 +26,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 @RequiredArgsConstructor
@@ -48,9 +51,14 @@ public class CommunityService {
     public List<TopFiveResponseDto> getTopFive() {
         // 2월의 데이터를 가져오기 위해 startDate, endDate 설정함
 
-        ArrayList<String> options= new ArrayList<>(Arrays.asList("kospi","kosdaq","volume", "transaction"));
-        LocalDate startDate =LocalDate.parse("2022-02-01");
-        LocalDate endDate = startDate.with(lastDayOfMonth());
+        ArrayList<String> options= new ArrayList<>(Arrays.asList("kospi","kosdaq","volume"));
+        LocalDate currentDate = LocalDate.now();
+        LocalDate baseDate = currentDate.minusMonths(1);
+        LocalDate startDate = baseDate.with(firstDayOfMonth());
+        LocalDate endDate = baseDate.with(lastDayOfMonth()).plusDays(1);
+        log.info("startDate "+startDate+" endDate "+endDate);
+        //        LocalDate startDate =LocalDate.parse("2022-02-01");
+//        LocalDate endDate = startDate.with(lastDayOfMonth());
 
         List<Stock> stocks;
         List<String> results;
@@ -61,9 +69,9 @@ public class CommunityService {
 
 
         for(String option : options){
-            if (vop.get("topFive"+option) != null) {
-                topFiveResponseDto = (TopFiveResponseDto) vop.get("topFive"+option);
-                log.info("redis topfive : {}", option);}
+            if (vop.get("topFive"+option+YearMonth.from(startDate)) != null) {
+                topFiveResponseDto = (TopFiveResponseDto) vop.get("topFive"+option+YearMonth.from(startDate));
+                log.info("redis topfive : {}", option+ YearMonth.from(startDate));}
 
 
             else{
@@ -74,18 +82,21 @@ public class CommunityService {
                             map(stock -> stock.toString()).
                             collect(Collectors.toList());
 
-                }else if(option.equals("volume")){
+                }else
+//                    if(option.equals("volume"))
+                    {
                     stocks = stockRepository.findTop5ByCloseDateBetweenOrderByVolumeDesc(startDate, endDate);
                     results = stocks.stream().
                             map(stock -> stock.getVolume().toString()).
                             collect(Collectors.toList());
 
-                }else{
-                    stocks = stockRepository.findTop5ByCloseDateBetweenOrderByTransactionDesc(startDate, endDate);
-                    results = stocks.stream().
-                            map(stock -> stock.getTransaction().toString()).
-                            collect(Collectors.toList());
                 }
+//                else{
+//                    stocks = stockRepository.findTop5ByCloseDateBetweenOrderByTransactionDesc(startDate, endDate);
+//                    results = stocks.stream().
+//                            map(stock -> stock.getTransaction().toString()).
+//                            collect(Collectors.toList());
+//                }
                 List<String> stockNames = stocks.
                         stream().
                         map(Stock :: getStockName).
@@ -102,9 +113,9 @@ public class CommunityService {
                         collect(Collectors.toList());
 
                 topFiveResponseDto = new TopFiveResponseDto(option, stockNames, stockCodes, results, closes);
-                vop.set("topFive"+option, topFiveResponseDto);
-                redisTemplate.expire("topFive"+option, 3, TimeUnit.DAYS);
-                log.info("db topfive : {}", option);
+                vop.set("topFive"+option+YearMonth.from(startDate), topFiveResponseDto);
+                redisTemplate.expire("topFive"+option+YearMonth.from(startDate), 7, TimeUnit.DAYS);
+                log.info("db topfive : {}", option+YearMonth.from(startDate));
             }
             topFiveResponseDtos.add(topFiveResponseDto);
         }
@@ -146,11 +157,19 @@ public class CommunityService {
             start = currentDateTime.minusMonths(1);
         }
 
-        Page<Portfolio> pagePortfolios =
+        Page<Portfolio> pagePortfolios = null;
+        if(option.equals("all")){
+            Pageable pageableLatest = PageRequest.of(page-1, size, Sort.by(Sort.Order.desc("createdAt")));
+            pagePortfolios =
+                    portfolioRepository.findAllByMyBest(true, pageableLatest);
+        }else{
+            pagePortfolios =
                 portfolioRepository.findAllByMyBestAndCreatedAtBetween(
-                         true, start, currentDateTime, pageable);
+                        true, start, currentDateTime, pageable);
+        }
 
         return getCommunityPortResponseDtos(pagePortfolios);
+
     }
 
 
@@ -161,16 +180,16 @@ public class CommunityService {
             CommunityPortDto portResponseDto;
             CommunityPortResponseDto communityPortResponseDto;
 
-            ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+//            ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 
-            if (vop.get("communityPort"+portfolio.getId()) != null) {
-                portResponseDto = (CommunityPortDto) vop.get("communityPort"+portfolio.getId().toString());
-                log.info("redis communityPort : {}", portfolio.getId());
-            } else {
+//            if (vop.get("communityPort"+portfolio.getId()) != null) {
+//                portResponseDto = (CommunityPortDto) vop.get("communityPort"+portfolio.getId().toString());
+//                log.info("redis communityPort : {}", portfolio.getId());
+//            } else {
 
                 BacktestingRequestDto requestDto = new BacktestingRequestDto(portfolio);
 
-                log.info("db communityPort : {}", portfolio.getId());
+//                log.info("db communityPort : {}", portfolio.getId());
 
                 portResponseDto = CommunityPortDto.
                         builder().
@@ -186,9 +205,9 @@ public class CommunityService {
                         createdAt(portfolio.getCreatedAt().toString()).
                         build();
 
-               vop.set("communityPort"+portfolio.getId().toString(), portResponseDto);
-               redisTemplate.expire("communityPort"+portfolio.getId().toString(), 3, TimeUnit.DAYS);
-            }
+//               vop.set("communityPort"+portfolio.getId().toString(), portResponseDto);
+//               redisTemplate.expire("communityPort"+portfolio.getId().toString(), 3, TimeUnit.DAYS);
+//            }
 
 
             List<Likes> likesList=  likesRepository.findByPortfolio(portfolio);

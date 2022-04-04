@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Builder
+
 @RequiredArgsConstructor
 @Component
 public class BacktestingCal {
@@ -125,27 +125,20 @@ public class BacktestingCal {
         List<Stock> kosdaqStocks =
                 stockRepository.findByStockNameAndCloseDateBetweenOrderByCloseDate("kosdaqIndex", startDate, endDate);
 
-
        List<Double> kospiYieldMoney = stockYieldCal.getStockYieldList(kospiStocks,seedMoney, "yieldMoney");
-       System.out.println(kospiYieldMoney);
        List<Double> kospiYield = stockYieldCal.getStockYieldList(kospiStocks,seedMoney, "yieldPct");
 
        List<Double> kosdaqYieldMoney = stockYieldCal.getStockYieldList(kosdaqStocks,seedMoney, "yieldMoney");
        List<Double> kosdaqYield = stockYieldCal.getStockYieldList(kosdaqStocks,seedMoney, "yieldPct");
 
         List<Double> stockYieldMoneys = new ArrayList<>();
-//        List<Double> stockYields = new ArrayList<>();
 
         // 종목별로 최종 수익만 뽑아서 보내주기
         for(BacktestingEachStockDto targetDataDto : backtestingDataDtos){
             Double targetYieldMoney =
                     targetDataDto.getYieldMoneys().
                             get(targetDataDto.getYieldMoneys().size()-1);
-//            Double targetYield =
-//                    targetDataDto.getYields().
-//                            get(targetDataDto.getYields().size()-1);
             stockYieldMoneys.add(targetYieldMoney);
-//            stockYields.add(targetYield*100);
         }
 
 

@@ -33,7 +33,6 @@ public class PortfolioService {
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
 
-
     private final UserRepository userRepository;
     private final PortfolioRepository portfolioRepository;
     private final PortStockRepository portStockRepository;
@@ -135,7 +134,6 @@ public class PortfolioService {
                 if(vop.get("port"+eachPortfolio.getId()) != null){
                     myPortBacktestingCal = (BacktestingResponseDto) vop.get("port"+eachPortfolio.getId());
                     log.info("redis port : {}", eachPortfolio.getId());
-//                    System.out.println("redis port"+eachPortfolio.getId());
                 }else{
                     BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
                     backtestingRequestDto.setStartDate(startDate);
@@ -148,7 +146,6 @@ public class PortfolioService {
                     vop.set("port"+eachPortfolio.getId(), myPortBacktestingCal);
                     redisTemplate.expire("port"+eachPortfolio.getId(), 3, TimeUnit.DAYS);
                     log.info("db port : {}", eachPortfolio.getId());
-//                    System.out.println("db port"+eachPortfolio.getId());
 
                 }
 
@@ -169,9 +166,6 @@ public class PortfolioService {
     //포트폴리오 상세보기
     @Transactional(readOnly = true)
     public PortfolioDetailsResponseDto getPortfolio(Long portId) {
-//        Portfolio portfolio = portfolioRepository.findById(portId).orElseThrow(
-//                () -> new PortfolioNotFoundException(portId)
-//        );
 
         Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioRepository);
 
@@ -202,7 +196,6 @@ public class PortfolioService {
         if(vop.get("port"+portfolio.getId()) != null){
             portBacktestingCal = (BacktestingResponseDto) vop.get("port"+portfolio.getId());
             log.info("redis portDetail : {}", portfolio.getId());
-//            System.out.println("redis portDetail" + portfolio.getId());
         }else{
             BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
             backtestingRequestDto.setStartDate(startDate);
@@ -215,7 +208,6 @@ public class PortfolioService {
             vop.set("port"+portfolio.getId(), portBacktestingCal);
             redisTemplate.expire("port"+portfolio.getId(), 3, TimeUnit.DAYS);
             log.info("db portDetail : {}", portfolio.getId());
-//            System.out.println("db portDetail" + portfolio.getId());
 
         }
 
@@ -270,7 +262,7 @@ public class PortfolioService {
                     if(vop.get("port"+eachPortId) != null){
                         compareBacktestingCal = (BacktestingResponseDto) vop.get("port"+eachPortId);
                         log.info("redis portDetail : {}", eachPortId);
-//                        System.out.println("redis portDetail" + eachPortId);
+
                     }else{
                         BacktestingRequestDto backtestingRequestDto = new BacktestingRequestDto();
                         backtestingRequestDto.setStartDate(startDate);
@@ -278,12 +270,13 @@ public class PortfolioService {
                         backtestingRequestDto.setSeedMoney(seedMoney);
                         backtestingRequestDto.setStockList(stockList);
                         backtestingRequestDto.setRatioList(ratioList);
+                        backtestingRequestDto.setRebalancingMonth(eachPort.getRebalancingMonth());
                         compareBacktestingCal = backtestingCal.getResult(backtestingRequestDto);
 
                         vop.set("port"+eachPortId, compareBacktestingCal);
                         redisTemplate.expire("port"+eachPortId, 3, TimeUnit.DAYS);
                         log.info("db port : {}", eachPortId);
-//                        System.out.println("db port" + eachPortId);
+
                 }
 
                     PortfolioRankDto portfolioRankDto = PortfolioRankDto.builder()

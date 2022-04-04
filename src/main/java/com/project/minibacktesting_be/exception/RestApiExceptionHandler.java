@@ -4,6 +4,7 @@ import com.project.minibacktesting_be.exception.comment.CommentNotFoundException
 import com.project.minibacktesting_be.exception.comment.CommentValidationException;
 import com.project.minibacktesting_be.exception.portfolio.PortfolioNotFoundException;
 import com.project.minibacktesting_be.exception.portfolio.PortfolioSaveOverException;
+import com.project.minibacktesting_be.exception.stock.StockNotFoundException;
 import com.project.minibacktesting_be.exception.stock.StockSearchException;
 import com.project.minibacktesting_be.exception.user.S3FileConvertException;
 import com.project.minibacktesting_be.exception.user.UserMatchException;
@@ -38,6 +39,13 @@ public class RestApiExceptionHandler {
     public ResponseEntity<ApiErrorResponse> StockSearchExceptionHandler(StockSearchException exception) {
         log.info("StockSearchExceptionHandler", exception);
         return new ResponseEntity<>(ApiErrorResponse.badRequest(exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(StockNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> StockNotFoundExceptionHandler(StockNotFoundException exception) {
+        log.info("StockNotFoundException", exception);
+        return new ResponseEntity<>(ApiErrorResponse.notFound(exception.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CommentNotFoundException.class)
