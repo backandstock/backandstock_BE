@@ -21,9 +21,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     // 거래량 top5찾기
     List<Stock> findTop5ByCloseDateBetweenOrderByVolumeDesc(LocalDate startDate, LocalDate endDate);
 
-    // 거래대금 top5 찾기
-    List<Stock> findTop5ByCloseDateBetweenOrderByTransactionDesc(LocalDate startDate, LocalDate endDate);
-
 
 
 

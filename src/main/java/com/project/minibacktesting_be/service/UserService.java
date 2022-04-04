@@ -8,7 +8,7 @@ import com.project.minibacktesting_be.model.User;
 import com.project.minibacktesting_be.repository.PortfolioRepository;
 import com.project.minibacktesting_be.repository.UserRepository;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
-import com.project.minibacktesting_be.vailidation.Validation;
+import com.project.minibacktesting_be.security.vailidation.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

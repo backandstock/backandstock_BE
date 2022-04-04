@@ -1,8 +1,7 @@
 package com.project.minibacktesting_be.service;
 
-import com.project.minibacktesting_be.dto.comment.CommentRegisterRequestDto;
-import com.project.minibacktesting_be.dto.comment.CommentRegisterResponseDto;
-import com.project.minibacktesting_be.dto.comment.CommentUpdateRequestDto;
+import com.project.minibacktesting_be.dto.comment.CommentRequestDto;
+import com.project.minibacktesting_be.dto.comment.CommentResponseDto;
 import com.project.minibacktesting_be.dto.comment.GetCommentsResponseDto;
 import com.project.minibacktesting_be.exception.user.UserMatchException;
 import com.project.minibacktesting_be.model.Comment;
@@ -11,7 +10,7 @@ import com.project.minibacktesting_be.presentcheck.PresentCheck;
 import com.project.minibacktesting_be.repository.CommentRepository;
 import com.project.minibacktesting_be.repository.PortfolioRepository;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
-import com.project.minibacktesting_be.vailidation.Validation;
+import com.project.minibacktesting_be.security.vailidation.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PortfolioRepository portfolioRepository;
 
-    public CommentRegisterResponseDto registerComment(Long portId, CommentRegisterRequestDto requestDto, UserDetailsImpl userDetails) {
+
+    public CommentResponseDto registerComment(Long portId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
         // DB 내부 portfolio 확인
         Portfolio portfolio = PresentCheck.portfoliIsPresentCheck(portId, portfolioRepository);
 
@@ -39,15 +39,23 @@ public class CommentService {
                 .user(userDetails.getUser())
                 .build();
 
+
+        log.info(comment.getContent());
+        log.info("portId {}", comment.getPortfolio().getId());
+        log.info("nickname {}", comment.getUser().getNickname());
+
         // 저장시 대댓글 활용부분 저장
         Comment savedComment = commentRepository.save(comment);
+        log.info("savedComment {}", savedComment.getContent());
         savedComment.firstRegistration(savedComment);
+
+
         commentRepository.save(savedComment);
 
-        return CommentRegisterResponseDto.builder().commentId(savedComment.getId()).build();
+        return CommentResponseDto.builder().commentId(savedComment.getId()).build();
     }
 
-    public void updateComment(Long commentId, CommentUpdateRequestDto requestDto, UserDetailsImpl userDetails) {
+    public void updateComment(Long commentId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
         // DB 내부 comment 확인
         Comment comment = PresentCheck.commentIsPresentCheck(commentId, commentRepository);
 

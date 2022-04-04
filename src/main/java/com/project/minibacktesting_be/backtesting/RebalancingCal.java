@@ -50,8 +50,7 @@ public class RebalancingCal {
                 log.info("stockNum 계산 전");
                 log.info(String.valueOf(stockNumList));
 
-               stockNumList = stockNumCal(stockYieldMoneyList,
-                       stockPriceList, ratioList, dayIdx);
+               stockNumList = stockNumCal(stockYieldMoneyList,stockPriceList, ratioList, dayIdx);
 
                 log.info("stockNum 계산 후");
                 log.info(String.valueOf(stockNumList));

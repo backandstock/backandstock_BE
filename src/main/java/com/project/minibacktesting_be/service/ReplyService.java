@@ -1,7 +1,7 @@
 package com.project.minibacktesting_be.service;
 
-import com.project.minibacktesting_be.dto.comment.CommentRegisterRequestDto;
-import com.project.minibacktesting_be.dto.comment.CommentRegisterResponseDto;
+import com.project.minibacktesting_be.dto.comment.CommentRequestDto;
+import com.project.minibacktesting_be.dto.comment.CommentResponseDto;
 import com.project.minibacktesting_be.model.Comment;
 import com.project.minibacktesting_be.presentcheck.PresentCheck;
 import com.project.minibacktesting_be.repository.CommentRepository;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class ReplyService {
     private final CommentRepository commentRepository;
 
-    public CommentRegisterResponseDto registerReply(Long commentId, CommentRegisterRequestDto requestDto, UserDetailsImpl userDetails) {
+    public CommentResponseDto registerReply(Long commentId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
         Comment comment =  PresentCheck.commentIsPresentCheck(commentId, commentRepository);
         Comment reply = Comment.commentBuilder()
                 .portfolio(comment.getPortfolio())
@@ -24,7 +24,7 @@ public class ReplyService {
                 .content(requestDto.getContent())
                 .parentComment(comment)
                 .build();
-        return CommentRegisterResponseDto.builder().commentId(commentRepository.save(reply).getId()).build();
+        return CommentResponseDto.builder().commentId(commentRepository.save(reply).getId()).build();
     }
 }
 

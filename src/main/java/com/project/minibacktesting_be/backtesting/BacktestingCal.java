@@ -174,13 +174,6 @@ public class BacktestingCal {
                        .kospiYearYield(backtestingYearDto.getKospiYearYield())
                        .kosdaqYearYield(backtestingYearDto.getKosdaqYearYield())
                        .build();
-
-
         return backtestingResponseDto;
     }
-
-
-
-
-
 }

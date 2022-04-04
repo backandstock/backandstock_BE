@@ -1,7 +1,7 @@
 package com.project.minibacktesting_be.controller;
 
-import com.project.minibacktesting_be.dto.comment.CommentRegisterRequestDto;
-import com.project.minibacktesting_be.dto.comment.CommentRegisterResponseDto;
+import com.project.minibacktesting_be.dto.comment.CommentRequestDto;
+import com.project.minibacktesting_be.dto.comment.CommentResponseDto;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import com.project.minibacktesting_be.service.ReplyService;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,9 @@ public class ReplyController {
 
     // 대댓글 작성하기
     @PostMapping("/comments/{commentId}")
-    public CommentRegisterResponseDto registerReply(@PathVariable Long commentId,
-                                                    @RequestBody CommentRegisterRequestDto requestDto,
-                                                    @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public CommentResponseDto registerReply(@PathVariable Long commentId,
+                                            @RequestBody CommentRequestDto requestDto,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails){
         return replyService.registerReply(commentId, requestDto, userDetails);
     }
 }
