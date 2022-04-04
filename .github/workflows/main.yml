@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
 
 # S3 bucket 이름 입력
-env:
-  S3_BUCKET_NAME: jsm-bucket
-  PROJECT_NAME: miniBacktesting_be
+#env:
+#  S3_BUCKET_NAME: jsm-bucket
+#  PROJECT_NAME: miniBacktesting_be
 
 jobs:
   build:
