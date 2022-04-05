@@ -64,4 +64,4 @@ jobs:
 
       - name: Code Deploy
 #        run: aws deploy create-deployment --application-name Github-Actions-Deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name Github-Actions-Group --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
-       run: aws deploy create-deployment --application-name Github-Actions-Deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name Github-Actions-Group --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
+        run: aws deploy create-deployment --application-name Github-Actions-Deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name Github-Actions-Group --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
