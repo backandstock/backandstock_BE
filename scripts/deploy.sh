@@ -12,14 +12,14 @@ then
         # B가 실행 중인 경우
         START_CONTAINER=a
         TERMINATE_CONTAINER=b
-        START_PORT=80
-        TERMINATE_PORT=8080
+        START_PORT=8081
+        TERMINATE_PORT=8082
 else
         # A가 실행 중인 경우
         START_CONTAINER=b
         TERMINATE_CONTAINER=a
-        START_PORT=8080
-        TERMINATE_PORT=80
+        START_PORT=8081
+        TERMINATE_PORT=8082
 fi
 
 echo "springboot-${START_CONTAINER} up"
