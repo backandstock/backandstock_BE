@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#sudo chmod +x ./gradlew # gradlew 읽기 권한 부여
+sudo chmod +x ./gradlew # gradlew 읽기 권한 부여
 
-#sudo ./gradlew bootJar # jar 파일 생성
+sudo ./gradlew bootJar # jar 파일 생성
 
 # 실행 중인 도커 컴포즈 확인
 EXIST_A=$(sudo docker-compose -p springboot-a -f /home/ubuntu/miniBacktesting_be/docker-compose.a.yml ps | grep Up)
