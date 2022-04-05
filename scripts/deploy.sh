@@ -18,8 +18,8 @@ else
         # A가 실행 중인 경우
         START_CONTAINER=b
         TERMINATE_CONTAINER=a
-        START_PORT=8080
-        TERMINATE_PORT=8081
+        START_PORT=8081
+        TERMINATE_PORT=8080
 fi
 
 echo "springboot-${START_CONTAINER} up"
