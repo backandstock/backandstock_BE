@@ -23,5 +23,6 @@ hooks:
 #      timeout: 180
 #      runas: ubuntu
      - location: scripts/deploy.sh
-       timeout: 180
+#       timeout: 180
+       timeout: 60
        runas: ubuntu
