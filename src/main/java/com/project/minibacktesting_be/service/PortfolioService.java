@@ -50,7 +50,7 @@ public class PortfolioService {
         User user = userTemp.get();
 
         // 1. 포트폴리오 갯수 validation
-        List<Portfolio> portfolioNum = portfolioRepository.findAllByUser(user);
+        List<Portfolio> portfolioNum = portfolioRepository.findPortfolioFetchPortStock(user);
         if(portfolioNum.size() > 2) {
             throw new PortfolioSaveOverException("UserId : "+userId + " exceed maximum saving portfolio number.");
         }
