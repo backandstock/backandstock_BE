@@ -1,6 +1,5 @@
 name: sm-action
 
-
 # githubActionTest branch에 push가 발생하면 실행
 on:
   push:
