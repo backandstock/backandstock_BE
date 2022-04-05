@@ -11,7 +11,6 @@ import com.project.minibacktesting_be.exception.user.UserMatchException;
 import com.project.minibacktesting_be.exception.user.UserNotFoundException;
 import com.project.minibacktesting_be.exception.user.UserRegisterValidationException;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
