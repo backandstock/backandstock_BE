@@ -2,6 +2,8 @@
 
 sudo chmod +x ./gradlew # gradlew 읽기 권한 부여
 
+#cd /home/ubuntu/miniBacktesting_be || exit
+
 sudo ./gradlew bootJar # jar 파일 생성
 
 # 실행 중인 도커 컴포즈 확인
@@ -33,7 +35,8 @@ do
         echo "check server start.."
 
         # 스프링부트에 등록했던 actuator로 실행되었는지 확인
-        UP=$(curl -s http://127.0.0.1:${START_PORT}/actuator/health | grep 'UP')
+#        UP=$(curl -s http://127.0.0.1:${START_PORT}/actuator/health | grep 'UP')
+        UP=$(curl -s http://127.0.0.1:${START_PORT}/actuator/health | grep 'DOWN')
         if [ -z "${UP}" ] # 실행되었다면 break
         then
                 echo "server not start.."
@@ -52,16 +55,16 @@ then
 fi
 
 echo "server start!"
-echo "change nginx server port"
+#echo "change nginx server port"
 
 # sed 명령어를 이용해서 아까 지정해줬던 service-url.inc의 url값을 변경해줍니다.
 # sed -i "s/기존문자열/변경할문자열" 파일경로 입니다.
 # 종료되는 포트를 새로 시작되는 포트로 값을 변경해줍니다.
-sudo sed -i "s/${TERMINATE_PORT}/${START_PORT}/" /etc/nginx/conf.d/service-url.inc
+#sudo sed -i "s/${TERMINATE_PORT}/${START_PORT}/" /etc/nginx/conf.d/service-url.inc
 
 # 새로운 포트로 스프링부트가 구동 되고, nginx의 포트를 변경해주었다면, nginx 재시작해줍니다.
-echo "nginx reload.."
-sudo service nginx reload
+#echo "nginx reload.."
+#sudo service nginx reload
 
 # 기존에 실행 중이었던 docker-compose는 종료시켜줍니다.
 echo "springboot-${TERMINATE_CONTAINER} down"
