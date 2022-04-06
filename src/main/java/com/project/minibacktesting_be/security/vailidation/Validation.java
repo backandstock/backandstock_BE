@@ -1,4 +1,4 @@
-package com.project.minibacktesting_be.vailidation;
+package com.project.minibacktesting_be.security.vailidation;
 
 import com.project.minibacktesting_be.dto.user.SignupDto;
 import com.project.minibacktesting_be.exception.comment.CommentValidationException;

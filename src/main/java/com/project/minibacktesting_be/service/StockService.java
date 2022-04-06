@@ -8,6 +8,7 @@ import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class StockService {
@@ -33,6 +34,7 @@ public class StockService {
     @Transactional(readOnly = true)
     public List<StockSearchResponseDto> getStockInfo(String keyword, String type) {
         List<StockSearchResponseDto> stockSearchResponseDtoList;
+        log.info("로그 확인! ");
         if(type.equals("code")){
             Pageable pageable = PageRequest.of(0, 10);
             stockSearchResponseDtoList = stockRepository.findStockByCode(keyword, pageable);

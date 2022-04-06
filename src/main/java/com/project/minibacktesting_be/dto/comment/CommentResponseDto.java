@@ -6,6 +6,6 @@ import lombok.Data;
 // Getter, Setter기능 통합
 @Data
 @Builder
-public class CommentRegisterResponseDto {
+public class CommentResponseDto {
     private Long commentId;
 }

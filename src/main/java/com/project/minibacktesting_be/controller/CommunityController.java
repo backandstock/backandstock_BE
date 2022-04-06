@@ -6,10 +6,12 @@ import com.project.minibacktesting_be.dto.community.TopFiveResponseDto;
 import com.project.minibacktesting_be.dto.likes.LikesRequestDto;
 import com.project.minibacktesting_be.service.CommunityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class CommunityController {
@@ -18,6 +20,8 @@ public class CommunityController {
     // 주식 top 5 조회 하기
     @GetMapping("/stocks/topfive")
     public List<TopFiveResponseDto> getTop5Info(){
+
+        log.info("top5 주식정보 조회");
         return communityService.getTopFive();
     }
 
@@ -26,6 +30,7 @@ public class CommunityController {
     @GetMapping("/portfolios/boast")
     public List<CommunityPortResponseDto> getCommunityPorts(@RequestParam("page") Integer page,
                                                             @RequestParam("size") Integer size){
+        log.info("자랑한 포트폴리오 가져오기.");
         return communityService.getCommnunityPorts(page, size);
     }
 
@@ -35,6 +40,7 @@ public class CommunityController {
             @RequestParam("option") String option,
             @RequestParam("page") Integer page,
             @RequestParam("size") Integer size){
+        log.info("옵션별로 포트폴리오 가져오기 option:{}", option);
         return communityService.getRecentCommnunityPorts(option ,page, size);
     }
 

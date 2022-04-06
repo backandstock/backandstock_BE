@@ -1,6 +1,8 @@
 package com.project.minibacktesting_be.dto.comment;
 
 import com.project.minibacktesting_be.model.Comment;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class GetCommentsResponseDto {
     private Long commentId;
     private String content;
