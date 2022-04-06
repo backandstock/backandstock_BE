@@ -135,7 +135,7 @@
 
 ## 트러블 슈팅
 
-1. Python을 사용한 주식데이터 수집 https://github.com/backandstock/backandstock_BE.wiki.git
+1. [Python을 사용한 주식데이터 수집](https://github.com/backandstock/backandstock_BE/wiki/%EC%A3%BC%EC%8B%9D-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%88%98%EC%A7%91-%EB%B0%8F-%EC%A0%84%EC%B2%98%EB%A6%AC) 
 
 ## 🛠 Tech Stack
 
