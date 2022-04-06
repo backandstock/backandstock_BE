@@ -2,7 +2,7 @@
 
 sudo chmod +x ./gradlew # gradlew 읽기 권한 부여
 
-#cd /home/ubuntu/miniBacktesting_be || exit
+cd /home/ubuntu/miniBacktesting_be
 
 sudo ./gradlew bootJar # jar 파일 생성
 
