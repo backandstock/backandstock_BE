@@ -99,7 +99,7 @@
 * 백엔드 깃허브 : https://github.com/backandstock/backandstock_BE
 * 프론트엔드 깃허브 : https://github.com/backandstock/backandstock_FE  
 * 파이썬(주식데이터 업로드) : https://github.com/backandstock/backandstock_python
-* 유튜브 링크 : 
+* 유튜브 링크 : https://www.youtube.com/watch?v=EJuRqEyssiU&t=1s
 * 노션 링크 : https://www.notion.so/Back-Stock-1acd036bee654077a6d85cac255cc581
 
 
