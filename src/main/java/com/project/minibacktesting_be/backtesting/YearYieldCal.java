@@ -2,13 +2,14 @@ package com.project.minibacktesting_be.backtesting;
 
 import com.project.minibacktesting_be.dto.backtesting.BacktestingYearDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class YearYieldCal {
@@ -43,11 +44,17 @@ public class YearYieldCal {
         List<Double> kospiYearYield = new ArrayList<>(); // 연단위 코스피 수익률
         List<Double> kosdaqYearYield = new ArrayList<>(); // 연단위 코스닥 수익률
 
+        log.info("monthYieldMoneys.size {}", monthYieldMoneys.size());
+        log.info("yearMonthList {}", yearMonthList);
+        log.info("yearMonthList Size {}", yearMonthList.size());
+        log.info("연도 인덱스 {}", yearIdxs);
+
         for(int y = 0; y < yearIdxs.size(); y++){
             int targetYearIdx = yearIdxs.get(y);
             int previousYearIdx = (y == 0)? 0:yearIdxs.get(y-1);
 
         // 12월이 없는 경우 or 마지막 월이 12월이 아닌 경우 예외처리
+
             Double targetYearYield =
                     ((monthYieldMoneys.get(targetYearIdx)-
                             monthYieldMoneys.get(previousYearIdx))

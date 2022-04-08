@@ -3,23 +3,18 @@ package com.project.minibacktesting_be.Integration;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.project.minibacktesting_be.backtesting.BacktestingCal;
 import com.project.minibacktesting_be.dto.StockSearchResponseDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 
-import com.project.minibacktesting_be.repository.StockRepository;
-import com.project.minibacktesting_be.service.StockService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 

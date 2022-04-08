@@ -18,11 +18,14 @@ public class StockYieldCal {
         Double targetNum = seedMoney.doubleValue() / targetStocks.get(0).getClose();
         // 코스피 수익금 계산
         if (option.equals("yieldMoney")) {
-            return targetStocks.
+            List<Double> yieldMoneyList = targetStocks.
                     stream().
                     map(Stock::getClose).
                     map(s -> s * targetNum).
                     collect(Collectors.toList());
+
+            return yieldMoneyList;
+
 
         } else if(option.equals("yieldPct")) {
             List<Double> yieldPctList = targetStocks.

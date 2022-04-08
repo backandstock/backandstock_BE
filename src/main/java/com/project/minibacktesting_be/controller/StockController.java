@@ -5,6 +5,7 @@ import com.project.minibacktesting_be.dto.backtesting.BacktestingRequestDto;
 import com.project.minibacktesting_be.dto.backtesting.BacktestingResponseDto;
 import com.project.minibacktesting_be.exception.stock.StockSearchException;
 import com.project.minibacktesting_be.service.StockService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class StockController  {
    private final StockService stockService;
 
     //백테스팅 계산하기
+    @ApiOperation(value = "백테스팅 계산하기")
     @PostMapping("/stocks")
     public BacktestingResponseDto backtestingCal(
             @RequestBody BacktestingRequestDto backtestingRequestDto){
@@ -27,6 +29,7 @@ public class StockController  {
     
 
     //주식 종목 검색
+    @ApiOperation(value = "주식 종목 검색")
     @GetMapping("/stocks")
     public ResponseEntity<List<StockSearchResponseDto>> getStockInfo(
             @RequestParam(value = "keyword", required = false, defaultValue = "")

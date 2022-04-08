@@ -2,6 +2,7 @@ package com.project.minibacktesting_be.controller;
 import com.project.minibacktesting_be.dto.portfolio.PortfolioSaveResponseDto;
 import com.project.minibacktesting_be.security.provider.UserDetailsImpl;
 import com.project.minibacktesting_be.service.LikesService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +16,7 @@ public class LikesController {
     private final LikesService likesService;
 
     // 좋아요
+    @ApiOperation(value = "포트폴리오 좋아요")
     @PostMapping("/portfolios/{portId}/likes")
     public PortfolioSaveResponseDto postLikes(@PathVariable Long portId,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -25,6 +27,7 @@ public class LikesController {
 
 
     // 좋아요 취소
+    @ApiOperation(value = "포트폴리오 좋아요 취소")
     @DeleteMapping ("/portfolios/{portId}/likes")
     public PortfolioSaveResponseDto postDislikes(@PathVariable Long portId,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails){
