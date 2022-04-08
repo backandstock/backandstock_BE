@@ -62,6 +62,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 
+    // Actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 tasks.named('test') {
