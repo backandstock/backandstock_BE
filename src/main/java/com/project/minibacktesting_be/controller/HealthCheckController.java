@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class nginxController {
+public class HealthCheckController {
 
     @Value("${logging-module.version}")
     private String version;
