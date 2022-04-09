@@ -8,7 +8,6 @@ on:
       - main
   workflow_dispatch:
 
-
 env:
   # S3 bucket 이름 입력
   S3_BUCKET_NAME: backnstock-deploy
