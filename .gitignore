@@ -43,7 +43,3 @@ out/
 ### 로그 파일 ###
 logs
 
-#### docker #####
-docker-compose.a.yml
-docker-compose.b.yml
-

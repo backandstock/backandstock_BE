@@ -1,0 +1,19 @@
+version: "3"
+services:
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+
+  springboot:
+    build: .
+    restart: on-failure
+    ports:
+      - 8080:8080
+    depends_on:
+      - redis
+
+networks:
+  default:
+    external:
+      name: smnetwork
