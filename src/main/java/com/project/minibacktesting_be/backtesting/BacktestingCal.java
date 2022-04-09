@@ -7,6 +7,7 @@ import com.project.minibacktesting_be.dto.backtesting.BacktestingYearDto;
 import com.project.minibacktesting_be.model.Stock;
 import com.project.minibacktesting_be.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class BacktestingCal {
@@ -47,6 +48,11 @@ public class BacktestingCal {
             startYearMonth = startYearMonth.plusMonths(1);
 
         }
+
+        log.info("backtestingCal {}", yearMonthList);
+        log.info("startDate {}", startDate );
+        log.info("endDate {}", endDate);
+
 
 //  스트림 : 주식의 비율을 충족 시키기 위해선 해당 주식을 얼마 사야 할까?
         List<Double> targetPrices = ratioList.
@@ -132,6 +138,9 @@ public class BacktestingCal {
        List<Double> kosdaqYield = stockYieldCal.getStockYieldList(kosdaqStocks,seedMoney, "yieldPct");
 
         List<Double> stockYieldMoneys = new ArrayList<>();
+
+        log.info("kospiYieldMoney.size {}",kospiYieldMoney.size());
+        log.info("kosdaqYieldMoney.size {}", kosdaqYieldMoney.size());
 
         // 종목별로 최종 수익만 뽑아서 보내주기
         for(BacktestingEachStockDto targetDataDto : backtestingDataDtos){

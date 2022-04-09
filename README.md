@@ -99,7 +99,7 @@
 * 백엔드 깃허브 : https://github.com/backandstock/backandstock_BE
 * 프론트엔드 깃허브 : https://github.com/backandstock/backandstock_FE  
 * 파이썬(주식데이터 업로드) : https://github.com/backandstock/backandstock_python
-* 유튜브 링크 : 
+* 유튜브 링크 : https://www.youtube.com/watch?v=EJuRqEyssiU&t=1s
 * 노션 링크 : https://www.notion.so/Back-Stock-1acd036bee654077a6d85cac255cc581
 
 
@@ -127,15 +127,18 @@
 
 ## 📖 서비스 아키텍쳐
 
-![image](https://user-images.githubusercontent.com/44867889/161977564-86f1157a-3ba1-451b-869e-8abf6010460a.png)
+![image](https://user-images.githubusercontent.com/44867889/162220038-0b32b522-6d07-43f5-ae7c-e562669cb1bb.png)
 
 
 
 ## 부하테스트
 
+#### 🔗 [부하테스트 결과 link](https://actually-basement-27a.notion.site/Back-Stock-2858c3d2fc384ea4a28c5013a27bbbbc)  
+
 ## 트러블 슈팅
 
 1. [Python을 사용한 주식데이터 수집](https://github.com/backandstock/backandstock_BE/wiki/%EC%A3%BC%EC%8B%9D-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%88%98%EC%A7%91-%EB%B0%8F-%EC%A0%84%EC%B2%98%EB%A6%AC) 
+2. [백테스팅 계산 결과 응답속도 개선](https://github.com/backandstock/backandstock_BE/wiki/%EB%B0%B1%ED%85%8C%EC%8A%A4%ED%8C%85-%EA%B3%84%EC%82%B0%EA%B2%B0%EA%B3%BC-%EC%9D%91%EB%8B%B5%EC%86%8D%EB%8F%84-%EA%B0%9C%EC%84%A0)
 
 ## 🛠 Tech Stack
 
@@ -151,7 +154,6 @@
 <img src="https://img.shields.io/badge/aws ec2-07C160?style=for-the-badge&logo=amazoneaws&logoColor=white">
 <img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"> 
 <img src="https://img.shields.io/badge/aws codedeploy-9D1620?style=for-the-badge&logo=amazonaws&logoColor=white">
-<img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white">
 
 <br>
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
