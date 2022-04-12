@@ -139,6 +139,7 @@
 
 1. [Python을 사용한 주식데이터 수집](https://github.com/backandstock/backandstock_BE/wiki/%EC%A3%BC%EC%8B%9D-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%88%98%EC%A7%91-%EB%B0%8F-%EC%A0%84%EC%B2%98%EB%A6%AC) 
 2. [백테스팅 계산 결과 응답속도 개선](https://github.com/backandstock/backandstock_BE/wiki/%EB%B0%B1%ED%85%8C%EC%8A%A4%ED%8C%85-%EA%B3%84%EC%82%B0%EA%B2%B0%EA%B3%BC-%EC%9D%91%EB%8B%B5%EC%86%8D%EB%8F%84-%EA%B0%9C%EC%84%A0)
+3. [CodeDeploy 쉘 스크립트 실행시에 HealthCheck 실패](https://github.com/backandstock/backandstock_BE/wiki/CodeDeploy-%EC%89%98-%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%8B%A4%ED%96%89%EC%8B%9C%EC%97%90-HealthCheck-%EC%8B%A4%ED%8C%A8)
 
 ## 🛠 Tech Stack
 
